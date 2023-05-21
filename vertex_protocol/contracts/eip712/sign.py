@@ -5,7 +5,7 @@ from vertex_protocol.contracts.eip712.domain import (
     get_vertex_eip712_domain,
 )
 from vertex_protocol.contracts.eip712.types import get_vertex_eip712_type
-from vertex_protocol.engine_client.types import VertexExecute
+from vertex_protocol.engine_client.types.execute import VertexExecute
 from eth_account.messages import encode_structured_data, _hash_eip191_message
 
 

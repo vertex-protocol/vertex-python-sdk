@@ -5,8 +5,10 @@ from vertex_protocol.contracts.eip712.sign import (
     build_eip712_typed_data,
 )
 from vertex_protocol.engine_client.types import (
-    BaseParams,
     EngineClientOpts,
+)
+from vertex_protocol.engine_client.types.execute import (
+    BaseParams,
     PlaceOrderParams,
     VertexExecute,
 )
@@ -19,7 +21,7 @@ class EngineExecuteClient:
         Initialize EngineExecuteClient with provided options
         """
         self._opts = EngineClientOpts.parse_obj(opts)
-        self.url = opts.url
+        self.url = self._opts.url
 
     def _inject_owner_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
         if (
@@ -37,12 +39,10 @@ class EngineExecuteClient:
         return self._opts.endpoint_addr
 
     @property
-    def book_addrs(self, product_id: int) -> str:
+    def book_addrs(self) -> str:
         if self._opts.book_addrs is None:
             raise ValueError("Book addresses are not set")
-        if product_id >= len(self._opts.book_addrs):
-            raise ValueError(f"Invalid product_id {product_id}")
-        return self._opts.book_addrs[product_id]
+        return self._opts.book_addrs
 
     @property
     def chain_id(self) -> str:
@@ -85,6 +85,11 @@ class EngineExecuteClient:
         if self._opts.signer is None:
             raise ValueError("Must set a `signer` first")
         self._opts.linked_signer = linked_signer
+
+    def book_addr(self, product_id: int) -> str:
+        if product_id >= len(self.book_addrs):
+            raise ValueError(f"Invalid product_id {product_id}")
+        return self.book_addrs[product_id]
 
     def sign(self, execute: VertexExecute, verifying_contract: str, msg: dict) -> str:
         return sign_eip712_typed_data(
