@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class EIP712Domain(BaseModel):
     name: str
     version: str
-    chainId: str
+    chainId: int
     verifyingContract: str
 
 
@@ -13,6 +13,7 @@ class EIP712Types(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+        extra = "allow"
 
 
 class EIP712TypedData(BaseModel):

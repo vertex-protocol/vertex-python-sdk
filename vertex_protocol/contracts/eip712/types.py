@@ -1,4 +1,4 @@
-from vertex_protocol.engine_client.types.execute import VertexExecute
+from vertex_protocol.utils.engine import VertexExecute
 
 
 def get_vertex_eip712_type(execute: VertexExecute) -> dict:

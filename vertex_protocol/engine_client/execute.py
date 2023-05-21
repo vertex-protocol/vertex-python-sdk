@@ -7,12 +7,9 @@ from vertex_protocol.contracts.eip712.sign import (
 from vertex_protocol.engine_client.types import (
     EngineClientOpts,
 )
-from vertex_protocol.engine_client.types.execute import (
-    BaseParams,
-    PlaceOrderParams,
-    VertexExecute,
-)
+from vertex_protocol.engine_client.types.execute import BaseParams, PlaceOrderParams
 from vertex_protocol.engine_client.types.execute import SubaccountParams
+from vertex_protocol.utils.engine import VertexExecute
 
 
 class EngineExecuteClient:

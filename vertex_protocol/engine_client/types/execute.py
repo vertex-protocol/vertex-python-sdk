@@ -1,21 +1,7 @@
 import binascii
 from typing import Optional
 from pydantic import BaseModel, validator
-
-from enum import Enum
-
 from vertex_protocol.utils.bytes32 import hex_to_bytes32
-
-
-class VertexExecute(str, Enum):
-    PLACE_ORDER = "place_order"
-    CANCEL_ORDERS = "cancel_orders"
-    CANCEL_PRODUCT_ORDERS = "cancel_product_orders"
-    WITHDRAW_COLLATERAL = "withdraw_collateral"
-    LIQUIDATE_SUBACCOUNT = "liquidate_subaccount"
-    MINT_LP = "mint_lp"
-    BURN_LP = "burn_lp"
-    LINK_SIGNER = "link_signer"
 
 
 class SubaccountParams(BaseModel):

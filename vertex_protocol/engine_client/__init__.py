@@ -1,6 +1,6 @@
-from .types import EngineClientOpts
-from .execute import EngineExecuteClient
-from .query import EngineQueryClient
+from vertex_protocol.engine_client.types import EngineClientOpts
+from vertex_protocol.engine_client.execute import EngineExecuteClient
+from vertex_protocol.engine_client.query import EngineQueryClient
 
 
 class EngineClient(EngineQueryClient, EngineExecuteClient):
