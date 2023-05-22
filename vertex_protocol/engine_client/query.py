@@ -21,11 +21,11 @@ class EngineQueryClient:
     def query(self, req: QueryRequest) -> QueryResponse:
         res = requests.get(f"{self.url}/query?{urlencode(req.dict())}")
         if res.status_code != 200:
-            raise Exception(res.content)
-        query_res = QueryResponse(**res.content)
+            raise Exception(res.text)
+        query_res = QueryResponse(**res.json())
         if query_res.status != "success":
-            raise Exception(res.content)
+            raise Exception(res.text)
         return query_res
 
-    def nonces(self, params: QueryNoncesParams) -> NoncesData:
-        return self.query(params).data
+    def get_nonces(self, params: QueryNoncesParams) -> NoncesData:
+        return self.query(QueryNoncesParams.parse_obj(params)).data

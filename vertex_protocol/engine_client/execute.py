@@ -66,7 +66,7 @@ class EngineExecuteClient:
         return params
 
     def tx_nonce(self) -> int:
-        return self._querier.nonces(
+        return self._querier.get_nonces(
             QueryNoncesParams(address=self.signer.address)
         ).tx_nonce
 
@@ -81,8 +81,8 @@ class EngineExecuteClient:
     def execute(self, req: ExecuteRequest) -> ExecuteResponse:
         res = requests.post(f"{self.url}/execute", json=req.dict())
         if res.status_code != 200:
-            raise Exception(res.content)
-        execute_res = ExecuteResponse(**res.content)
+            raise Exception(res.text)
+        execute_res = ExecuteResponse(**res.json())
         if execute_res.status != "success":
             raise Exception(execute_res.error)
         return execute_res

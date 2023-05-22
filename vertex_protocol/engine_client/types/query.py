@@ -1,24 +1,24 @@
 from typing import Any
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from vertex_protocol.utils.engine import VertexQuery
 
 
 class QueryStatusParams(BaseModel):
-    type = VertexQuery.STATUS
+    type = VertexQuery.STATUS.value
 
 
 class QueryContractsParams(BaseModel):
-    type = VertexQuery.CONTRACTS
+    type = VertexQuery.CONTRACTS.value
 
 
 class QueryNoncesParams(BaseModel):
-    type = VertexQuery.NONCES
+    type = VertexQuery.NONCES.value
     address: str
 
 
 class QueryOrderParams(BaseModel):
-    type = VertexQuery.ORDER
+    type = VertexQuery.ORDER.value
     product_id: int
     digest: str
 
