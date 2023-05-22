@@ -39,7 +39,7 @@ from vertex_protocol.utils.nonce import gen_order_nonce
 
 
 class EngineExecuteClient:
-    def __init__(self, opts: EngineClientOpts, querier: Optional[EngineQueryClient]):
+    def __init__(self, opts: EngineClientOpts, querier: EngineQueryClient = None):
         """
         Initialize EngineExecuteClient with provided options
         """
