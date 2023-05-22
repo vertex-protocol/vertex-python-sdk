@@ -29,6 +29,10 @@ class EngineClientOpts(BaseModel):
             raise ValueError("linked_signer cannot be set if signer is not set")
         return values
 
+    @validator("url")
+    def clean_url(cls, v: AnyUrl) -> AnyUrl:
+        return v.rstrip("/")
+
     @validator("signer")
     def signer_to_local_account(cls, v: Optional[Signer]) -> Optional[LocalAccount]:
         if v is None or isinstance(v, LocalAccount):
