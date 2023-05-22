@@ -29,28 +29,34 @@ class EngineExecuteClient:
             params.sender = params.sender_to_bytes32(params.sender)
         return params
 
+    def _inject_nonce_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
+        if params.nonce is not None:
+            return params
+
+        return params
+
     @property
     def endpoint_addr(self) -> str:
         if self._opts.endpoint_addr is None:
-            raise ValueError("Endpoint address not set")
+            raise AttributeError("Endpoint address not set.")
         return self._opts.endpoint_addr
 
     @property
     def book_addrs(self) -> str:
         if self._opts.book_addrs is None:
-            raise ValueError("Book addresses are not set")
+            raise AttributeError("Book addresses are not set.")
         return self._opts.book_addrs
 
     @property
     def chain_id(self) -> str:
         if self._opts.chain_id is None:
-            raise ValueError("Chain ID is not set")
+            raise AttributeError("Chain ID is not set.")
         return self._opts.chain_id
 
     @property
     def signer(self) -> LocalAccount:
         if self._opts.signer is None:
-            raise ValueError("Signer is not set")
+            raise AttributeError("Signer is not set.")
         return self._opts.signer
 
     @property
@@ -59,7 +65,7 @@ class EngineExecuteClient:
             return self._opts.linked_signer
         if self._opts.signer is not None:
             return self.signer
-        raise ValueError("Linked signer is not set")
+        raise AttributeError("Linked signer is not set.")
 
     @endpoint_addr.setter
     def endpoint_addr(self, addr: str) -> None:
@@ -80,12 +86,14 @@ class EngineExecuteClient:
     @linked_signer.setter
     def linked_signer(self, linked_signer: LocalAccount) -> None:
         if self._opts.signer is None:
-            raise ValueError("Must set a `signer` first")
+            raise AttributeError(
+                "Must set a `signer` first before setting `linked_signer`."
+            )
         self._opts.linked_signer = linked_signer
 
     def book_addr(self, product_id: int) -> str:
         if product_id >= len(self.book_addrs):
-            raise ValueError(f"Invalid product_id {product_id}")
+            raise ValueError(f"Invalid product_id {product_id} provided.")
         return self.book_addrs[product_id]
 
     def sign(self, execute: VertexExecute, verifying_contract: str, msg: dict) -> str:
@@ -98,5 +106,6 @@ class EngineExecuteClient:
 
     def place_order(self, params: PlaceOrderParams):
         params.order = self._inject_owner_if_needed(params.order)
+        params.order = self._inject_nonce_if_needed(params.order)
         params = PlaceOrderParams.parse_obj(params)
         pass

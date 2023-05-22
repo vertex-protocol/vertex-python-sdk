@@ -1,4 +1,7 @@
+from eth_account import Account
 import pytest
+from vertex_protocol.engine_client import EngineClient
+from vertex_protocol.engine_client.types import EngineClientOpts
 
 from vertex_protocol.utils.bytes32 import hex_to_bytes32
 
@@ -27,6 +30,22 @@ def endpoint_addr() -> str:
 
 
 @pytest.fixture
+def owners() -> list[str]:
+    return [
+        "0x841fe4876763357975d60da128d8a54bb045d76a",
+        "0x12a0b4888021576eb10a67616dd3dd3d9ce206b6",
+    ]
+
+
+@pytest.fixture
+def senders() -> list[str]:
+    return [
+        "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
+        "0x12a0b4888021576eb10a67616dd3dd3d9ce206b664656661756c740000000000",
+    ]
+
+
+@pytest.fixture
 def book_addrs() -> list[str]:
     return [
         "0x0000000000000000000000000000000000000000",
@@ -38,11 +57,29 @@ def book_addrs() -> list[str]:
 
 
 @pytest.fixture
-def order_params() -> dict:
+def engine_client(
+    url: str,
+    chain_id: int,
+    endpoint_addr: str,
+    book_addrs: list[str],
+    private_keys: list[str],
+) -> EngineClient:
+    return EngineClient(
+        opts=EngineClientOpts(
+            url=url,
+            chain_id=chain_id,
+            endpoint_addr=endpoint_addr,
+            book_addrs=book_addrs,
+            signer=Account.from_key(private_keys[0]),
+            linked_signer=Account.from_key(private_keys[1]),
+        )
+    )
+
+
+@pytest.fixture
+def order_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
         "priceX18": 28898000000000000000000,
         "amount": -10000000000000000,
         "expiration": 4611687701117784255,
@@ -51,11 +88,9 @@ def order_params() -> dict:
 
 
 @pytest.fixture
-def cancellation_params() -> dict:
+def cancellation_params(senders: str) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
         "productIds": [4],
         "digests": [
             hex_to_bytes32(
@@ -67,22 +102,18 @@ def cancellation_params() -> dict:
 
 
 @pytest.fixture
-def cancellation_products_params() -> dict:
+def cancellation_products_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
         "productIds": [2, 4],
         "nonce": 1,
     }
 
 
 @pytest.fixture
-def withdraw_collateral_params() -> dict:
+def withdraw_collateral_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
         "productId": 2,
         "amount": 10000000000000000,
         "nonce": 1,
@@ -90,14 +121,10 @@ def withdraw_collateral_params() -> dict:
 
 
 @pytest.fixture
-def liquidate_subaccount_params() -> dict:
+def liquidate_subaccount_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
-        "liquidatee": hex_to_bytes32(
-            "0x12a0b4888021576eb10a67616dd3dd3d9ce206b664656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
+        "liquidatee": hex_to_bytes32(senders[1]),
         "mode": 0,
         "healthGroup": 1,
         "amount": 10000000000000000,
@@ -106,11 +133,9 @@ def liquidate_subaccount_params() -> dict:
 
 
 @pytest.fixture
-def mint_lp_params() -> dict:
+def mint_lp_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
         "productId": 1,
         "amountBase": 1000000000000000000,
         "quoteAmountLow": 20000000000000000000000,
@@ -120,11 +145,9 @@ def mint_lp_params() -> dict:
 
 
 @pytest.fixture
-def burn_lp_params() -> dict:
+def burn_lp_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
         "productId": 1,
         "amount": 1000000000000000000,
         "nonce": 1,
@@ -132,13 +155,9 @@ def burn_lp_params() -> dict:
 
 
 @pytest.fixture
-def link_signer_params() -> dict:
+def link_signer_params(senders: list[str]) -> dict:
     return {
-        "sender": hex_to_bytes32(
-            "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000"
-        ),
-        "signer": hex_to_bytes32(
-            "0x12a0b4888021576eb10a67616dd3dd3d9ce206b664656661756c740000000000"
-        ),
+        "sender": hex_to_bytes32(senders[0]),
+        "signer": hex_to_bytes32(senders[1]),
         "nonce": 1,
     }
