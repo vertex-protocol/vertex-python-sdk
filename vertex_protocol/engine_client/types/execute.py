@@ -1,5 +1,5 @@
 import binascii
-from typing import Optional
+from typing import Optional, Type
 from pydantic import BaseModel, validator
 from vertex_protocol.utils.bytes32 import hex_to_bytes32
 
@@ -88,3 +88,91 @@ class BurnLpParams(BaseParamsSigned):
 
 class LinkSignerParams(BaseParamsSigned):
     signer: Subaccount
+
+
+class PlaceOrderRequest(BaseModel):
+    place_order: PlaceOrderParams
+
+    @validator("place_order")
+    def validate(cls, v: PlaceOrderParams) -> PlaceOrderParams:
+        if v.order.nonce is None:
+            raise ValueError("Missing order `nonce`")
+        if v.signature is None:
+            raise ValueError("Missing `signature")
+        return v
+
+
+class TxRequest(BaseModel):
+    tx: dict
+    signature: str
+
+    @validator("tx")
+    def tx_has_nonce(cls, v: dict) -> dict:
+        if v.get("nonce") is None:
+            raise ValueError("Missing tx `nonce`")
+        return v
+
+
+def to_tx_request(cls: Type[BaseModel], v: BaseParamsSigned) -> TxRequest:
+    if v.signature is None:
+        raise ValueError("Missing `signature`")
+    return TxRequest(tx=v.dict(exclude="signature"), signature=v.signature)
+
+
+class CancelOrdersRequest(BaseModel):
+    cancel_orders: CancelOrdersParams
+
+    _validator = validator("cancel_orders", allow_reuse=True)(to_tx_request)
+
+
+class CancelProductOrdersRequest(BaseModel):
+    cancel_product_orders: CancelProductOrdersParams
+
+    _validator = validator("cancel_product_orders", allow_reuse=True)(to_tx_request)
+
+
+class WithdrawCollateralRequest(BaseModel):
+    withdraw_collateral: WithdrawCollateralParams
+
+    _validator = validator("withdraw_collateral", allow_reuse=True)(to_tx_request)
+
+
+class LiquidateSubaccountRequest(BaseModel):
+    liquidate_subaccount: LiquidateSubaccountParams
+
+    _validator = validator("liquidate_subaccount", allow_reuse=True)(to_tx_request)
+
+
+class MintLpRequest(BaseModel):
+    mint_lp: MintLpParams
+
+    _validator = validator("mint_lp", allow_reuse=True)(to_tx_request)
+
+
+class BurnLpRequest(BaseModel):
+    burn_lp: BurnLpParams
+
+    _validator = validator("burn_lp", allow_reuse=True)(to_tx_request)
+
+
+class LinkSignerRequest(BaseModel):
+    link_signer: LinkSignerParams
+
+    _validator = validator("link_signer", allow_reuse=True)(to_tx_request)
+
+
+ExecuteRequest = (
+    PlaceOrderRequest
+    | CancelOrdersRequest
+    | CancelProductOrdersRequest
+    | WithdrawCollateralRequest
+    | LiquidateSubaccountRequest
+    | MintLpRequest
+    | BurnLpRequest
+    | LinkSignerRequest
+)
+
+
+class ExecuteResponse(BaseModel):
+    status: str
+    error: Optional[str]
