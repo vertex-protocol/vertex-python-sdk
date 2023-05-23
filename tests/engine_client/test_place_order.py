@@ -148,9 +148,9 @@ def test_place_order_execute_success(
     with pytest.raises(
         ValueError, match="Missing `product_id` to sign place_order execute"
     ):
-        engine_client.sign(VertexExecute.PLACE_ORDER, order.dict())
+        engine_client._sign(VertexExecute.PLACE_ORDER, order.dict())
 
-    expected_signature = engine_client.sign(
+    expected_signature = engine_client._sign(
         VertexExecute.PLACE_ORDER,
         order.dict(),
         product_id=place_order_params.product_id,
@@ -246,17 +246,14 @@ def test_place_order_execute_provide_full_params(
         "nonce": gen_order_nonce(),
         "expiration": 10000,
     }
-    signature = sign_eip712_typed_data(
-        typed_data=build_eip712_typed_data(
-            VertexExecute.PLACE_ORDER, book_addrs[0], chain_id, order_params
-        ),
-        signer=signer,
+    signature = engine_client.sign(
+        VertexExecute.PLACE_ORDER, order_params, book_addrs[1], chain_id, signer
     )
+    order_params["sender"] = bytes32_to_hex(order_params["sender"])
     res = engine_client.place_order(
         {"product_id": product_id, "order": order_params, "signature": signature}
     )
     req = PlaceOrderRequest(**res.req)
 
     assert req.place_order.signature == signature
-    order_params["sender"] = bytes32_to_hex(order_params["sender"])
     assert req.place_order.order.dict() == order_params
