@@ -65,11 +65,13 @@ class EngineExecuteClient:
         return params
 
     def tx_nonce(self) -> int:
-        return self._querier.get_nonces(
-            QueryNoncesParams(address=self.signer.address)
-        ).tx_nonce
+        return int(
+            self._querier.get_nonces(
+                QueryNoncesParams(address=self.signer.address)
+            ).tx_nonce
+        )
 
-    def order_nonce(self, recv_time_ms: int = None) -> int:
+    def order_nonce(self, recv_time_ms: int = None) -> str:
         return gen_order_nonce(recv_time_ms)
 
     def prepare_execute_params(self, params: Type[BaseParams]) -> Type[BaseParams]:
@@ -79,7 +81,10 @@ class EngineExecuteClient:
 
     def execute(self, req: ExecuteRequest) -> ExecuteResponse:
         res = requests.post(f"{self.url}/execute", json=req.dict())
-        execute_res = ExecuteResponse(**res.json(), req=req.dict())
+        try:
+            execute_res = ExecuteResponse(**res.json(), req=req.dict())
+        except Exception:
+            raise Exception(res.text)
         if res.status_code != 200 or execute_res.status != "success":
             raise Exception(execute_res.error)
         return execute_res
@@ -196,9 +201,7 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecute.CANCEL_PRODUCT_ORDERS, params.dict()
         )
-        return self.execute(
-            CancelProductOrdersRequest(cancel_product_orders=params.validate())
-        )
+        return self.execute(CancelProductOrdersRequest(cancel_product_orders=params))
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))
@@ -217,9 +220,7 @@ class EngineExecuteClient:
             VertexExecute.LIQUIDATE_SUBACCOUNT,
             params.dict(),
         )
-        return self.execute(
-            LiquidateSubaccountRequest(liquidate_subaccount=params.validate())
-        )
+        return self.execute(LiquidateSubaccountRequest(liquidate_subaccount=params))
 
     def mint_lp(self, params: MintLpParams) -> ExecuteResponse:
         params = self.prepare_execute_params(MintLpParams.parse_obj(params))

@@ -3,7 +3,9 @@ from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.query import (
+    ContractsData,
     NoncesData,
+    QueryContractsParams,
     QueryNoncesParams,
     QueryRequest,
     QueryResponse,
@@ -29,3 +31,6 @@ class EngineQueryClient:
 
     def get_nonces(self, params: QueryNoncesParams) -> NoncesData:
         return self.query(QueryNoncesParams.parse_obj(params)).data
+
+    def get_contracts(self) -> ContractsData:
+        return self.query(QueryContractsParams()).data

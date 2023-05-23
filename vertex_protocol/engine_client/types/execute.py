@@ -49,6 +49,7 @@ class OrderParams(BaseParams):
 class PlaceOrderParams(SignatureParams):
     product_id: int
     order: OrderParams
+    spot_leverage: Optional[bool]
 
 
 class CancelOrdersParams(BaseParamsSigned):
@@ -99,6 +100,8 @@ class PlaceOrderRequest(BaseModel):
         if v.signature is None:
             raise ValueError("Missing `signature")
         v.order.__dict__["sender"] = bytes32_to_hex(v.order.sender)
+        for field in ["nonce", "priceX18", "amount", "expiration"]:
+            v.order.__dict__[field] = str(getattr(v.order, field))
         return v
 
 
@@ -117,6 +120,7 @@ def to_tx_request(cls: Type[BaseModel], v: BaseParamsSigned) -> TxRequest:
     if v.signature is None:
         raise ValueError("Missing `signature`")
     v.__dict__["sender"] = bytes32_to_hex(v.sender)
+    v.__dict__["nonce"] = str(v.nonce)
     return TxRequest(tx=v.dict(exclude="signature"), signature=v.signature)
 
 
