@@ -3,6 +3,7 @@ import requests
 from typing import Type
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.eip712.sign import (
+    get_eip712_typed_data_digest,
     sign_eip712_typed_data,
     build_eip712_typed_data,
 )
@@ -149,6 +150,16 @@ class EngineExecuteClient:
         if product_id >= len(self.book_addrs):
             raise ValueError(f"Invalid product_id {product_id} provided.")
         return self.book_addrs[product_id]
+
+    def get_order_digest(self, order: OrderParams, product_id: int) -> str:
+        return get_eip712_typed_data_digest(
+            build_eip712_typed_data(
+                VertexExecute.PLACE_ORDER,
+                self.book_addr(product_id),
+                self.chain_id,
+                order.dict(),
+            )
+        )
 
     def _sign(self, execute: VertexExecute, msg: dict, product_id: int = None) -> str:
         if execute.PLACE_ORDER and product_id is None:
