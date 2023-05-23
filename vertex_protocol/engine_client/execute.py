@@ -163,12 +163,10 @@ class EngineExecuteClient:
 
     def place_order(self, params: PlaceOrderParams) -> ExecuteResponse:
         params = PlaceOrderParams.parse_obj(params)
-        print("fuck", params)
         params.order = self.prepare_execute_params(params.order)
         params.signature = params.signature or self.sign(
             VertexExecute.PLACE_ORDER, params.order, params.product_id
         )
-        print("tf is this!", params)
         return self.execute(PlaceOrderRequest(place_order=params))
 
     def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
