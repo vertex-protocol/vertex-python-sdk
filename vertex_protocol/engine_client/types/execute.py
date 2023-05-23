@@ -1,7 +1,10 @@
-import binascii
 from typing import Optional, Type
 from pydantic import BaseModel, validator
-from vertex_protocol.utils.bytes32 import hex_to_bytes32
+from vertex_protocol.utils.bytes32 import (
+    bytes32_to_hex,
+    hex_to_bytes32,
+    subaccount_to_bytes32,
+)
 
 
 class SubaccountParams(BaseModel):
@@ -23,12 +26,8 @@ class BaseParams(BaseModel):
     def sender_to_bytes32(cls, v: Subaccount) -> bytes:
         if isinstance(v, str):
             return hex_to_bytes32(v)
-        elif isinstance(v, bytes):
-            return v
-        elif isinstance(v, Subaccount) and v.subaccount_owner is not None:
-            return hex_to_bytes32(
-                f"{v.subaccount_owner}{binascii.hexlify(v.subaccount_name.encode()).decode()}"
-            )
+        elif isinstance(v, SubaccountParams) and v.subaccount_owner is not None:
+            return subaccount_to_bytes32(v.subaccount_owner, v.subaccount_name)
         else:
             return v
 
@@ -99,6 +98,7 @@ class PlaceOrderRequest(BaseModel):
             raise ValueError("Missing order `nonce`")
         if v.signature is None:
             raise ValueError("Missing `signature")
+        v.order.__dict__["sender"] = bytes32_to_hex(v.order.sender)
         return v
 
 
@@ -116,6 +116,7 @@ class TxRequest(BaseModel):
 def to_tx_request(cls: Type[BaseModel], v: BaseParamsSigned) -> TxRequest:
     if v.signature is None:
         raise ValueError("Missing `signature`")
+    v.__dict__["sender"] = bytes32_to_hex(v.sender)
     return TxRequest(tx=v.dict(exclude="signature"), signature=v.signature)
 
 
@@ -175,4 +176,6 @@ ExecuteRequest = (
 
 class ExecuteResponse(BaseModel):
     status: str
+    signature: Optional[str]
     error: Optional[str]
+    req: Optional[dict]

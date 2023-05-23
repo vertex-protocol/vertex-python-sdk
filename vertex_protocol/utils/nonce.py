@@ -2,7 +2,7 @@ import datetime
 import random
 
 
-def gen_order_nonce(recv_time_ms=None, random_int=None) -> int:
+def gen_order_nonce(recv_time_ms: int = None, random_int: int = None) -> int:
     """Generates an order nonce based on recv_time_ms in milliseconds, defaulting to current_time + 90 seconds"""
     if recv_time_ms is None:
         recv_time_ms = int(

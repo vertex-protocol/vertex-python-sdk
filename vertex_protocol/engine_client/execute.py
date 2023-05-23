@@ -1,6 +1,6 @@
 import requests
 
-from typing import Optional, Type
+from typing import Type
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.eip712.sign import (
     sign_eip712_typed_data,
@@ -53,7 +53,7 @@ class EngineExecuteClient:
             and params.sender.subaccount_owner is None
         ):
             params.sender.subaccount_owner = self.signer.address
-            params.sender = params.sender_to_bytes32(params.sender)
+        params.sender = params.sender_to_bytes32(params.sender)
         return params
 
     def _inject_nonce_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
@@ -70,7 +70,7 @@ class EngineExecuteClient:
             QueryNoncesParams(address=self.signer.address)
         ).tx_nonce
 
-    def order_nonce(self, recv_time_ms: Optional[int]) -> int:
+    def order_nonce(self, recv_time_ms: int = None) -> int:
         return gen_order_nonce(recv_time_ms)
 
     def prepare_execute_params(self, params: Type[BaseParams]) -> Type[BaseParams]:
@@ -80,10 +80,8 @@ class EngineExecuteClient:
 
     def execute(self, req: ExecuteRequest) -> ExecuteResponse:
         res = requests.post(f"{self.url}/execute", json=req.dict())
-        if res.status_code != 200:
-            raise Exception(res.text)
-        execute_res = ExecuteResponse(**res.json())
-        if execute_res.status != "success":
+        execute_res = ExecuteResponse(**res.json(), req=req.dict())
+        if res.status_code != 200 or execute_res.status != "success":
             raise Exception(execute_res.error)
         return execute_res
 
@@ -117,7 +115,7 @@ class EngineExecuteClient:
             return self._opts.linked_signer
         if self._opts.signer is not None:
             return self.signer
-        raise AttributeError("Linked signer is not set.")
+        raise AttributeError("Signer is not set.")
 
     @endpoint_addr.setter
     def endpoint_addr(self, addr: str) -> None:
@@ -148,7 +146,7 @@ class EngineExecuteClient:
             raise ValueError(f"Invalid product_id {product_id} provided.")
         return self.book_addrs[product_id]
 
-    def sign(self, execute: VertexExecute, msg: dict, product_id: Optional[int]) -> str:
+    def sign(self, execute: VertexExecute, msg: dict, product_id: int = None) -> str:
         if execute.PLACE_ORDER and product_id is None:
             raise ValueError("Missing `product_id` to sign place_order execute")
         verifying_contract = (
@@ -164,79 +162,72 @@ class EngineExecuteClient:
         )
 
     def place_order(self, params: PlaceOrderParams) -> ExecuteResponse:
+        params = PlaceOrderParams.parse_obj(params)
+        print("fuck", params)
         params.order = self.prepare_execute_params(params.order)
         params.signature = params.signature or self.sign(
             VertexExecute.PLACE_ORDER, params.order, params.product_id
         )
-        return self.execute(
-            PlaceOrderRequest(place_order=PlaceOrderParams.parse_obj(params))
-        )
+        print("tf is this!", params)
+        return self.execute(PlaceOrderRequest(place_order=params))
 
     def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params))
         params.signature = params.signature or self.sign(
             VertexExecute.CANCEL_ORDERS, params.dict()
         )
-        return self.execute(
-            CancelOrdersRequest(cancel_orders=CancelOrdersParams.parse_obj(params))
-        )
+        return self.execute(CancelOrdersRequest(cancel_orders=params))
 
     def cancel_product_orders(
         self, params: CancelProductOrdersParams
     ) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(
+            CancelProductOrdersParams.parse_obj(params)
+        )
         params.signature = params.signature or self.sign(
             VertexExecute.CANCEL_PRODUCT_ORDERS, params.dict()
         )
         return self.execute(
-            CancelProductOrdersRequest(
-                cancel_product_orders=CancelProductOrdersParams.parse_obj(params)
-            )
+            CancelProductOrdersRequest(cancel_product_orders=params.validate())
         )
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))
         params.signature = params.signature or self.sign(
             VertexExecute.WITHDRAW_COLLATERAL, params.dict()
         )
-        return self.execute(
-            WithdrawCollateralRequest(
-                withdraw_collateral=WithdrawCollateralParams.parse_obj(params)
-            )
-        )
+        return self.execute(WithdrawCollateralRequest(withdraw_collateral=params))
 
     def liquidate_subaccount(
         self, params: LiquidateSubaccountParams
     ) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(
+            LiquidateSubaccountParams.parse_obj(params)
+        )
         params.signature = params.signature or self.sign(
             VertexExecute.LIQUIDATE_SUBACCOUNT, params.dict()
         )
         return self.execute(
-            LiquidateSubaccountRequest(
-                liquidate_subaccount=LiquidateSubaccountParams.parse_obj(params)
-            )
+            LiquidateSubaccountRequest(liquidate_subaccount=params.validate())
         )
 
     def mint_lp(self, params: MintLpParams) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(MintLpParams.parse_obj(params))
         params.signature = params.signature or self.sign(
             VertexExecute.MINT_LP, params.dict()
         )
-        return self.execute(MintLpRequest(mint_lp=MintLpParams.parse_obj(params)))
+        return self.execute(MintLpRequest(mint_lp=params))
 
     def burn_lp(self, params: BurnLpParams) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(BurnLpParams.parse_obj(params))
         params.signature = params.signature or self.sign(
             VertexExecute.BURN_LP, params.dict()
         )
-        return self.execute(BurnLpRequest(burn_lp=BurnLpParams.parse_obj(params)))
+        return self.execute(BurnLpRequest(burn_lp=params))
 
     def link_signer(self, params: LinkSignerParams) -> ExecuteResponse:
-        params = self.prepare_execute_params(params)
+        params = self.prepare_execute_params(LinkSignerParams.parse_obj(params))
         params.signature = params.signature or self.sign(
             VertexExecute.LINK_SIGNER, params.dict()
         )
-        return self.execute(
-            LinkSignerRequest(link_signer=LinkSignerParams.parse_obj(params))
-        )
+        return self.execute(LinkSignerRequest(link_signer=params))

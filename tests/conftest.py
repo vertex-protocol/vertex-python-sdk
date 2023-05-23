@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock, patch
 from eth_account import Account
 import pytest
 from vertex_protocol.engine_client import EngineClient
@@ -32,16 +33,16 @@ def endpoint_addr() -> str:
 @pytest.fixture
 def owners() -> list[str]:
     return [
-        "0x841fe4876763357975d60da128d8a54bb045d76a",
-        "0x12a0b4888021576eb10a67616dd3dd3d9ce206b6",
+        "0xBE3faCAE76A38c3b61492E57BF65ae0628c4A808",
+        "0xd1914656F48102b6eF086b4dc33f748F9D12A6F8",
     ]
 
 
 @pytest.fixture
 def senders() -> list[str]:
     return [
-        "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
-        "0x12a0b4888021576eb10a67616dd3dd3d9ce206b664656661756c740000000000",
+        "0xBE3faCAE76A38c3b61492E57BF65ae0628c4A80864656661756c740000000000",
+        "0xd1914656F48102b6eF086b4dc33f748F9D12A6F864656661756c740000000000",
     ]
 
 
@@ -161,3 +162,15 @@ def link_signer_params(senders: list[str]) -> dict:
         "signer": hex_to_bytes32(senders[1]),
         "nonce": 1,
     }
+
+
+@pytest.fixture
+def mock_post() -> MagicMock:
+    with patch("requests.post") as mock_post:
+        yield mock_post
+
+
+@pytest.fixture
+def mock_get() -> MagicMock:
+    with patch("requests.get") as mock_post:
+        yield mock_post

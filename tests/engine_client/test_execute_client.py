@@ -23,7 +23,7 @@ def test_execute_client_properties(
     with pytest.raises(AttributeError, match="Signer is not set"):
         engine_client.signer
 
-    with pytest.raises(AttributeError, match="Linked signer is not set"):
+    with pytest.raises(AttributeError, match="Signer is not set"):
         engine_client.linked_signer
 
     engine_client.endpoint_addr = endpoint_addr
