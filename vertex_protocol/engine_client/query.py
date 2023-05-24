@@ -4,15 +4,18 @@ from urllib.parse import urlencode
 from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.query import (
     ContractsData,
+    MarketLiquidityData,
     NoncesData,
     OrderData,
     QueryContractsParams,
+    QueryMarketLiquidityParams,
     QueryNoncesParams,
     QueryOrderParams,
     QueryRequest,
     QueryResponse,
     QueryStatusParams,
     QuerySubaccountInfoParams,
+    QuerySubaccountInfoTx,
     QuerySubaccountOpenOrdersParams,
     StatusData,
     SubaccountInfoData,
@@ -43,18 +46,27 @@ class EngineQueryClient:
     def get_contracts(self) -> ContractsData:
         return self.query(QueryContractsParams()).data
 
-    def get_nonces(self, params: QueryNoncesParams) -> NoncesData:
-        return self.query(QueryNoncesParams.parse_obj(params)).data
+    def get_nonces(self, address: str) -> NoncesData:
+        return self.query(QueryNoncesParams(address)).data
 
-    def get_order(self, params: QueryOrderParams) -> OrderData:
-        return self.query(QueryOrderParams.parse_obj(params)).data
+    def get_order(self, product_id: int, digest: str) -> OrderData:
+        return self.query(QueryOrderParams(product_id=product_id, digest=digest)).data
 
     def get_subaccount_info(
-        self, params: QuerySubaccountInfoParams
+        self, subaccount: str, txs: list[QuerySubaccountInfoTx] = None
     ) -> SubaccountInfoData:
-        return self.query(QuerySubaccountInfoParams.parse_obj(params)).data
+        return self.query(
+            QuerySubaccountInfoParams(subaccount=subaccount, txs=txs)
+        ).data
 
     def get_subaccount_open_orders(
-        self, params: QuerySubaccountOpenOrdersParams
+        self, product_id: int, sender: str
     ) -> SubaccountOpenOrdersData:
-        return self.query(QuerySubaccountOpenOrdersParams.parse_obj(params)).data
+        return self.query(
+            QuerySubaccountOpenOrdersParams(product_id=product_id, sender=sender)
+        ).data
+
+    def get_market_liquidity(self, product_id: int, depth: int) -> MarketLiquidityData:
+        return self.query(
+            QueryMarketLiquidityParams(product_id=product_id, depth=depth)
+        ).data

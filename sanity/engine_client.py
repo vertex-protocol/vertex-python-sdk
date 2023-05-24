@@ -7,6 +7,7 @@ from vertex_protocol.engine_client.types.execute import (
     OrderParams,
     SubaccountParams,
 )
+from vertex_protocol.engine_client.types.query import QueryMarketLiquidityParams
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
@@ -50,15 +51,17 @@ def run():
     print("order result", res.json(indent=2))
 
     print("querying order...")
-    order = client.get_order({"product_id": product_id, "digest": order_digest})
+    order = client.get_order(product_id, order_digest)
     print("order found", order.json(indent=2))
 
     print("querying subaccount info...")
-    subaccount_info = client.get_subaccount_info({"subaccount": order.sender})
+    subaccount_info = client.get_subaccount_info(order.sender)
     print("subaccount info", subaccount_info.json(indent=2))
 
     print("querying subaccount open orders...")
-    subaccount_open_orders = client.get_subaccount_open_orders(
-        {"sender": order.sender, "product_id": product_id}
-    )
+    subaccount_open_orders = client.get_subaccount_open_orders(product_id, order.sender)
     print("subaccount open orders", subaccount_open_orders.json(indent=2))
+
+    print("querying market liquidity...")
+    market_liquidity = client.get_market_liquidity(product_id, depth=10)
+    print("market liquidity", market_liquidity)

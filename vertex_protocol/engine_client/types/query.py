@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,
     BurnLpTx,
+    Liquidity,
     MintLpTx,
     SpotProduct,
     SubaccountHealth,
@@ -48,6 +49,12 @@ class QuerySubaccountOpenOrdersParams(BaseModel):
     sender: str
 
 
+class QueryMarketLiquidityParams(BaseModel):
+    type = VertexQuery.MARKET_LIQUIDITY.value
+    product_id: int
+    depth: int
+
+
 QueryRequest = (
     QueryStatusParams
     | QueryContractsParams
@@ -55,6 +62,7 @@ QueryRequest = (
     | QueryOrderParams
     | QuerySubaccountInfoParams
     | QuerySubaccountOpenOrdersParams
+    | QueryMarketLiquidityParams
 )
 
 StatusData = str
@@ -102,6 +110,12 @@ class SubaccountOpenOrdersData(BaseModel):
     orders: list[OrderData]
 
 
+class MarketLiquidityData(BaseModel):
+    bids: list[Liquidity]
+    asks: list[Liquidity]
+    timestamp: str
+
+
 QueryResponseData = (
     StatusData
     | ContractsData
@@ -109,6 +123,7 @@ QueryResponseData = (
     | OrderData
     | SubaccountInfoData
     | SubaccountOpenOrdersData
+    | MarketLiquidityData
 )
 
 

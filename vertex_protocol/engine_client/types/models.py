@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, conlist
 
 
 class MintLp(BaseModel):
@@ -147,3 +147,7 @@ class PerpProductLpState(BaseModel):
 class PerpProduct(BaseProduct):
     state: PerpProductState
     lp_state: PerpProductLpState
+
+
+# (price, amount)
+Liquidity = conlist(str, min_items=2, max_items=2)
