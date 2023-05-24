@@ -6,17 +6,28 @@ print("Hello Vertex")
 
 # Development
 
-1. Install poetry via `curl -sSL https://install.python-poetry.org | python3 -`
-2. Setup `.env` file and set the following envvars
+1. Install poetry
+   ```
+   $ curl -sSL https://install.python-poetry.org | python3 -
+   ```
+2. Setup a virtual environment and activate it
 
-```shell
-PRIVATE_KEY="xxx"
-```
+   ```
+   $ python3 -m venv venv
+   $ source ./venv/bin/activate
+   ```
+
+3. Install dependencies via `poetry install`
+4. Setup an `.env` file and set the following envvars
+
+   ```shell
+   PRIVATE_KEY="xxx"
+   ```
 
 # Run tests
 
 ```
-poetry run test
+$ poetry run test
 ```
 
 # Run sanity checks
