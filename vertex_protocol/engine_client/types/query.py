@@ -1,10 +1,13 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,
     BurnLpTx,
+    EngineStatus,
     Liquidity,
+    MaxOrderSizeDirection,
     MintLpTx,
+    ResponseStatus,
     SpotProduct,
     SubaccountHealth,
     SpotProductBalance,
@@ -64,6 +67,47 @@ class QueryMarketPriceParams(BaseModel):
     product_id: int
 
 
+class QueryMaxOrderSizeParams(BaseModel):
+    type = VertexQuery.MAX_ORDER_SIZE.value
+    sender: str
+    product_id: int
+    price_x18: str
+    direction: MaxOrderSizeDirection
+    spot_leverage: Optional[bool]
+
+    @validator("direction")
+    def direction_to_str(cls, v: MaxOrderSizeDirection) -> str:
+        return v.value
+
+
+class QueryMaxWithdrawableParams(BaseModel):
+    type = VertexQuery.MAX_WITHDRAWABLE.value
+    sender: str
+    product_id: int
+    spot_leverage: Optional[bool]
+
+
+class QueryMaxLpMintableParams(BaseModel):
+    type = VertexQuery.MAX_LP_MINTABLE.value
+    sender: str
+    product_id: int
+    spot_leverage: Optional[bool]
+
+
+class QueryFeeRatesParams(BaseModel):
+    type = VertexQuery.FEE_RATES.value
+    sender: str
+
+
+class QueryHealthGroupsParams(BaseModel):
+    type = VertexQuery.HEALTH_GROUPS.value
+
+
+class QueryLinkedSignerParams(BaseModel):
+    type = VertexQuery.LINKED_SIGNER.value
+    subaccount: str
+
+
 QueryRequest = (
     QueryStatusParams
     | QueryContractsParams
@@ -74,9 +118,15 @@ QueryRequest = (
     | QueryMarketLiquidityParams
     | QueryAllProductsParams
     | QueryMarketPriceParams
+    | QueryMaxOrderSizeParams
+    | QueryMaxWithdrawableParams
+    | QueryMaxLpMintableParams
+    | QueryFeeRatesParams
+    | QueryHealthGroupsParams
+    | QueryLinkedSignerParams
 )
 
-StatusData = str
+StatusData = EngineStatus
 
 
 class ContractsData(BaseModel):
@@ -138,6 +188,35 @@ class MarketPriceData(BaseModel):
     ask_x18: str
 
 
+class MaxOrderSizeData(BaseModel):
+    max_order_size: str
+
+
+class MaxWithdrawableData(BaseModel):
+    max_withdrawable: str
+
+
+class MaxLpMintableData(BaseModel):
+    max_base_amount: str
+
+
+class FeeRatesData(BaseModel):
+    taker_fee_rates_x18: list[str]
+    maker_fee_rates_x18: list[str]
+    liquidation_sequencer_fee: str
+    health_check_sequencer_fee: str
+    taker_sequencer_fee: str
+    withdraw_sequencer_fees: list[str]
+
+
+class HealthGroupsData(BaseModel):
+    health_groups: list[list[int]]
+
+
+class LinkedSignerData(BaseModel):
+    linked_signer: str
+
+
 QueryResponseData = (
     StatusData
     | ContractsData
@@ -148,9 +227,15 @@ QueryResponseData = (
     | MarketLiquidityData
     | AllProductsData
     | MarketPriceData
+    | MaxOrderSizeData
+    | MaxWithdrawableData
+    | MaxLpMintableData
+    | FeeRatesData
+    | HealthGroupsData
+    | LinkedSignerData
 )
 
 
 class QueryResponse(BaseModel):
-    status: str
-    data: QueryResponseData
+    status: ResponseStatus
+    data: QueryResponseData | str

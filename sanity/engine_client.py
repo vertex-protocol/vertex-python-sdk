@@ -7,7 +7,9 @@ from vertex_protocol.engine_client.types.execute import (
     OrderParams,
     SubaccountParams,
 )
-from vertex_protocol.engine_client.types.query import QueryMarketLiquidityParams
+from vertex_protocol.engine_client.types.query import (
+    QueryMaxOrderSizeParams,
+)
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
@@ -33,7 +35,7 @@ def run():
     client.book_addrs = contracts_data.book_addrs
 
     print("placing order...")
-    product_id = 2
+    product_id = 1
     order = OrderParams(
         sender=SubaccountParams(
             subaccount_owner=client.signer.address, subaccount_name="default"
@@ -73,3 +75,37 @@ def run():
     print("querying market price...")
     market_price = client.get_market_price(product_id)
     print("market price:", market_price.json(indent=2))
+
+    print("querying max order size...")
+    max_order_size = client.get_max_order_size(
+        QueryMaxOrderSizeParams(
+            sender=order.sender,
+            product_id=product_id,
+            price_x18=to_x18(25000),
+            direction="short",
+        )
+    )
+    print("max order size:", max_order_size)
+
+    print("querying max withdrawable...")
+    max_withdrawable = client.get_max_withdrawable(product_id, order.sender)
+    print("max withdrawable:", max_withdrawable.json(indent=2))
+
+    print("querying max lp mintable...")
+    max_lp_mintable = client.get_max_lp_mintable(
+        product_id=1,
+        sender=order.sender,
+    )
+    print("max lp mintable:", max_lp_mintable.json(indent=2))
+
+    print("querying fee rates...")
+    fee_rates = client.get_fee_rates(sender=order.sender)
+    print("fee rates:", fee_rates.json(indent=2))
+
+    print("querying health groups...")
+    health_groups = client.get_health_groups()
+    print("health groups:", health_groups.json(indent=2))
+
+    print("querying linked signer...")
+    linked_signer = client.get_linked_signer(subaccount=order.sender)
+    print("linked signer:", linked_signer.json(indent=2))

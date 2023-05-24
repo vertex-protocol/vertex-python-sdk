@@ -1,5 +1,6 @@
-from typing import Optional, Type
+from typing import Optional, Type, Union
 from pydantic import BaseModel, validator
+from vertex_protocol.engine_client.types.models import EngineStatus, ResponseStatus
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
     hex_to_bytes32,
@@ -190,7 +191,7 @@ ExecuteRequest = (
 
 
 class ExecuteResponse(BaseModel):
-    status: str
+    status: ResponseStatus
     signature: Optional[str]
     error: Optional[str]
     req: Optional[dict]

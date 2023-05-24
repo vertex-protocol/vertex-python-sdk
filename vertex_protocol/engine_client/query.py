@@ -5,14 +5,26 @@ from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.query import (
     AllProductsData,
     ContractsData,
+    FeeRatesData,
+    HealthGroupsData,
+    LinkedSignerData,
     MarketLiquidityData,
     MarketPriceData,
+    MaxLpMintableData,
+    MaxOrderSizeData,
+    MaxWithdrawableData,
     NoncesData,
     OrderData,
     QueryAllProductsParams,
     QueryContractsParams,
+    QueryFeeRatesParams,
+    QueryHealthGroupsParams,
+    QueryLinkedSignerParams,
     QueryMarketLiquidityParams,
     QueryMarketPriceParams,
+    QueryMaxLpMintableParams,
+    QueryMaxOrderSizeParams,
+    QueryMaxWithdrawableParams,
     QueryNoncesParams,
     QueryOrderParams,
     QueryRequest,
@@ -25,6 +37,10 @@ from vertex_protocol.engine_client.types.query import (
     SubaccountInfoData,
     SubaccountOpenOrdersData,
 )
+from vertex_protocol.utils.exceptions import (
+    BadStatusCodeException,
+    QueryFailedException,
+)
 
 
 class EngineQueryClient:
@@ -36,12 +52,13 @@ class EngineQueryClient:
         self.url = self._opts.url
 
     def query(self, req: QueryRequest) -> QueryResponse:
-        res = requests.get(f"{self.url}/query?{urlencode(req.dict())}")
+        req_params = {k: v for k, v in req.dict().items() if v is not None}
+        res = requests.get(f"{self.url}/query?{urlencode(req_params)}")
         if res.status_code != 200:
-            raise Exception(res.text)
+            raise BadStatusCodeException(res.text)
         query_res = QueryResponse(**res.json())
         if query_res.status != "success":
-            raise Exception(res.text)
+            raise QueryFailedException(res.text)
         return query_res
 
     def get_status(self) -> StatusData:
@@ -80,3 +97,33 @@ class EngineQueryClient:
 
     def get_market_price(self, product_id: int) -> MarketPriceData:
         return self.query(QueryMarketPriceParams(product_id=product_id)).data
+
+    def get_max_order_size(self, params: QueryMaxOrderSizeParams) -> MaxOrderSizeData:
+        return self.query(QueryMaxOrderSizeParams.parse_obj(params)).data
+
+    def get_max_withdrawable(
+        self, product_id: int, sender: str, spot_leverage: bool = None
+    ) -> MaxWithdrawableData:
+        return self.query(
+            QueryMaxWithdrawableParams(
+                product_id=product_id, sender=sender, spot_leverage=spot_leverage
+            )
+        ).data
+
+    def get_max_lp_mintable(
+        self, product_id: int, sender: str, spot_leverage: bool = None
+    ) -> MaxLpMintableData:
+        return self.query(
+            QueryMaxLpMintableParams(
+                product_id=product_id, sender=sender, spot_leverage=spot_leverage
+            )
+        ).data
+
+    def get_fee_rates(self, sender: str) -> FeeRatesData:
+        return self.query(QueryFeeRatesParams(sender=sender)).data
+
+    def get_health_groups(self) -> HealthGroupsData:
+        return self.query(QueryHealthGroupsParams()).data
+
+    def get_linked_signer(self, subaccount: str) -> LinkedSignerData:
+        return self.query(QueryLinkedSignerParams(subaccount=subaccount))

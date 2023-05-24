@@ -1,4 +1,15 @@
+from enum import Enum
 from pydantic import BaseModel, conlist
+
+
+class ResponseStatus(str, Enum):
+    SUCCESS = "success"
+    FAILURE = "failure"
+
+
+class EngineStatus(str, Enum):
+    ACTIVE = "active"
+    FAILED = "failed"
 
 
 class MintLp(BaseModel):
@@ -147,6 +158,11 @@ class PerpProductLpState(BaseModel):
 class PerpProduct(BaseProduct):
     state: PerpProductState
     lp_state: PerpProductLpState
+
+
+class MaxOrderSizeDirection(str, Enum):
+    LONG = "long"
+    SHORT = "short"
 
 
 # (price, amount)
