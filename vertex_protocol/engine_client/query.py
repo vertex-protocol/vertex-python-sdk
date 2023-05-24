@@ -3,12 +3,16 @@ from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.query import (
+    AllProductsData,
     ContractsData,
     MarketLiquidityData,
+    MarketPriceData,
     NoncesData,
     OrderData,
+    QueryAllProductsParams,
     QueryContractsParams,
     QueryMarketLiquidityParams,
+    QueryMarketPriceParams,
     QueryNoncesParams,
     QueryOrderParams,
     QueryRequest,
@@ -70,3 +74,9 @@ class EngineQueryClient:
         return self.query(
             QueryMarketLiquidityParams(product_id=product_id, depth=depth)
         ).data
+
+    def get_all_products(self) -> AllProductsData:
+        return self.query(QueryAllProductsParams()).data
+
+    def get_market_price(self, product_id: int) -> MarketPriceData:
+        return self.query(QueryMarketPriceParams(product_id=product_id)).data

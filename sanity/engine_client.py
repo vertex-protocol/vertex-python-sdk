@@ -22,7 +22,7 @@ def run():
 
     print("querying status...")
     status_data = client.get_status()
-    print("status", status_data)
+    print("status:", status_data)
 
     print("querying contracts...")
     contracts_data = client.get_contracts()
@@ -44,11 +44,11 @@ def run():
         nonce=gen_order_nonce(),
     )
     order_digest = client.get_order_digest(order, product_id)
-    print("order digest", order_digest)
+    print("order digest:", order_digest)
 
     place_order = PlaceOrderParams(product_id=product_id, order=order)
     res = client.place_order(place_order)
-    print("order result", res.json(indent=2))
+    print("order result:", res.json(indent=2))
 
     print("querying order...")
     order = client.get_order(product_id, order_digest)
@@ -56,12 +56,20 @@ def run():
 
     print("querying subaccount info...")
     subaccount_info = client.get_subaccount_info(order.sender)
-    print("subaccount info", subaccount_info.json(indent=2))
+    print("subaccount info:", subaccount_info.json(indent=2))
 
     print("querying subaccount open orders...")
     subaccount_open_orders = client.get_subaccount_open_orders(product_id, order.sender)
-    print("subaccount open orders", subaccount_open_orders.json(indent=2))
+    print("subaccount open orders:", subaccount_open_orders.json(indent=2))
 
     print("querying market liquidity...")
     market_liquidity = client.get_market_liquidity(product_id, depth=10)
-    print("market liquidity", market_liquidity)
+    print("market liquidity:", market_liquidity)
+
+    print("querying all products...")
+    all_products = client.get_all_products()
+    print("all products:", all_products.json(indent=2))
+
+    print("querying market price...")
+    market_price = client.get_market_price(product_id)
+    print("market price:", market_price.json(indent=2))

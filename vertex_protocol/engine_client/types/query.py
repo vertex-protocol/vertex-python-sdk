@@ -55,6 +55,15 @@ class QueryMarketLiquidityParams(BaseModel):
     depth: int
 
 
+class QueryAllProductsParams(BaseModel):
+    type = VertexQuery.ALL_PRODUCTS.value
+
+
+class QueryMarketPriceParams(BaseModel):
+    type = VertexQuery.MARKET_PRICE.value
+    product_id: int
+
+
 QueryRequest = (
     QueryStatusParams
     | QueryContractsParams
@@ -63,6 +72,8 @@ QueryRequest = (
     | QuerySubaccountInfoParams
     | QuerySubaccountOpenOrdersParams
     | QueryMarketLiquidityParams
+    | QueryAllProductsParams
+    | QueryMarketPriceParams
 )
 
 StatusData = str
@@ -116,6 +127,17 @@ class MarketLiquidityData(BaseModel):
     timestamp: str
 
 
+class AllProductsData(BaseModel):
+    spot_products: list[SpotProduct]
+    perp_products: list[PerpProduct]
+
+
+class MarketPriceData(BaseModel):
+    product_id: int
+    bid_x18: str
+    ask_x18: str
+
+
 QueryResponseData = (
     StatusData
     | ContractsData
@@ -124,6 +146,8 @@ QueryResponseData = (
     | SubaccountInfoData
     | SubaccountOpenOrdersData
     | MarketLiquidityData
+    | AllProductsData
+    | MarketPriceData
 )
 
 
