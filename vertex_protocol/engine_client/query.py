@@ -12,7 +12,11 @@ from vertex_protocol.engine_client.types.query import (
     QueryRequest,
     QueryResponse,
     QueryStatusParams,
+    QuerySubaccountInfoParams,
+    QuerySubaccountOpenOrdersParams,
     StatusData,
+    SubaccountInfoData,
+    SubaccountOpenOrdersData,
 )
 
 
@@ -44,3 +48,13 @@ class EngineQueryClient:
 
     def get_order(self, params: QueryOrderParams) -> OrderData:
         return self.query(QueryOrderParams.parse_obj(params)).data
+
+    def get_subaccount_info(
+        self, params: QuerySubaccountInfoParams
+    ) -> SubaccountInfoData:
+        return self.query(QuerySubaccountInfoParams.parse_obj(params)).data
+
+    def get_subaccount_open_orders(
+        self, params: QuerySubaccountOpenOrdersParams
+    ) -> SubaccountOpenOrdersData:
+        return self.query(QuerySubaccountOpenOrdersParams.parse_obj(params)).data

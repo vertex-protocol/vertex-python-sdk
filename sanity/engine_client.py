@@ -1,5 +1,6 @@
 from pprint import pprint
 import time
+import os
 from vertex_protocol.engine_client import EngineClient, EngineClientOpts
 from vertex_protocol.engine_client.types.execute import (
     PlaceOrderParams,
@@ -10,7 +11,7 @@ from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 
-private_key = "0xa0dff2b40838cef1ae86ddd11b8c2a34aa52d2d6f4355e3eb9abbaaf8eccee91"
+private_key = os.getenv("PRIVATE_KEY")
 backend_url = "https://test.vertexprotocol-backend.com"
 
 
@@ -50,4 +51,14 @@ def run():
 
     print("querying order...")
     order = client.get_order({"product_id": product_id, "digest": order_digest})
-    print("found order", order.json(indent=2))
+    print("order found", order.json(indent=2))
+
+    print("querying subaccount info...")
+    subaccount_info = client.get_subaccount_info({"subaccount": order.sender})
+    print("subaccount info", subaccount_info.json(indent=2))
+
+    print("querying subaccount open orders...")
+    subaccount_open_orders = client.get_subaccount_open_orders(
+        {"sender": order.sender, "product_id": product_id}
+    )
+    print("subaccount open orders", subaccount_open_orders.json(indent=2))

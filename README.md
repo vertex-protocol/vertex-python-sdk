@@ -7,3 +7,20 @@ print("Hello Vertex")
 # Development
 
 1. Install poetry via `curl -sSL https://install.python-poetry.org | python3 -`
+2. Setup `.env` file and set the following envvars
+
+```shell
+PRIVATE_KEY="xxx"
+```
+
+# Run tests
+
+```
+poetry run test
+```
+
+# Run sanity checks
+
+- `poetry run engine-sanity`: runs sanity checks for the `engine-client`.
+- `poetry run indexer-sanity`: runs sanity checks for the `indexer-client`.
+- `poetry run client-sanity`: runs sanity checks for the top-level client.

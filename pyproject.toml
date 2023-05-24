@@ -18,6 +18,7 @@ ruff = "*"
 black = "*"
 pytest = "^7.3.1"
 pre-commit = "^3.3.2"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.scripts]
 test = "pytest:main"

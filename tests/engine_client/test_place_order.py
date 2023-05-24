@@ -256,4 +256,8 @@ def test_place_order_execute_provide_full_params(
     req = PlaceOrderRequest(**res.req)
 
     assert req.place_order.signature == signature
-    assert req.place_order.order.dict() == order_params
+    assert req.place_order.order.amount == str(order_params["amount"])
+    assert req.place_order.order.priceX18 == str(order_params["priceX18"])
+    assert req.place_order.order.sender == order_params["sender"]
+    assert req.place_order.order.nonce == str(order_params["nonce"])
+    assert req.place_order.order.expiration == str(order_params["expiration"])
