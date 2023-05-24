@@ -32,7 +32,7 @@ def build_eip712_typed_data(
 
 def get_eip712_typed_data_digest(typed_data: EIP712TypedData) -> str:
     encoded_data = encode_structured_data(typed_data.dict())
-    return _hash_eip191_message(encoded_data).hex()
+    return f"0x{_hash_eip191_message(encoded_data).hex()}"
 
 
 def sign_eip712_typed_data(typed_data: EIP712TypedData, signer: LocalAccount) -> str:

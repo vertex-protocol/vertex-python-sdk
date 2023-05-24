@@ -21,6 +21,9 @@ pre-commit = "^3.3.2"
 
 [tool.poetry.scripts]
 test = "pytest:main"
+engine-sanity = "sanity.engine_client:run"
+indexer-sanity = "sanity.indexer_client:run"
+client-sanity = "sanity.client:run"
 
 [[tool.poetry.source]]
 name = "private"

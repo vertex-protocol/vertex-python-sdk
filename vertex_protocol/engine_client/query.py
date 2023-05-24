@@ -5,10 +5,14 @@ from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.query import (
     ContractsData,
     NoncesData,
+    OrderData,
     QueryContractsParams,
     QueryNoncesParams,
+    QueryOrderParams,
     QueryRequest,
     QueryResponse,
+    QueryStatusParams,
+    StatusData,
 )
 
 
@@ -29,8 +33,14 @@ class EngineQueryClient:
             raise Exception(res.text)
         return query_res
 
-    def get_nonces(self, params: QueryNoncesParams) -> NoncesData:
-        return self.query(QueryNoncesParams.parse_obj(params)).data
+    def get_status(self) -> StatusData:
+        return self.query(QueryStatusParams()).data
 
     def get_contracts(self) -> ContractsData:
         return self.query(QueryContractsParams()).data
+
+    def get_nonces(self, params: QueryNoncesParams) -> NoncesData:
+        return self.query(QueryNoncesParams.parse_obj(params)).data
+
+    def get_order(self, params: QueryOrderParams) -> OrderData:
+        return self.query(QueryOrderParams.parse_obj(params)).data
