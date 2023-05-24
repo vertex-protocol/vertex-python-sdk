@@ -49,6 +49,7 @@ class OrderParams(BaseParams):
 class PlaceOrderParams(SignatureParams):
     product_id: int
     order: OrderParams
+    digest: Optional[str]
     spot_leverage: Optional[bool]
 
 
@@ -65,6 +66,7 @@ class CancelProductOrdersParams(BaseParamsSigned):
 class WithdrawCollateralParams(BaseParamsSigned):
     productId: int
     amount: int
+    spot_leverage: Optional[bool]
 
 
 class LiquidateSubaccountParams(BaseParamsSigned):
@@ -79,6 +81,7 @@ class MintLpParams(BaseParamsSigned):
     amountBase: int
     quoteAmountLow: int
     quoteAmountHigh: int
+    spot_leverage: Optional[bool]
 
 
 class BurnLpParams(BaseParamsSigned):
@@ -107,7 +110,8 @@ class PlaceOrderRequest(BaseModel):
 
 class TxRequest(BaseModel):
     tx: dict
-    signature: str
+    spot_leverage: Optional[bool]
+    digest: Optional[str]
 
     @validator("tx")
     def tx_has_nonce(cls, v: dict) -> dict:
@@ -121,7 +125,14 @@ def to_tx_request(cls: Type[BaseModel], v: BaseParamsSigned) -> TxRequest:
         raise ValueError("Missing `signature`")
     v.__dict__["sender"] = bytes32_to_hex(v.sender)
     v.__dict__["nonce"] = str(v.nonce)
-    return TxRequest(tx=v.dict(exclude="signature"), signature=v.signature)
+    req = TxRequest(
+        tx=v.dict(exclude="signature,digest,spot_leverage"), signature=v.signature
+    )
+    if v.dict().get("spot_leverage"):
+        req.spot_leverage = v.dict().get("spot_leverage")
+    if v.dict().get("digest"):
+        req.digest = v.dict().get("digest")
+    return req
 
 
 class CancelOrdersRequest(BaseModel):
