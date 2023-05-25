@@ -1,6 +1,7 @@
-from typing import Optional, Type, Union
-from pydantic import BaseModel, validator
+from typing import Optional, Type
+from pydantic import validator
 from vertex_protocol.engine_client.types.models import EngineStatus, ResponseStatus
+from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
     hex_to_bytes32,
@@ -8,15 +9,17 @@ from vertex_protocol.utils.bytes32 import (
 )
 
 
-class SubaccountParams(BaseModel):
+class SubaccountParams(VertexBaseModel):
     subaccount_owner: Optional[str]
     subaccount_name: str
 
 
 Subaccount = str | bytes | SubaccountParams
 
+Digest = str | bytes
 
-class BaseParams(BaseModel):
+
+class BaseParams(VertexBaseModel):
     sender: Subaccount
     nonce: Optional[int]
 
@@ -33,7 +36,7 @@ class BaseParams(BaseModel):
             return v
 
 
-class SignatureParams(BaseModel):
+class SignatureParams(VertexBaseModel):
     signature: Optional[str]
 
 
@@ -56,7 +59,14 @@ class PlaceOrderParams(SignatureParams):
 
 class CancelOrdersParams(BaseParamsSigned):
     productIds: list[int]
-    digests: list[str]
+    digests: list[Digest]
+
+    @validator("digests")
+    def digests_to_bytes32(cls, v: list[Digest]) -> list[bytes]:
+        return [
+            hex_to_bytes32(digest) if isinstance(digest, str) else digest
+            for digest in v
+        ]
 
 
 class CancelProductOrdersParams(BaseParamsSigned):
@@ -94,7 +104,7 @@ class LinkSignerParams(BaseParamsSigned):
     signer: Subaccount
 
 
-class PlaceOrderRequest(BaseModel):
+class PlaceOrderRequest(VertexBaseModel):
     place_order: PlaceOrderParams
 
     @validator("place_order")
@@ -109,70 +119,81 @@ class PlaceOrderRequest(BaseModel):
         return v
 
 
-class TxRequest(BaseModel):
+class TxRequest(VertexBaseModel):
     tx: dict
+    signature: str
     spot_leverage: Optional[bool]
     digest: Optional[str]
 
     @validator("tx")
-    def tx_has_nonce(cls, v: dict) -> dict:
+    def validate(cls, v: dict) -> dict:
         if v.get("nonce") is None:
             raise ValueError("Missing tx `nonce`")
+        v["sender"] = (
+            bytes32_to_hex(v["sender"])
+            if isinstance(v["sender"], bytes)
+            else v["sender"]
+        )
+        v["nonce"] = str(v["nonce"])
         return v
 
 
-def to_tx_request(cls: Type[BaseModel], v: BaseParamsSigned) -> TxRequest:
+def to_tx_request(cls: Type[VertexBaseModel], v: BaseParamsSigned) -> TxRequest:
     if v.signature is None:
         raise ValueError("Missing `signature`")
-    v.__dict__["sender"] = bytes32_to_hex(v.sender)
-    v.__dict__["nonce"] = str(v.nonce)
-    req = TxRequest(
-        tx=v.dict(exclude="signature,digest,spot_leverage"), signature=v.signature
+    return TxRequest(
+        tx=v.dict(exclude={"signature", "digest", "spot_leverage"}),
+        signature=v.signature,
+        spot_leverage=v.dict().get("spot_leverage"),
+        digest=v.dict().get("digest"),
     )
-    if v.dict().get("spot_leverage"):
-        req.spot_leverage = v.dict().get("spot_leverage")
-    if v.dict().get("digest"):
-        req.digest = v.dict().get("digest")
-    return req
 
 
-class CancelOrdersRequest(BaseModel):
+class CancelOrdersRequest(VertexBaseModel):
     cancel_orders: CancelOrdersParams
+
+    @validator("cancel_orders")
+    def digests_to_hex(cls, v: CancelOrdersParams) -> CancelOrdersParams:
+        v.__dict__["digests"] = [
+            bytes32_to_hex(digest) if isinstance(digest, bytes) else digest
+            for digest in v.digests
+        ]
+        return v
 
     _validator = validator("cancel_orders", allow_reuse=True)(to_tx_request)
 
 
-class CancelProductOrdersRequest(BaseModel):
+class CancelProductOrdersRequest(VertexBaseModel):
     cancel_product_orders: CancelProductOrdersParams
 
     _validator = validator("cancel_product_orders", allow_reuse=True)(to_tx_request)
 
 
-class WithdrawCollateralRequest(BaseModel):
+class WithdrawCollateralRequest(VertexBaseModel):
     withdraw_collateral: WithdrawCollateralParams
 
     _validator = validator("withdraw_collateral", allow_reuse=True)(to_tx_request)
 
 
-class LiquidateSubaccountRequest(BaseModel):
+class LiquidateSubaccountRequest(VertexBaseModel):
     liquidate_subaccount: LiquidateSubaccountParams
 
     _validator = validator("liquidate_subaccount", allow_reuse=True)(to_tx_request)
 
 
-class MintLpRequest(BaseModel):
+class MintLpRequest(VertexBaseModel):
     mint_lp: MintLpParams
 
     _validator = validator("mint_lp", allow_reuse=True)(to_tx_request)
 
 
-class BurnLpRequest(BaseModel):
+class BurnLpRequest(VertexBaseModel):
     burn_lp: BurnLpParams
 
     _validator = validator("burn_lp", allow_reuse=True)(to_tx_request)
 
 
-class LinkSignerRequest(BaseModel):
+class LinkSignerRequest(VertexBaseModel):
     link_signer: LinkSignerParams
 
     _validator = validator("link_signer", allow_reuse=True)(to_tx_request)
@@ -190,7 +211,7 @@ ExecuteRequest = (
 )
 
 
-class ExecuteResponse(BaseModel):
+class ExecuteResponse(VertexBaseModel):
     status: ResponseStatus
     signature: Optional[str]
     error: Optional[str]

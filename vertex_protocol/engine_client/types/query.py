@@ -1,5 +1,6 @@
 from typing import Optional
-from pydantic import BaseModel, validator
+from pydantic import validator
+from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,
     BurnLpTx,
@@ -18,20 +19,20 @@ from vertex_protocol.engine_client.types.models import (
 from vertex_protocol.utils.engine import VertexQuery
 
 
-class QueryStatusParams(BaseModel):
+class QueryStatusParams(VertexBaseModel):
     type = VertexQuery.STATUS.value
 
 
-class QueryContractsParams(BaseModel):
+class QueryContractsParams(VertexBaseModel):
     type = VertexQuery.CONTRACTS.value
 
 
-class QueryNoncesParams(BaseModel):
+class QueryNoncesParams(VertexBaseModel):
     type = VertexQuery.NONCES.value
     address: str
 
 
-class QueryOrderParams(BaseModel):
+class QueryOrderParams(VertexBaseModel):
     type = VertexQuery.ORDER.value
     product_id: int
     digest: str
@@ -40,34 +41,34 @@ class QueryOrderParams(BaseModel):
 QuerySubaccountInfoTx = MintLpTx | BurnLpTx | ApplyDeltaTx
 
 
-class QuerySubaccountInfoParams(BaseModel):
+class QuerySubaccountInfoParams(VertexBaseModel):
     type = VertexQuery.SUBACCOUNT_INFO.value
     subaccount: str
     txs: Optional[list[QuerySubaccountInfoTx]]
 
 
-class QuerySubaccountOpenOrdersParams(BaseModel):
+class QuerySubaccountOpenOrdersParams(VertexBaseModel):
     type = VertexQuery.SUBACCOUNT_ORDERS.value
     product_id: int
     sender: str
 
 
-class QueryMarketLiquidityParams(BaseModel):
+class QueryMarketLiquidityParams(VertexBaseModel):
     type = VertexQuery.MARKET_LIQUIDITY.value
     product_id: int
     depth: int
 
 
-class QueryAllProductsParams(BaseModel):
+class QueryAllProductsParams(VertexBaseModel):
     type = VertexQuery.ALL_PRODUCTS.value
 
 
-class QueryMarketPriceParams(BaseModel):
+class QueryMarketPriceParams(VertexBaseModel):
     type = VertexQuery.MARKET_PRICE.value
     product_id: int
 
 
-class QueryMaxOrderSizeParams(BaseModel):
+class QueryMaxOrderSizeParams(VertexBaseModel):
     type = VertexQuery.MAX_ORDER_SIZE.value
     sender: str
     product_id: int
@@ -80,30 +81,30 @@ class QueryMaxOrderSizeParams(BaseModel):
         return v.value
 
 
-class QueryMaxWithdrawableParams(BaseModel):
+class QueryMaxWithdrawableParams(VertexBaseModel):
     type = VertexQuery.MAX_WITHDRAWABLE.value
     sender: str
     product_id: int
     spot_leverage: Optional[bool]
 
 
-class QueryMaxLpMintableParams(BaseModel):
+class QueryMaxLpMintableParams(VertexBaseModel):
     type = VertexQuery.MAX_LP_MINTABLE.value
     sender: str
     product_id: int
     spot_leverage: Optional[bool]
 
 
-class QueryFeeRatesParams(BaseModel):
+class QueryFeeRatesParams(VertexBaseModel):
     type = VertexQuery.FEE_RATES.value
     sender: str
 
 
-class QueryHealthGroupsParams(BaseModel):
+class QueryHealthGroupsParams(VertexBaseModel):
     type = VertexQuery.HEALTH_GROUPS.value
 
 
-class QueryLinkedSignerParams(BaseModel):
+class QueryLinkedSignerParams(VertexBaseModel):
     type = VertexQuery.LINKED_SIGNER.value
     subaccount: str
 
@@ -129,18 +130,18 @@ QueryRequest = (
 StatusData = EngineStatus
 
 
-class ContractsData(BaseModel):
+class ContractsData(VertexBaseModel):
     chain_id: str
     endpoint_addr: str
     book_addrs: list[str]
 
 
-class NoncesData(BaseModel):
+class NoncesData(VertexBaseModel):
     tx_nonce: str
     order_nonce: str
 
 
-class OrderData(BaseModel):
+class OrderData(VertexBaseModel):
     product_id: int
     sender: str
     price_x18: str
@@ -152,7 +153,7 @@ class OrderData(BaseModel):
     placed_at: str
 
 
-class SubaccountInfoData(BaseModel):
+class SubaccountInfoData(VertexBaseModel):
     subaccount: str
     exists: bool
     healths: list[SubaccountHealth]
@@ -165,42 +166,42 @@ class SubaccountInfoData(BaseModel):
     perp_products: list[PerpProduct]
 
 
-class SubaccountOpenOrdersData(BaseModel):
+class SubaccountOpenOrdersData(VertexBaseModel):
     sender: str
     product_id: int
     orders: list[OrderData]
 
 
-class MarketLiquidityData(BaseModel):
+class MarketLiquidityData(VertexBaseModel):
     bids: list[Liquidity]
     asks: list[Liquidity]
     timestamp: str
 
 
-class AllProductsData(BaseModel):
+class AllProductsData(VertexBaseModel):
     spot_products: list[SpotProduct]
     perp_products: list[PerpProduct]
 
 
-class MarketPriceData(BaseModel):
+class MarketPriceData(VertexBaseModel):
     product_id: int
     bid_x18: str
     ask_x18: str
 
 
-class MaxOrderSizeData(BaseModel):
+class MaxOrderSizeData(VertexBaseModel):
     max_order_size: str
 
 
-class MaxWithdrawableData(BaseModel):
+class MaxWithdrawableData(VertexBaseModel):
     max_withdrawable: str
 
 
-class MaxLpMintableData(BaseModel):
+class MaxLpMintableData(VertexBaseModel):
     max_base_amount: str
 
 
-class FeeRatesData(BaseModel):
+class FeeRatesData(VertexBaseModel):
     taker_fee_rates_x18: list[str]
     maker_fee_rates_x18: list[str]
     liquidation_sequencer_fee: str
@@ -209,11 +210,11 @@ class FeeRatesData(BaseModel):
     withdraw_sequencer_fees: list[str]
 
 
-class HealthGroupsData(BaseModel):
+class HealthGroupsData(VertexBaseModel):
     health_groups: list[list[int]]
 
 
-class LinkedSignerData(BaseModel):
+class LinkedSignerData(VertexBaseModel):
     linked_signer: str
 
 
@@ -236,6 +237,6 @@ QueryResponseData = (
 )
 
 
-class QueryResponse(BaseModel):
+class QueryResponse(VertexBaseModel):
     status: ResponseStatus
     data: QueryResponseData | str

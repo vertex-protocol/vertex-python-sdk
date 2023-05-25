@@ -1,5 +1,6 @@
 from enum import Enum
-from pydantic import BaseModel, conlist
+from vertex_protocol.utils.model import VertexBaseModel
+from pydantic import conlist
 
 
 class ResponseStatus(str, Enum):
@@ -12,7 +13,7 @@ class EngineStatus(str, Enum):
     FAILED = "failed"
 
 
-class MintLp(BaseModel):
+class MintLp(VertexBaseModel):
     product_id: int
     subaccount: str
     amount_base: str
@@ -20,70 +21,70 @@ class MintLp(BaseModel):
     quote_amount_high: str
 
 
-class BurnLp(BaseModel):
+class BurnLp(VertexBaseModel):
     product_id: int
     subaccount: str
     amount_lp: str
 
 
-class ApplyDelta(BaseModel):
+class ApplyDelta(VertexBaseModel):
     product_id: int
     subaccount: str
     amount_delta: str
     v_quote_delta: str
 
 
-class MintLpTx(BaseModel):
+class MintLpTx(VertexBaseModel):
     mint_lp: MintLp
 
 
-class BurnLpTx(BaseModel):
+class BurnLpTx(VertexBaseModel):
     burn_lp: BurnLp
 
 
-class ApplyDeltaTx(BaseModel):
+class ApplyDeltaTx(VertexBaseModel):
     apply_delta: ApplyDelta
 
 
-class SubaccountHealth(BaseModel):
+class SubaccountHealth(VertexBaseModel):
     assets: str
     liabilities: str
     health: str
 
 
-class SpotLpBalance(BaseModel):
+class SpotLpBalance(VertexBaseModel):
     amount: str
 
 
-class SpotBalance(BaseModel):
+class SpotBalance(VertexBaseModel):
     amount: str
     last_cumulative_multiplier_x18: str
 
 
-class SpotProductBalance(BaseModel):
+class SpotProductBalance(VertexBaseModel):
     product_id: int
     lp_balance: SpotLpBalance
     balance: SpotBalance
 
 
-class PerpLpBalance(BaseModel):
+class PerpLpBalance(VertexBaseModel):
     amount: str
     last_cumulative_funding_x18: str
 
 
-class PerpBalance(BaseModel):
+class PerpBalance(VertexBaseModel):
     amount: str
     v_quote_balance: str
     last_cumulative_funding_x18: str
 
 
-class PerpProductBalance(BaseModel):
+class PerpProductBalance(VertexBaseModel):
     product_id: int
     lp_balance: PerpLpBalance
     balance: PerpBalance
 
 
-class ProductRisk(BaseModel):
+class ProductRisk(VertexBaseModel):
     long_weight_initial_x18: str
     short_weight_initial_x18: str
     long_weight_maintenance_x18: str
@@ -91,7 +92,7 @@ class ProductRisk(BaseModel):
     large_position_penalty_x18: str
 
 
-class ProductBookInfo(BaseModel):
+class ProductBookInfo(VertexBaseModel):
     size_increment: str
     price_increment_x18: str
     min_size: str
@@ -99,18 +100,18 @@ class ProductBookInfo(BaseModel):
     lp_spread_x18: str
 
 
-class BaseProduct(BaseModel):
+class BaseProduct(VertexBaseModel):
     product_id: int
     oracle_price_x18: str
     risk: ProductRisk
     book_info: ProductBookInfo
 
 
-class BaseProductLpState(BaseModel):
+class BaseProductLpState(VertexBaseModel):
     supply: str
 
 
-class SpotProductConfig(BaseModel):
+class SpotProductConfig(VertexBaseModel):
     token: str
     interest_inflection_util_x18: str
     interest_floor_x18: str
@@ -118,14 +119,14 @@ class SpotProductConfig(BaseModel):
     interest_large_cap_x18: str
 
 
-class SpotProductState(BaseModel):
+class SpotProductState(VertexBaseModel):
     cumulative_deposits_multiplier_x18: str
     cumulative_borrows_multiplier_x18: str
     total_deposits_normalized: str
     total_borrows_normalized: str
 
 
-class SpotProductLpAmount(BaseModel):
+class SpotProductLpAmount(VertexBaseModel):
     amount: str
     last_cumulative_multiplier_x18: str
 
@@ -141,14 +142,14 @@ class SpotProduct(BaseProduct):
     lp_state: SpotProductLpState
 
 
-class PerpProductState(BaseModel):
+class PerpProductState(VertexBaseModel):
     cumulative_funding_long_x18: str
     cumulative_funding_short_x18: str
     available_settle: str
     open_interest: str
 
 
-class PerpProductLpState(BaseModel):
+class PerpProductLpState(VertexBaseModel):
     last_cumulative_funding_x18: str
     cumulative_funding_per_lp_x18: str
     base: str

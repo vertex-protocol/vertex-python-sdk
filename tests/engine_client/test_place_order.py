@@ -158,9 +158,9 @@ def test_place_order_execute_success(
     computed_signature = sign_eip712_typed_data(
         typed_data=build_eip712_typed_data(
             VertexExecute.PLACE_ORDER,
+            order.dict(),
             engine_client._opts.book_addrs[1],
             engine_client.chain_id,
-            order.dict(),
         ),
         signer=engine_client._opts.linked_signer,
     )
@@ -199,9 +199,9 @@ def test_place_order_execute_success(
     expected_signature = sign_eip712_typed_data(
         typed_data=build_eip712_typed_data(
             VertexExecute.PLACE_ORDER,
+            order.dict(),
             engine_client._opts.book_addrs[1],
             engine_client.chain_id,
-            order.dict(),
         ),
         signer=engine_client._opts.signer,
     )

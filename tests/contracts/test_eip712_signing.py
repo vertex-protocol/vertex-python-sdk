@@ -318,7 +318,7 @@ def test_sign_eip712_typed_data(
 
     for execute, verifying_contract, msg in to_sign:
         eip712_typed_data = build_eip712_typed_data(
-            execute, verifying_contract, chain_id, msg
+            execute, msg, verifying_contract, chain_id
         )
         # raises an exception if signing fails
         sign_eip712_typed_data(eip712_typed_data, signer)

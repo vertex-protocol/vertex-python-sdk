@@ -152,13 +152,11 @@ class EngineExecuteClient:
         return self.book_addrs[product_id]
 
     def get_order_digest(self, order: OrderParams, product_id: int) -> str:
-        return get_eip712_typed_data_digest(
-            build_eip712_typed_data(
-                VertexExecute.PLACE_ORDER,
-                self.book_addr(product_id),
-                self.chain_id,
-                order.dict(),
-            )
+        return self.build_digest(
+            VertexExecute.PLACE_ORDER,
+            order.dict(),
+            self.book_addr(product_id),
+            self.chain_id,
         )
 
     def _sign(self, execute: VertexExecute, msg: dict, product_id: int = None) -> str:
@@ -173,6 +171,13 @@ class EngineExecuteClient:
             execute, msg, verifying_contract, self.chain_id, self.linked_signer
         )
 
+    def build_digest(
+        self, execute: VertexExecute, msg: dict, verifying_contract: str, chain_id: int
+    ) -> str:
+        return get_eip712_typed_data_digest(
+            build_eip712_typed_data(execute, msg, verifying_contract, chain_id)
+        )
+
     def sign(
         self,
         execute: VertexExecute,
@@ -183,7 +188,7 @@ class EngineExecuteClient:
     ) -> str:
         return sign_eip712_typed_data(
             typed_data=build_eip712_typed_data(
-                execute, verifying_contract, chain_id, msg
+                execute, msg, verifying_contract, chain_id
             ),
             signer=signer,
         )

@@ -52,8 +52,7 @@ class EngineQueryClient:
         self.url = self._opts.url
 
     def query(self, req: QueryRequest) -> QueryResponse:
-        req_params = {k: v for k, v in req.dict().items() if v is not None}
-        res = requests.get(f"{self.url}/query?{urlencode(req_params)}")
+        res = requests.get(f"{self.url}/query?{urlencode(req.dict())}")
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         query_res = QueryResponse(**res.json())

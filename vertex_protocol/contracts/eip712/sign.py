@@ -11,7 +11,7 @@ from vertex_protocol.utils.engine import VertexExecute
 
 
 def build_eip712_typed_data(
-    execute: VertexExecute, verifying_contract: str, chain_id: int, msg: dict
+    execute: VertexExecute, msg: dict, verifying_contract: str, chain_id: int
 ) -> EIP712TypedData:
     eip17_domain = get_vertex_eip712_domain(verifying_contract, chain_id)
     eip712_execute_type = get_vertex_eip712_type(execute)
