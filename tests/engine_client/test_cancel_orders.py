@@ -8,9 +8,9 @@ from vertex_protocol.utils.bytes32 import hex_to_bytes32
 def test_cancel_orders_params(senders: list[str]):
     product_ids = [4]
     digests = ["0x51ba8762bc5f77957a4e896dba34e17b553b872c618ffb83dba54878796f2821"]
-    sender_1 = hex_to_bytes32(senders[0])
+    sender = hex_to_bytes32(senders[0])
     params_from_dict = CancelOrdersParams(
-        **{"productIds": product_ids, "sender": sender_1, "digests": digests}
+        **{"productIds": product_ids, "sender": sender, "digests": digests}
     )
     params_from_obj = CancelOrdersParams(
         sender=senders[0],
@@ -18,7 +18,7 @@ def test_cancel_orders_params(senders: list[str]):
         digests=digests,
     )
     bytes32_digests = CancelOrdersParams(
-        sender=sender_1,
+        sender=sender,
         productIds=product_ids,
         digests=[hex_to_bytes32(digest) for digest in digests],
     )

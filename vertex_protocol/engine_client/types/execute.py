@@ -28,13 +28,8 @@ class BaseParams(VertexBaseModel):
         validate_assignment = True
 
     @validator("sender")
-    def sender_to_bytes32(cls, v: Subaccount) -> bytes:
-        if isinstance(v, str):
-            return hex_to_bytes32(v)
-        elif isinstance(v, SubaccountParams) and v.subaccount_owner is not None:
-            return subaccount_to_bytes32(v.subaccount_owner, v.subaccount_name)
-        else:
-            return v
+    def serialize_sender(cls, v: Subaccount) -> bytes:
+        return subaccount_to_bytes32(v)
 
 
 class SignatureParams(VertexBaseModel):
@@ -64,11 +59,8 @@ class CancelOrdersParams(BaseParamsSigned):
     digests: list[Digest]
 
     @validator("digests")
-    def digests_to_bytes32(cls, v: list[Digest]) -> list[bytes]:
-        return [
-            hex_to_bytes32(digest) if isinstance(digest, str) else digest
-            for digest in v
-        ]
+    def serialize_digests(cls, v: list[Digest]) -> list[bytes]:
+        return [hex_to_bytes32(digest) for digest in v]
 
 
 class CancelProductOrdersParams(BaseParamsSigned):
@@ -88,6 +80,10 @@ class LiquidateSubaccountParams(BaseParamsSigned):
     healthGroup: int
     amount: int
 
+    @validator("liquidatee")
+    def serialize_liquidatee(cls, v: Subaccount) -> bytes:
+        return subaccount_to_bytes32(v)
+
 
 class MintLpParams(BaseParamsSigned):
     productId: int
@@ -104,6 +100,10 @@ class BurnLpParams(BaseParamsSigned):
 
 class LinkSignerParams(BaseParamsSigned):
     signer: Subaccount
+
+    @validator("signer")
+    def serialize_signer(cls, v: Subaccount) -> bytes:
+        return subaccount_to_bytes32(v)
 
 
 ExecuteParams = (
@@ -122,14 +122,14 @@ class PlaceOrderRequest(VertexBaseModel):
     place_order: PlaceOrderParams
 
     @validator("place_order")
-    def validate(cls, v: PlaceOrderParams) -> PlaceOrderParams:
+    def serialize(cls, v: PlaceOrderParams) -> PlaceOrderParams:
         if v.order.nonce is None:
             raise ValueError("Missing order `nonce`")
         if v.signature is None:
             raise ValueError("Missing `signature")
-        v.order.__dict__["sender"] = bytes32_to_hex(v.order.sender)
-        for field in ["nonce", "priceX18", "amount", "expiration"]:
-            v.order.__dict__[field] = str(getattr(v.order, field))
+        if isinstance(v.order.sender, bytes):
+            v.order.serialize_dict(["sender"], bytes32_to_hex)
+        v.order.serialize_dict(["nonce", "priceX18", "amount", "expiration"], str)
         return v
 
 
@@ -140,14 +140,10 @@ class TxRequest(VertexBaseModel):
     digest: Optional[str]
 
     @validator("tx")
-    def validate(cls, v: dict) -> dict:
+    def serialize(cls, v: dict) -> dict:
         if v.get("nonce") is None:
             raise ValueError("Missing tx `nonce`")
-        v["sender"] = (
-            bytes32_to_hex(v["sender"])
-            if isinstance(v["sender"], bytes)
-            else v["sender"]
-        )
+        v["sender"] = bytes32_to_hex(v["sender"])
         v["nonce"] = str(v["nonce"])
         return v
 
@@ -167,11 +163,8 @@ class CancelOrdersRequest(VertexBaseModel):
     cancel_orders: CancelOrdersParams
 
     @validator("cancel_orders")
-    def digests_to_hex(cls, v: CancelOrdersParams) -> CancelOrdersParams:
-        v.__dict__["digests"] = [
-            bytes32_to_hex(digest) if isinstance(digest, bytes) else digest
-            for digest in v.digests
-        ]
+    def serialize(cls, v: CancelOrdersParams) -> CancelOrdersParams:
+        v.serialize_dict(["digests"], lambda l: [bytes32_to_hex(x) for x in l])
         return v
 
     _validator = validator("cancel_orders", allow_reuse=True)(to_tx_request)
@@ -186,11 +179,22 @@ class CancelProductOrdersRequest(VertexBaseModel):
 class WithdrawCollateralRequest(VertexBaseModel):
     withdraw_collateral: WithdrawCollateralParams
 
+    @validator("withdraw_collateral")
+    def serialize(cls, v: WithdrawCollateralParams) -> WithdrawCollateralParams:
+        v.serialize_dict(["amount"], str)
+        return v
+
     _validator = validator("withdraw_collateral", allow_reuse=True)(to_tx_request)
 
 
 class LiquidateSubaccountRequest(VertexBaseModel):
     liquidate_subaccount: LiquidateSubaccountParams
+
+    @validator("liquidate_subaccount")
+    def serialize(cls, v: LiquidateSubaccountParams) -> LiquidateSubaccountParams:
+        v.serialize_dict(["amount"], str)
+        v.serialize_dict(["liquidatee"], bytes32_to_hex)
+        return v
 
     _validator = validator("liquidate_subaccount", allow_reuse=True)(to_tx_request)
 
@@ -198,17 +202,32 @@ class LiquidateSubaccountRequest(VertexBaseModel):
 class MintLpRequest(VertexBaseModel):
     mint_lp: MintLpParams
 
+    @validator("mint_lp")
+    def serialize(cls, v: MintLpParams) -> MintLpParams:
+        v.serialize_dict(["amountBase", "quoteAmountLow", "quoteAmountHigh"], str)
+        return v
+
     _validator = validator("mint_lp", allow_reuse=True)(to_tx_request)
 
 
 class BurnLpRequest(VertexBaseModel):
     burn_lp: BurnLpParams
 
+    @validator("burn_lp")
+    def serialize(cls, v: BurnLpParams) -> BurnLpParams:
+        v.serialize_dict(["amount"], str)
+        return v
+
     _validator = validator("burn_lp", allow_reuse=True)(to_tx_request)
 
 
 class LinkSignerRequest(VertexBaseModel):
     link_signer: LinkSignerParams
+
+    @validator("link_signer")
+    def serialize(cls, v: LinkSignerParams) -> LinkSignerParams:
+        v.serialize_dict(["signer"], bytes32_to_hex)
+        return v
 
     _validator = validator("link_signer", allow_reuse=True)(to_tx_request)
 

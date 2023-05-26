@@ -12,6 +12,7 @@ from vertex_protocol.engine_client.types.execute import (
     PlaceOrderParams,
     PlaceOrderRequest,
     SubaccountParams,
+    to_execute_request,
 )
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
@@ -26,7 +27,7 @@ from vertex_protocol.utils.nonce import gen_order_nonce
 
 def test_place_order_params(senders: list[str], owners: list[str], order_params: dict):
     product_id = 1
-    sender_1 = hex_to_bytes32(senders[0])
+    sender = hex_to_bytes32(senders[0])
     params_from_dict = PlaceOrderParams(
         **{
             "product_id": product_id,
@@ -76,11 +77,30 @@ def test_place_order_params(senders: list[str], owners: list[str], order_params:
     )
 
     assert params_from_dict.product_id == product_id
-    assert params_from_dict.order.sender == sender_1
+    assert params_from_dict.order.sender == sender
     assert params_from_dict.order.amount == order_params["amount"]
     assert params_from_dict.order.priceX18 == order_params["priceX18"]
     assert params_from_dict.order.expiration == order_params["expiration"]
     assert params_from_dict.signature is None
+
+    params_from_dict.signature = (
+        "0x51ba8762bc5f77957a4e896dba34e17b553b872c618ffb83dba54878796f2821"
+    )
+    place_order_req = PlaceOrderRequest(place_order=params_from_dict)
+    assert place_order_req == to_execute_request(params_from_dict)
+    assert place_order_req.dict() == {
+        "place_order": {
+            "product_id": product_id,
+            "order": {
+                "sender": senders[0].lower(),
+                "priceX18": str(order_params["priceX18"]),
+                "amount": str(order_params["amount"]),
+                "expiration": str(order_params["expiration"]),
+                "nonce": str(params_from_dict.order.nonce),
+            },
+            "signature": params_from_dict.signature,
+        }
+    }
 
 
 def test_place_order_execute_fails_incomplete_client(

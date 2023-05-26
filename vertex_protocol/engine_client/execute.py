@@ -48,7 +48,7 @@ class EngineExecuteClient:
             params.sender.subaccount_owner = (
                 params.sender.subaccount_owner or self.signer.address
             )
-            params.sender = params.sender_to_bytes32(params.sender)
+            params.sender = params.serialize_sender(params.sender)
         return params
 
     def _inject_nonce_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
