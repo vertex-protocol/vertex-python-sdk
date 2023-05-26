@@ -57,6 +57,7 @@ class PlaceOrderParams(SignatureParams):
 class CancelOrdersParams(BaseParamsSigned):
     productIds: list[int]
     digests: list[Digest]
+    nonce: int = gen_order_nonce()
 
     @validator("digests")
     def serialize_digests(cls, v: list[Digest]) -> list[bytes]:
@@ -66,6 +67,7 @@ class CancelOrdersParams(BaseParamsSigned):
 class CancelProductOrdersParams(BaseParamsSigned):
     productIds: list[int]
     digest: Optional[str]
+    nonce: int = gen_order_nonce()
 
 
 class WithdrawCollateralParams(BaseParamsSigned):

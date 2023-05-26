@@ -67,7 +67,7 @@ class EngineQueryClient:
         return self.query(QueryContractsParams()).data
 
     def get_nonces(self, address: str) -> NoncesData:
-        return self.query(QueryNoncesParams(address)).data
+        return self.query(QueryNoncesParams(address=address)).data
 
     def get_order(self, product_id: int, digest: str) -> OrderData:
         return self.query(QueryOrderParams(product_id=product_id, digest=digest)).data

@@ -3,12 +3,25 @@ import time
 import os
 from vertex_protocol.engine_client import EngineClient, EngineClientOpts
 from vertex_protocol.engine_client.types.execute import (
+    BurnLpParams,
+    CancelOrdersParams,
+    LinkSignerParams,
+    LiquidateSubaccountParams,
+    MintLpParams,
     PlaceOrderParams,
     OrderParams,
     SubaccountParams,
+    WithdrawCollateralParams,
 )
 from vertex_protocol.engine_client.types.query import (
     QueryMaxOrderSizeParams,
+)
+from vertex_protocol.utils.bytes32 import (
+    bytes32_to_hex,
+    hex_to_bytes32,
+    str_to_hex,
+    subaccount_to_bytes32,
+    zero_subaccount,
 )
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
@@ -64,6 +77,24 @@ def run():
     subaccount_open_orders = client.get_subaccount_open_orders(product_id, order.sender)
     print("subaccount open orders:", subaccount_open_orders.json(indent=2))
 
+    cancel_order = CancelOrdersParams(
+        sender=order.sender, productIds=[product_id], digests=[order_digest]
+    )
+    res = client.cancel_orders(cancel_order)
+    print("cancel orders result:", res.json(indent=2))
+
+    print("querying order after cancel...")
+    try:
+        order = client.get_order(product_id, order_digest)
+        print("order found but should not be!")
+        exit(1)
+    except Exception as e:
+        print("order not found:", e)
+
+    print("querying subaccount open orders (after cancel)...")
+    subaccount_open_orders = client.get_subaccount_open_orders(product_id, order.sender)
+    print("subaccount open orders:", subaccount_open_orders.json(indent=2))
+
     print("querying market liquidity...")
     market_liquidity = client.get_market_liquidity(product_id, depth=10)
     print("market liquidity:", market_liquidity)
@@ -109,3 +140,84 @@ def run():
     print("querying linked signer...")
     linked_signer = client.get_linked_signer(subaccount=order.sender)
     print("linked signer:", linked_signer.json(indent=2))
+
+    print("minting lp...")
+    mint_lp_params = MintLpParams(
+        sender=SubaccountParams(
+            subaccount_owner=client.signer.address, subaccount_name="default"
+        ),
+        productId=3,
+        amountBase=to_x18(1),
+        quoteAmountLow=to_x18(1000),
+        quoteAmountHigh=to_x18(2000),
+    )
+    res = client.mint_lp(mint_lp_params)
+    print("mint lp results:", res.json(indent=2))
+
+    print("burning lp...")
+    burn_lp_params = BurnLpParams(
+        sender=SubaccountParams(
+            subaccount_owner=client.signer.address, subaccount_name="default"
+        ),
+        productId=3,
+        amount=to_x18(1),
+        nonce=client.tx_nonce(),
+    )
+    res = client.burn_lp(burn_lp_params)
+    print("burn lp result:", res.json(indent=2))
+
+    print("liquidating subaccount...")
+    liquidate_subaccount_params = LiquidateSubaccountParams(
+        sender=SubaccountParams(
+            subaccount_owner=client.signer.address, subaccount_name="default"
+        ),
+        liquidatee=subaccount_to_bytes32(
+            "0x13df46D99A81DcA51A7fC9852a0c1b88072B6Ba9", "default"
+        ),
+        mode=0,
+        healthGroup=1,
+        amount=to_x18(1),
+    )
+    try:
+        res = client.liquidate_subaccount(liquidate_subaccount_params)
+        print("liquidate subaccount result:", res.json(indent=2))
+    except Exception as e:
+        print("liquidate subaccount failed with error:", e)
+
+    print("linking signer...")
+    link_signer_params = LinkSignerParams(
+        sender=client.signer.address + str_to_hex("default"),
+        signer=subaccount_to_bytes32(
+            "0x13df46D99A81DcA51A7fC9852a0c1b88072B6Ba9", "default"
+        ),
+    )
+    res = client.link_signer(link_signer_params)
+    print("link signer result:", res.json(indent=2))
+
+    print("querying linked signer post update...")
+    linked_signer = client.get_linked_signer(
+        subaccount=bytes32_to_hex(link_signer_params.sender)
+    )
+    print("linked signer:", linked_signer.json(indent=2))
+
+    print("revoking signer...")
+    link_signer_params.signer = zero_subaccount()
+    res = client.link_signer(link_signer_params)
+    print("revoke signer result:", res.json(indent=2))
+
+    print("querying linked signer post revoking...")
+    linked_signer = client.get_linked_signer(
+        subaccount=bytes32_to_hex(link_signer_params.sender)
+    )
+    print("linked signer:", linked_signer.json(indent=2))
+
+    print("withdrawing collateral...")
+    withdraw_collateral_params = WithdrawCollateralParams(
+        sender=SubaccountParams(
+            subaccount_owner=client.signer.address, subaccount_name="default"
+        ),
+        productId=0,
+        amount=to_pow_10(1, 6),
+    )
+    res = client.withdraw_collateral(withdraw_collateral_params)
+    print("withdraw collateral result:", res.json(indent=2))

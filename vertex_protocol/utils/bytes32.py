@@ -2,9 +2,11 @@ import binascii
 from vertex_protocol.utils.model import VertexBaseModel
 
 
-def hex_to_bytes32(input: str) -> bytes:
+def hex_to_bytes32(input: str | bytes) -> bytes:
     if isinstance(input, bytes):
         return input
+    if input.encode() == zero_subaccount():
+        return zero_subaccount()
     if input.startswith("0x"):
         input = input[2:]
     data_bytes = bytes.fromhex(input)
@@ -18,7 +20,7 @@ def str_to_hex(input: str) -> str:
 
 def subaccount_to_bytes32(
     subaccount: str | bytes | VertexBaseModel, name: str = None
-) -> str:
+) -> bytes:
     # When subaccount is a string
     if isinstance(subaccount, str):
         if name is None:
@@ -45,3 +47,7 @@ def bytes32_to_hex(bytes32: bytes) -> str:
         return f"0x{bytes32.hex()}"
     else:
         return bytes32
+
+
+def zero_subaccount() -> bytes:
+    return b"\x00" * 32

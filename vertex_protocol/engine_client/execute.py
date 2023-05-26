@@ -58,11 +58,7 @@ class EngineExecuteClient:
         return params
 
     def tx_nonce(self) -> int:
-        return int(
-            self._querier.get_nonces(
-                QueryNoncesParams(address=self.signer.address)
-            ).tx_nonce
-        )
+        return int(self._querier.get_nonces(self.signer.address).tx_nonce)
 
     def order_nonce(self, recv_time_ms: int = None) -> str:
         return gen_order_nonce(recv_time_ms)
@@ -160,12 +156,11 @@ class EngineExecuteClient:
         )
 
     def _sign(self, execute: VertexExecute, msg: dict, product_id: int = None) -> str:
-        if execute.PLACE_ORDER and product_id is None:
+        is_place_order = execute == VertexExecute.PLACE_ORDER
+        if is_place_order and product_id is None:
             raise ValueError("Missing `product_id` to sign place_order execute")
         verifying_contract = (
-            self.book_addr(product_id)
-            if execute == VertexExecute.PLACE_ORDER
-            else self.endpoint_addr
+            self.book_addr(product_id) if is_place_order else self.endpoint_addr
         )
         return self.sign(
             execute, msg, verifying_contract, self.chain_id, self.linked_signer
