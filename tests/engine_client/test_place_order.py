@@ -80,7 +80,6 @@ def test_place_order_params(senders: list[str], owners: list[str], order_params:
     assert params_from_dict.order.amount == order_params["amount"]
     assert params_from_dict.order.priceX18 == order_params["priceX18"]
     assert params_from_dict.order.expiration == order_params["expiration"]
-    assert params_from_dict.order.nonce is None
     assert params_from_dict.signature is None
 
 

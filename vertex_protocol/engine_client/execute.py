@@ -1,4 +1,5 @@
 import requests
+from functools import singledispatchmethod
 
 from typing import Type
 from eth_account.signers.local import LocalAccount
@@ -14,24 +15,18 @@ from vertex_protocol.engine_client.types import (
 from vertex_protocol.engine_client.types.execute import (
     BaseParams,
     BurnLpParams,
-    BurnLpRequest,
     CancelOrdersParams,
-    CancelOrdersRequest,
     CancelProductOrdersParams,
-    CancelProductOrdersRequest,
+    ExecuteParams,
     ExecuteRequest,
     ExecuteResponse,
     LinkSignerParams,
-    LinkSignerRequest,
     LiquidateSubaccountParams,
-    LiquidateSubaccountRequest,
     MintLpParams,
-    MintLpRequest,
     OrderParams,
     PlaceOrderParams,
-    PlaceOrderRequest,
     WithdrawCollateralParams,
-    WithdrawCollateralRequest,
+    to_execute_request,
 )
 from vertex_protocol.engine_client.types.execute import SubaccountParams
 from vertex_protocol.engine_client.types.query import QueryNoncesParams
@@ -59,10 +54,7 @@ class EngineExecuteClient:
     def _inject_nonce_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
         if params.nonce is not None:
             return params
-        if type(params) == OrderParams:
-            params.nonce = self.order_nonce()
-        else:
-            params.nonce = self.tx_nonce()
+        params.nonce = self.tx_nonce()
         return params
 
     def tx_nonce(self) -> int:
@@ -80,7 +72,15 @@ class EngineExecuteClient:
         params = self._inject_nonce_if_needed(params)
         return params
 
-    def execute(self, req: ExecuteRequest) -> ExecuteResponse:
+    @singledispatchmethod
+    def execute(self, params: ExecuteParams) -> ExecuteResponse:
+        return self._execute(to_execute_request(params))
+
+    @execute.register
+    def _(self, req: ExecuteRequest):
+        return self._execute(req)
+
+    def _execute(self, req: ExecuteRequest) -> ExecuteResponse:
         res = requests.post(f"{self.url}/execute", json=req.dict())
         try:
             execute_res = ExecuteResponse(**res.json(), req=req.dict())
@@ -197,16 +197,16 @@ class EngineExecuteClient:
         params = PlaceOrderParams.parse_obj(params)
         params.order = self.prepare_execute_params(params.order)
         params.signature = params.signature or self._sign(
-            VertexExecute.PLACE_ORDER, params.order, params.product_id
+            VertexExecute.PLACE_ORDER, params.order.dict(), params.product_id
         )
-        return self.execute(PlaceOrderRequest(place_order=params))
+        return self.execute(params)
 
     def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params))
         params.signature = params.signature or self._sign(
             VertexExecute.CANCEL_ORDERS, params.dict()
         )
-        return self.execute(CancelOrdersRequest(cancel_orders=params))
+        return self.execute(params)
 
     def cancel_product_orders(
         self, params: CancelProductOrdersParams
@@ -217,14 +217,14 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecute.CANCEL_PRODUCT_ORDERS, params.dict()
         )
-        return self.execute(CancelProductOrdersRequest(cancel_product_orders=params))
+        return self.execute(params)
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))
         params.signature = params.signature or self._sign(
             VertexExecute.WITHDRAW_COLLATERAL, params.dict()
         )
-        return self.execute(WithdrawCollateralRequest(withdraw_collateral=params))
+        return self.execute(params)
 
     def liquidate_subaccount(
         self, params: LiquidateSubaccountParams
@@ -236,7 +236,7 @@ class EngineExecuteClient:
             VertexExecute.LIQUIDATE_SUBACCOUNT,
             params.dict(),
         )
-        return self.execute(LiquidateSubaccountRequest(liquidate_subaccount=params))
+        return self.execute(params)
 
     def mint_lp(self, params: MintLpParams) -> ExecuteResponse:
         params = self.prepare_execute_params(MintLpParams.parse_obj(params))
@@ -244,7 +244,7 @@ class EngineExecuteClient:
             VertexExecute.MINT_LP,
             params.dict(),
         )
-        return self.execute(MintLpRequest(mint_lp=params))
+        return self.execute(params)
 
     def burn_lp(self, params: BurnLpParams) -> ExecuteResponse:
         params = self.prepare_execute_params(BurnLpParams.parse_obj(params))
@@ -252,7 +252,7 @@ class EngineExecuteClient:
             VertexExecute.BURN_LP,
             params.dict(),
         )
-        return self.execute(BurnLpRequest(burn_lp=params))
+        return self.execute(params)
 
     def link_signer(self, params: LinkSignerParams) -> ExecuteResponse:
         params = self.prepare_execute_params(LinkSignerParams.parse_obj(params))
@@ -260,4 +260,4 @@ class EngineExecuteClient:
             VertexExecute.LINK_SIGNER,
             params.dict(),
         )
-        return self.execute(LinkSignerRequest(link_signer=params))
+        return self.execute(params)

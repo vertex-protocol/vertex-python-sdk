@@ -5,7 +5,7 @@ from vertex_protocol.engine_client.types.execute import (
 from vertex_protocol.utils.bytes32 import hex_to_bytes32
 
 
-def test_cancel_orders_params(senders: list[str], cancellation_params: dict):
+def test_cancel_orders_params(senders: list[str]):
     product_ids = [4]
     digests = ["0x51ba8762bc5f77957a4e896dba34e17b553b872c618ffb83dba54878796f2821"]
     sender_1 = hex_to_bytes32(senders[0])

@@ -7,6 +7,7 @@ from vertex_protocol.utils.bytes32 import (
     hex_to_bytes32,
     subaccount_to_bytes32,
 )
+from vertex_protocol.utils.nonce import gen_order_nonce
 
 
 class SubaccountParams(VertexBaseModel):
@@ -48,6 +49,7 @@ class OrderParams(BaseParams):
     priceX18: int
     amount: int
     expiration: int
+    nonce: int = gen_order_nonce()
 
 
 class PlaceOrderParams(SignatureParams):
@@ -102,6 +104,18 @@ class BurnLpParams(BaseParamsSigned):
 
 class LinkSignerParams(BaseParamsSigned):
     signer: Subaccount
+
+
+ExecuteParams = (
+    PlaceOrderParams
+    | CancelOrdersParams
+    | CancelProductOrdersParams
+    | WithdrawCollateralParams
+    | LiquidateSubaccountParams
+    | MintLpParams
+    | BurnLpParams
+    | LinkSignerParams
+)
 
 
 class PlaceOrderRequest(VertexBaseModel):
@@ -216,3 +230,22 @@ class ExecuteResponse(VertexBaseModel):
     signature: Optional[str]
     error: Optional[str]
     req: Optional[dict]
+
+
+def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
+    execute_request_mapping = {
+        PlaceOrderParams: (PlaceOrderRequest, "place_order"),
+        CancelOrdersParams: (CancelOrdersRequest, "cancel_orders"),
+        CancelProductOrdersParams: (
+            CancelProductOrdersRequest,
+            "cancel_product_orders",
+        ),
+        WithdrawCollateralParams: (WithdrawCollateralRequest, "withdraw_collateral"),
+        LiquidateSubaccountParams: (LiquidateSubaccountRequest, "liquidate_subaccount"),
+        MintLpParams: (MintLpRequest, "mint_lp"),
+        BurnLpParams: (BurnLpRequest, "burn_lp"),
+        LinkSignerParams: (LinkSignerRequest, "link_signer"),
+    }
+
+    RequestClass, field_name = execute_request_mapping[type(params)]
+    return RequestClass(**{field_name: params})
