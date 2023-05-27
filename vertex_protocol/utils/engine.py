@@ -1,7 +1,5 @@
 from enum import Enum
 
-from vertex_protocol.engine_client.types.execute import ExecuteParams, ExecuteRequest
-
 
 class VertexExecute(str, Enum):
     PLACE_ORDER = "place_order"

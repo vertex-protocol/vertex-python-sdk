@@ -1,6 +1,7 @@
 from typing import Optional, Type
 from pydantic import validator
 from vertex_protocol.engine_client.types.models import EngineStatus, ResponseStatus
+from vertex_protocol.utils.engine import VertexExecute
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
@@ -255,17 +256,23 @@ class ExecuteResponse(VertexBaseModel):
 
 def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
     execute_request_mapping = {
-        PlaceOrderParams: (PlaceOrderRequest, "place_order"),
-        CancelOrdersParams: (CancelOrdersRequest, "cancel_orders"),
+        PlaceOrderParams: (PlaceOrderRequest, VertexExecute.PLACE_ORDER),
+        CancelOrdersParams: (CancelOrdersRequest, VertexExecute.CANCEL_ORDERS),
         CancelProductOrdersParams: (
             CancelProductOrdersRequest,
-            "cancel_product_orders",
+            VertexExecute.CANCEL_PRODUCT_ORDERS,
         ),
-        WithdrawCollateralParams: (WithdrawCollateralRequest, "withdraw_collateral"),
-        LiquidateSubaccountParams: (LiquidateSubaccountRequest, "liquidate_subaccount"),
-        MintLpParams: (MintLpRequest, "mint_lp"),
-        BurnLpParams: (BurnLpRequest, "burn_lp"),
-        LinkSignerParams: (LinkSignerRequest, "link_signer"),
+        WithdrawCollateralParams: (
+            WithdrawCollateralRequest,
+            VertexExecute.WITHDRAW_COLLATERAL,
+        ),
+        LiquidateSubaccountParams: (
+            LiquidateSubaccountRequest,
+            VertexExecute.LIQUIDATE_SUBACCOUNT,
+        ),
+        MintLpParams: (MintLpRequest, VertexExecute.MINT_LP),
+        BurnLpParams: (BurnLpRequest, VertexExecute.BURN_LP),
+        LinkSignerParams: (LinkSignerRequest, VertexExecute.LINK_SIGNER),
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]

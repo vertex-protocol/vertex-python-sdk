@@ -1,8 +1,5 @@
 from types import FunctionType
-from typing import Type, Any, TypeVar
 from pydantic import BaseModel
-
-T = TypeVar("T", bound="VertexBaseModel")
 
 
 class VertexBaseModel(BaseModel):

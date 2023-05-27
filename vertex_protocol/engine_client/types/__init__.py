@@ -9,7 +9,7 @@ Signer = LocalAccount | PrivateKey
 
 class EngineClientOpts(BaseModel):
     """
-    Model representing the options for Engine Client
+    Model representing the options for the Engine Client
     """
 
     url: AnyUrl
