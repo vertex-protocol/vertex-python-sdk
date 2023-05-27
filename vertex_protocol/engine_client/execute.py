@@ -73,7 +73,7 @@ class EngineExecuteClient:
         return self._execute(to_execute_request(params))
 
     @execute.register
-    def _(self, req: ExecuteRequest):
+    def _(self, req: ExecuteRequest) -> ExecuteResponse:
         return self._execute(req)
 
     def _execute(self, req: ExecuteRequest) -> ExecuteResponse:

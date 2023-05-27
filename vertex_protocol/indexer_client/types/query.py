@@ -2,8 +2,18 @@ from typing import Optional
 
 from pydantic import Field
 from vertex_protocol.indexer_client.types.models import (
+    IndexerCandlestick,
     IndexerCandlesticksGranularity,
+    IndexerEvent,
     IndexerEventType,
+    IndexerHistoricalOrder,
+    IndexerLiquidationFeed,
+    IndexerMarketMaker,
+    IndexerMatch,
+    IndexerOraclePrice,
+    IndexerProduct,
+    IndexerTokenReward,
+    IndexerTx,
 )
 from vertex_protocol.utils.indexer import VertexIndexer
 from vertex_protocol.utils.model import VertexBaseModel
@@ -15,7 +25,7 @@ class IndexerBaseParams(VertexBaseModel):
     limit: Optional[int]
 
 
-class IndexerOrdersParams(IndexerBaseParams):
+class IndexerHistoricalOrdersParams(IndexerBaseParams):
     subaccount: Optional[str]
     product_ids: Optional[list[int]]
     digests: Optional[list[str]]
@@ -44,7 +54,7 @@ class IndexerEventsParams(IndexerBaseParams):
     limit: Optional[IndexerEventsLimit]
 
 
-class IndexerSummaryParams(VertexBaseModel):
+class IndexerSubaccountSummaryParams(VertexBaseModel):
     subaccount: str
     timestamp: Optional[int]
 
@@ -73,7 +83,7 @@ class IndexerOraclePricesParams(VertexBaseModel):
     product_ids: list[int]
 
 
-class IndexerRewardsParams(VertexBaseModel):
+class IndexerTokenRewardsParams(VertexBaseModel):
     address: str
 
 
@@ -92,24 +102,24 @@ class IndexerLinkedSignerRateLimitParams(VertexBaseModel):
 
 
 IndexerParams = (
-    IndexerOrdersParams
+    IndexerHistoricalOrdersParams
     | IndexerMatchesParams
     | IndexerEventsParams
-    | IndexerSummaryParams
+    | IndexerSubaccountSummaryParams
     | IndexerProductsParams
     | IndexerCandlesticksParams
     | IndexerFundingRateParams
     | IndexerPerpPricesParams
     | IndexerOraclePricesParams
-    | IndexerRewardsParams
+    | IndexerTokenRewardsParams
     | IndexerMakerStatisticsParams
     | IndexerLiquidationFeedParams
     | IndexerLinkedSignerRateLimitParams
 )
 
 
-class IndexerOrdersRequest(VertexBaseModel):
-    orders: IndexerOrdersParams
+class IndexerHistoricalOrdersRequest(VertexBaseModel):
+    orders: IndexerHistoricalOrdersParams
 
 
 class IndexerMatchesRequest(VertexBaseModel):
@@ -120,8 +130,8 @@ class IndexerEventsRequest(VertexBaseModel):
     events: IndexerEventsParams
 
 
-class IndexerSummaryRequest(VertexBaseModel):
-    summary: IndexerSummaryParams
+class IndexerSubaccountSummaryRequest(VertexBaseModel):
+    summary: IndexerSubaccountSummaryParams
 
 
 class IndexerProductRequest(VertexBaseModel):
@@ -144,8 +154,8 @@ class IndexerOraclePricesRequest(VertexBaseModel):
     oracle_price: IndexerOraclePricesParams
 
 
-class IndexerRewardsRequest(VertexBaseModel):
-    rewards: IndexerRewardsParams
+class IndexerTokenRewardsRequest(VertexBaseModel):
+    rewards: IndexerTokenRewardsParams
 
 
 class IndexerMakerStatisticsRequest(VertexBaseModel):
@@ -161,29 +171,116 @@ class IndexerLinkedSignerRateLimitRequest(VertexBaseModel):
 
 
 IndexerRequest = (
-    IndexerOrdersRequest
+    IndexerHistoricalOrdersRequest
     | IndexerMatchesRequest
     | IndexerEventsRequest
-    | IndexerSummaryRequest
+    | IndexerSubaccountSummaryRequest
     | IndexerProductRequest
     | IndexerCandlesticksRequest
-    | IndexerSummaryRequest
     | IndexerFundingRateRequest
     | IndexerPerpPricesRequest
     | IndexerOraclePricesRequest
-    | IndexerRewardsRequest
+    | IndexerTokenRewardsRequest
     | IndexerMakerStatisticsRequest
     | IndexerLiquidationFeedRequest
     | IndexerLinkedSignerRateLimitRequest
 )
 
 
+class IndexerHistoricalOrdersData(VertexBaseModel):
+    orders: list[IndexerHistoricalOrder]
+
+
+class IndexerMatchesData(VertexBaseModel):
+    matches: list[IndexerMatch]
+    txs: list[IndexerTx]
+
+
+class IndexerEventsData(VertexBaseModel):
+    events: list[IndexerEvent]
+    txs: list[IndexerTx]
+
+
+class IndexerSubaccountSummaryData(IndexerEventsData):
+    pass
+
+
+class IndexerProductsData(VertexBaseModel):
+    products: list[IndexerProduct]
+    txs: list[IndexerTx]
+
+
+class IndexerCandlesticksData(VertexBaseModel):
+    candlesticks: list[IndexerCandlestick]
+
+
+class IndexerFundingRateData(VertexBaseModel):
+    product_id: int
+    funding_rate_x18: str
+    update_time: str
+
+
+class IndexerPerpPricesData(VertexBaseModel):
+    product_id: int
+    index_price_x18: str
+    mark_price_x18: str
+    update_time: str
+
+
+class IndexerOraclePricesData(VertexBaseModel):
+    prices: list[IndexerOraclePrice]
+
+
+class IndexerTokenRewardsData(VertexBaseModel):
+    rewards: list[IndexerTokenReward]
+    update_time: str
+
+
+class IndexerMakerStatisticsData(VertexBaseModel):
+    reward_coefficient: float
+    makers: list[IndexerMarketMaker]
+
+
+class IndexerLinkedSignerRateLimitData(VertexBaseModel):
+    remaining_tx: str
+    wait_time: int
+    signer: str
+
+
+IndexerLiquidationFeedData = list[IndexerLiquidationFeed]
+
+
+IndexerResponseData = (
+    IndexerHistoricalOrdersData
+    | IndexerMatchesData
+    | IndexerEventsData
+    | IndexerSubaccountSummaryData
+    | IndexerCandlesticksData
+    | IndexerFundingRateData
+    | IndexerPerpPricesData
+    | IndexerOraclePricesData
+    | IndexerTokenRewardsData
+    | IndexerLinkedSignerRateLimitData
+    | IndexerLiquidationFeedData
+)
+
+
+class IndexerResponse(VertexBaseModel):
+    data: IndexerResponseData
+
+
 def to_indexer_request(params: IndexerParams) -> IndexerRequest:
     indexer_request_mapping = {
-        IndexerOrdersParams: (IndexerOrdersRequest, VertexIndexer.ORDERS),
+        IndexerHistoricalOrdersParams: (
+            IndexerHistoricalOrdersRequest,
+            VertexIndexer.ORDERS,
+        ),
         IndexerMatchesParams: (IndexerMatchesRequest, VertexIndexer.MATCHES),
         IndexerEventsParams: (IndexerEventsRequest, VertexIndexer.EVENTS),
-        IndexerSummaryParams: (IndexerSummaryRequest, VertexIndexer.SUMMARY),
+        IndexerSubaccountSummaryParams: (
+            IndexerSubaccountSummaryRequest,
+            VertexIndexer.SUMMARY,
+        ),
         IndexerProductsParams: (IndexerProductRequest, VertexIndexer.PRODUCTS),
         IndexerCandlesticksParams: (
             IndexerCandlesticksRequest,
@@ -198,7 +295,7 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
             IndexerOraclePricesRequest,
             VertexIndexer.ORACLE_PRICES,
         ),
-        IndexerRewardsParams: (IndexerRewardsRequest, VertexIndexer.REWARDS),
+        IndexerTokenRewardsParams: (IndexerTokenRewardsRequest, VertexIndexer.REWARDS),
         IndexerMakerStatisticsParams: (
             IndexerMakerStatisticsRequest,
             VertexIndexer.MAKER_STATISTICS,
@@ -215,6 +312,3 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
 
     RequestClass, field_name = indexer_request_mapping[type(params)]
     return RequestClass(**{field_name: params})
-
-
-IndexerResponse = None
