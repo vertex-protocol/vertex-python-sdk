@@ -250,6 +250,7 @@ ExecuteRequest = (
 class ExecuteResponse(VertexBaseModel):
     status: ResponseStatus
     signature: Optional[str]
+    error_code: Optional[int]
     error: Optional[str]
     req: Optional[dict]
 

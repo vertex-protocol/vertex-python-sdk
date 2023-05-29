@@ -53,8 +53,8 @@ def run():
         sender=SubaccountParams(
             subaccount_owner=client.signer.address, subaccount_name="default"
         ),
-        priceX18=to_x18(27000),
-        amount=to_pow_10(-1, 17),
+        priceX18=to_x18(20000),
+        amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
         nonce=gen_order_nonce(),
     )

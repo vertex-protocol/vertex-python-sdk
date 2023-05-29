@@ -1,10 +1,10 @@
-from .context import VertexClientContext
+from vertex_protocol.client.apis.market import MarketAPI
+from vertex_protocol.client.context import VertexClientContext
 
 
 class VertexClient:
     """
     Client for querying and executing against Vertex Clearinghouse.
-    Usually not instantiated directly. Instead, use `create_vertex_client` function.
     """
 
     def __init__(self, context: VertexClientContext):
@@ -14,4 +14,5 @@ class VertexClient:
         Args:
             context (VertexClientContext): The client context.
         """
-        pass
+        self.context = context
+        self.market = MarketAPI(context)
