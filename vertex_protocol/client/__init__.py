@@ -1,4 +1,5 @@
 from vertex_protocol.client.apis.market import MarketAPI
+from vertex_protocol.client.apis.perp import PerpAPI
 from vertex_protocol.client.apis.spot import SpotAPI
 from vertex_protocol.client.apis.subaccount import SubaccountAPI
 from vertex_protocol.client.context import VertexClientContext
@@ -20,3 +21,4 @@ class VertexClient:
         self.market = MarketAPI(context)
         self.subaccount = SubaccountAPI(context)
         self.spot = SpotAPI(context)
+        self.perp = PerpAPI(context)
