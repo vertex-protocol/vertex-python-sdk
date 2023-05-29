@@ -73,9 +73,6 @@ class IndexerMatch(IndexerOrderFill):
     cumulative_quote_filled: str
 
 
-ExecuteSlowModeTx = "execute_slow_mode"
-
-
 class IndexerMatchOrdersTxData(VertexBaseModel):
     product_id: int
     amm: bool
@@ -136,8 +133,7 @@ class IndexerBurnLpTx(VertexBaseModel):
 
 
 IndexerTxData = (
-    ExecuteSlowModeTx
-    | IndexerMatchOrdersTx
+    IndexerMatchOrdersTx
     | IndexerWithdrawCollateralTx
     | IndexerLiquidateSubaccountTx
     | IndexerMintLpTx
@@ -154,7 +150,7 @@ class IndexerSpotProductBalanceData(VertexBaseModel):
 
 
 class IndexerPerpProductBalanceData(VertexBaseModel):
-    spot: PerpProductBalance
+    perp: PerpProductBalance
 
 
 IndexerProductBalanceData = (
@@ -170,7 +166,7 @@ class IndexerPerpProductData(VertexBaseModel):
     perp: PerpProduct
 
 
-IndexerProductData = IndexerSpotProductData | IndexerSpotProductData
+IndexerProductData = IndexerSpotProductData | IndexerPerpProductData
 
 
 class IndexerEventTrackedData(VertexBaseModel):
@@ -260,9 +256,9 @@ class IndexerMarketMakerData(VertexBaseModel):
 
 class IndexerMarketMaker(VertexBaseModel):
     address: str
-    data: IndexerMarketMakerData
+    data: list[IndexerMarketMakerData]
 
 
-class IndexerLiquidationFeed(VertexBaseModel):
+class IndexerLiquidatableAccount(VertexBaseModel):
     subaccount: str
     update_time: int

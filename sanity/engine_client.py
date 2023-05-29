@@ -18,17 +18,17 @@ from vertex_protocol.engine_client.types.query import (
 )
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
-    hex_to_bytes32,
     str_to_hex,
     subaccount_to_bytes32,
     zero_subaccount,
 )
+from vertex_protocol.utils.endpoint import VertexEndpoint
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 
 private_key = os.getenv("PRIVATE_KEY")
-backend_url = "https://test.vertexprotocol-backend.com"
+backend_url = VertexEndpoint.TESTNET.value
 
 
 def run():

@@ -42,6 +42,12 @@ def subaccount_to_bytes32(
         return subaccount
 
 
+def subaccount_to_hex(
+    subaccount: str | bytes | VertexBaseModel, name: str = None
+) -> str:
+    return bytes32_to_hex(subaccount_to_bytes32(subaccount, name))
+
+
 def bytes32_to_hex(bytes32: bytes) -> str:
     if isinstance(bytes32, bytes):
         return f"0x{bytes32.hex()}"

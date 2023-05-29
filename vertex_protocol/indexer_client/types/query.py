@@ -7,7 +7,7 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerEvent,
     IndexerEventType,
     IndexerHistoricalOrder,
-    IndexerLiquidationFeed,
+    IndexerLiquidatableAccount,
     IndexerMarketMaker,
     IndexerMatch,
     IndexerOraclePrice,
@@ -25,10 +25,13 @@ class IndexerBaseParams(VertexBaseModel):
     limit: Optional[int]
 
 
-class IndexerHistoricalOrdersParams(IndexerBaseParams):
-    subaccount: Optional[str]
+class IndexerSubaccountHistoricalOrdersParams(IndexerBaseParams):
+    subaccount: str
     product_ids: Optional[list[int]]
-    digests: Optional[list[str]]
+
+
+class IndexerHistoricalOrdersByDigestParams(VertexBaseModel):
+    digests: list[str]
 
 
 class IndexerMatchesParams(IndexerBaseParams):
@@ -59,7 +62,7 @@ class IndexerSubaccountSummaryParams(VertexBaseModel):
     timestamp: Optional[int]
 
 
-class IndexerProductsParams(IndexerBaseParams):
+class IndexerProductSnapshotsParams(IndexerBaseParams):
     product_id: int
 
 
@@ -102,11 +105,12 @@ class IndexerLinkedSignerRateLimitParams(VertexBaseModel):
 
 
 IndexerParams = (
-    IndexerHistoricalOrdersParams
+    IndexerSubaccountHistoricalOrdersParams
+    | IndexerHistoricalOrdersByDigestParams
     | IndexerMatchesParams
     | IndexerEventsParams
     | IndexerSubaccountSummaryParams
-    | IndexerProductsParams
+    | IndexerProductSnapshotsParams
     | IndexerCandlesticksParams
     | IndexerFundingRateParams
     | IndexerPerpPricesParams
@@ -119,7 +123,7 @@ IndexerParams = (
 
 
 class IndexerHistoricalOrdersRequest(VertexBaseModel):
-    orders: IndexerHistoricalOrdersParams
+    orders: IndexerSubaccountHistoricalOrdersParams | IndexerHistoricalOrdersByDigestParams
 
 
 class IndexerMatchesRequest(VertexBaseModel):
@@ -134,8 +138,8 @@ class IndexerSubaccountSummaryRequest(VertexBaseModel):
     summary: IndexerSubaccountSummaryParams
 
 
-class IndexerProductRequest(VertexBaseModel):
-    products: IndexerProductsParams
+class IndexerProductSnapshotsRequest(VertexBaseModel):
+    products: IndexerProductSnapshotsParams
 
 
 class IndexerCandlesticksRequest(VertexBaseModel):
@@ -175,7 +179,7 @@ IndexerRequest = (
     | IndexerMatchesRequest
     | IndexerEventsRequest
     | IndexerSubaccountSummaryRequest
-    | IndexerProductRequest
+    | IndexerProductSnapshotsRequest
     | IndexerCandlesticksRequest
     | IndexerFundingRateRequest
     | IndexerPerpPricesRequest
@@ -198,14 +202,14 @@ class IndexerMatchesData(VertexBaseModel):
 
 class IndexerEventsData(VertexBaseModel):
     events: list[IndexerEvent]
-    txs: list[IndexerTx]
+    txs: Optional[list[IndexerTx]]
 
 
 class IndexerSubaccountSummaryData(IndexerEventsData):
     pass
 
 
-class IndexerProductsData(VertexBaseModel):
+class IndexerProductSnapshotsData(VertexBaseModel):
     products: list[IndexerProduct]
     txs: list[IndexerTx]
 
@@ -247,7 +251,7 @@ class IndexerLinkedSignerRateLimitData(VertexBaseModel):
     signer: str
 
 
-IndexerLiquidationFeedData = list[IndexerLiquidationFeed]
+IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
 
 
 IndexerResponseData = (
@@ -255,11 +259,13 @@ IndexerResponseData = (
     | IndexerMatchesData
     | IndexerEventsData
     | IndexerSubaccountSummaryData
+    | IndexerProductSnapshotsData
     | IndexerCandlesticksData
     | IndexerFundingRateData
     | IndexerPerpPricesData
     | IndexerOraclePricesData
     | IndexerTokenRewardsData
+    | IndexerMakerStatisticsData
     | IndexerLinkedSignerRateLimitData
     | IndexerLiquidationFeedData
 )
@@ -271,7 +277,11 @@ class IndexerResponse(VertexBaseModel):
 
 def to_indexer_request(params: IndexerParams) -> IndexerRequest:
     indexer_request_mapping = {
-        IndexerHistoricalOrdersParams: (
+        IndexerSubaccountHistoricalOrdersParams: (
+            IndexerHistoricalOrdersRequest,
+            VertexIndexer.ORDERS,
+        ),
+        IndexerHistoricalOrdersByDigestParams: (
             IndexerHistoricalOrdersRequest,
             VertexIndexer.ORDERS,
         ),
@@ -281,7 +291,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
             IndexerSubaccountSummaryRequest,
             VertexIndexer.SUMMARY,
         ),
-        IndexerProductsParams: (IndexerProductRequest, VertexIndexer.PRODUCTS),
+        IndexerProductSnapshotsParams: (
+            IndexerProductSnapshotsRequest,
+            VertexIndexer.PRODUCTS,
+        ),
         IndexerCandlesticksParams: (
             IndexerCandlesticksRequest,
             VertexIndexer.CANDLESTICKS,

@@ -9,7 +9,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerEventsData,
     IndexerFundingRateParams,
     IndexerFundingRateData,
-    IndexerHistoricalOrdersParams,
+    IndexerHistoricalOrdersByDigestParams,
     IndexerHistoricalOrdersData,
     IndexerLinkedSignerRateLimitData,
     IndexerLinkedSignerRateLimitParams,
@@ -24,10 +24,11 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerParams,
     IndexerPerpPricesData,
     IndexerPerpPricesParams,
-    IndexerProductsParams,
-    IndexerProductsData,
+    IndexerProductSnapshotsData,
+    IndexerProductSnapshotsParams,
     IndexerRequest,
     IndexerResponse,
+    IndexerSubaccountHistoricalOrdersParams,
     IndexerSubaccountSummaryParams,
     IndexerSubaccountSummaryData,
     IndexerTokenRewardsData,
@@ -56,18 +57,25 @@ class IndexerQueryClient:
         res = requests.post(f"{self.url}/indexer", json=req.dict())
         if res.status_code != 200:
             raise Exception(res.text)
-        return IndexerResponse(**res.json())
+        return IndexerResponse(data=res.json())
 
-    def get_historical_orders(
-        self, params: IndexerHistoricalOrdersParams
+    def get_subaccount_historical_orders(
+        self, params: IndexerSubaccountHistoricalOrdersParams
     ) -> IndexerHistoricalOrdersData:
-        return self.query(params).data
+        return self.query(
+            IndexerSubaccountHistoricalOrdersParams.parse_obj(params)
+        ).data
+
+    def get_historical_orders_by_digest(
+        self, digests: list[str]
+    ) -> IndexerHistoricalOrdersData:
+        return self.query(IndexerHistoricalOrdersByDigestParams(digests=digests)).data
 
     def get_matches(self, params: IndexerMatchesParams) -> IndexerMatchesData:
-        return self.query(params).data
+        return self.query(IndexerMatchesParams.parse_obj(params)).data
 
     def get_events(self, params: IndexerEventsParams) -> IndexerEventsData:
-        return self.query(params).data
+        return self.query(IndexerEventsParams.parse_obj(params)).data
 
     def get_subaccount_summary(
         self, subaccount: str, timestamp: int = None
@@ -76,13 +84,15 @@ class IndexerQueryClient:
             IndexerSubaccountSummaryParams(subaccount=subaccount, timestamp=timestamp)
         ).data
 
-    def get_products(self, params: IndexerProductsParams) -> IndexerProductsData:
-        return self.query(params).data
+    def get_product_snapshots(
+        self, params: IndexerProductSnapshotsParams
+    ) -> IndexerProductSnapshotsData:
+        return self.query(IndexerProductSnapshotsParams.parse_obj(params)).data
 
     def get_candlesticks(
         self, params: IndexerCandlesticksParams
     ) -> IndexerCandlesticksData:
-        return self.query(params).data
+        return self.query(IndexerCandlesticksParams.parse_obj(params)).data
 
     def get_perp_funding_rate(self, product_id: int) -> IndexerFundingRateData:
         return self.query(IndexerFundingRateParams(product_id=product_id)).data
@@ -99,7 +109,7 @@ class IndexerQueryClient:
     def get_maker_statistics(
         self, params: IndexerMakerStatisticsParams
     ) -> IndexerMakerStatisticsData:
-        return self.query(params).data
+        return self.query(IndexerMakerStatisticsParams.parse_obj(params)).data
 
     def get_liquidation_feed(self) -> IndexerLiquidationFeedData:
         return self.query(IndexerLiquidationFeedParams()).data
