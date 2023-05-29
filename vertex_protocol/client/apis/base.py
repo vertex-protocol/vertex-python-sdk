@@ -1,13 +1,13 @@
 from vertex_protocol.client.context import VertexClientContext
 
 
-class BaseVertexAPI:
+class VertexBaseAPI:
     """
     The base class for Vertex APIs.
     """
 
     def __init__(self, context: VertexClientContext):
         """
-        Initialize BaseVertexAPI with provided context.
+        Initialize VertexBaseAPI with provided context.
         """
         self.context = context

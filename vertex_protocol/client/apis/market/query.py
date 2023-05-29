@@ -1,4 +1,4 @@
-from vertex_protocol.client.apis.base import BaseVertexAPI
+from vertex_protocol.client.apis.base import VertexBaseAPI
 from vertex_protocol.engine_client.types.query import (
     AllProductsData,
     MarketLiquidityData,
@@ -19,7 +19,7 @@ from vertex_protocol.indexer_client.types.query import (
 )
 
 
-class MarketQueryAPI(BaseVertexAPI):
+class MarketQueryAPI(VertexBaseAPI):
     def get_all_engine_markets(self) -> AllProductsData:
         """
         Retrieves all market states from the off-chain engine.

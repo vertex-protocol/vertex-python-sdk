@@ -6,10 +6,10 @@ from vertex_protocol.engine_client.types.execute import (
     MintLpParams,
     PlaceOrderParams,
 )
-from vertex_protocol.client.apis.base import BaseVertexAPI
+from vertex_protocol.client.apis.base import VertexBaseAPI
 
 
-class MarketExecuteAPI(BaseVertexAPI):
+class MarketExecuteAPI(VertexBaseAPI):
     """
     Provides market execution APIs.
     """
@@ -19,10 +19,13 @@ class MarketExecuteAPI(BaseVertexAPI):
         Mint LP tokens through the engine.
 
         Args:
-            params: Parameters required to mint LP tokens.
+            params (MintLpParams): Parameters required to mint LP tokens.
 
         Returns:
-            The response from the engine client.
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.mint_lp(params)
 
@@ -31,10 +34,13 @@ class MarketExecuteAPI(BaseVertexAPI):
         Burn LP tokens through the engine.
 
         Args:
-            params: Parameters required to burn LP tokens.
+            params (BurnLpParams): Parameters required to burn LP tokens.
 
-        Returns:
-            The response from the engine client.
+                Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.burn_lp(params)
 
@@ -43,10 +49,13 @@ class MarketExecuteAPI(BaseVertexAPI):
         Places an order through the engine.
 
         Args:
-            params: Parameters required to place an order.
+            params (PlaceOrderParams): Parameters required to place an order.
 
-        Returns:
-            The response from the engine client.
+                Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.place_order(params)
 
@@ -55,10 +64,13 @@ class MarketExecuteAPI(BaseVertexAPI):
         Cancels orders through the engine.
 
         Args:
-            params: Parameters required to cancel orders.
+            params (CancelOrdersParams): Parameters required to cancel orders.
 
-        Returns:
-            The response from the engine client.
+                Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.cancel_orders(params)
 
@@ -69,9 +81,12 @@ class MarketExecuteAPI(BaseVertexAPI):
         Cancels all orders for provided products through the engine.
 
         Args:
-            params: Parameters required to cancel product orders.
+            params (CancelProductOrdersParams): Parameters required to cancel product orders.
 
-        Returns:
-            The response from the engine client.
+                Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.cancel_product_orders(params)
