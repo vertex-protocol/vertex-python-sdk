@@ -31,6 +31,7 @@ from vertex_protocol.engine_client.types.execute import (
 from vertex_protocol.engine_client.types.execute import SubaccountParams
 from vertex_protocol.engine_client.types.query import QueryNoncesParams
 from vertex_protocol.utils.engine import VertexExecute
+from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.nonce import gen_order_nonce
 
 
@@ -73,8 +74,8 @@ class EngineExecuteClient:
         return self._execute(to_execute_request(params))
 
     @execute.register
-    def _(self, req: ExecuteRequest) -> ExecuteResponse:
-        return self._execute(req)
+    def _(self, req: dict | ExecuteRequest) -> ExecuteResponse:
+        return self._execute(VertexBaseModel.parse_obj(req))
 
     def _execute(self, req: ExecuteRequest) -> ExecuteResponse:
         res = requests.post(f"{self.url}/execute", json=req.dict())

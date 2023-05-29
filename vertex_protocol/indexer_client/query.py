@@ -35,6 +35,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerTokenRewardsParams,
     to_indexer_request,
 )
+from vertex_protocol.utils.model import VertexBaseModel
 
 
 class IndexerQueryClient:
@@ -50,8 +51,8 @@ class IndexerQueryClient:
         return self._query(to_indexer_request(params))
 
     @query.register
-    def _(self, req: IndexerRequest) -> IndexerResponse:
-        return self._query(req)
+    def _(self, req: dict | IndexerRequest) -> IndexerResponse:
+        return self._query(VertexBaseModel.parse_obj(req))
 
     def _query(self, req: IndexerRequest) -> IndexerResponse:
         res = requests.post(f"{self.url}/indexer", json=req.dict())
