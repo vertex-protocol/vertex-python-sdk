@@ -36,7 +36,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         Args:
             params (BurnLpParams): Parameters required to burn LP tokens.
 
-                Returns:
+        Returns:
             ExecuteResponse: The response from the engine execution.
 
         Raises:
@@ -51,7 +51,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         Args:
             params (PlaceOrderParams): Parameters required to place an order.
 
-                Returns:
+        Returns:
             ExecuteResponse: The response from the engine execution.
 
         Raises:
@@ -66,7 +66,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         Args:
             params (CancelOrdersParams): Parameters required to cancel orders.
 
-                Returns:
+        Returns:
             ExecuteResponse: The response from the engine execution.
 
         Raises:
