@@ -1,9 +1,8 @@
 import logging
 from dataclasses import dataclass
-from typing import Optional
 
 from pydantic import BaseModel
-from vertex_protocol.contracts import VertexContracts
+from vertex_protocol.contracts import VertexContracts, VertexContractsContext
 
 from vertex_protocol.engine_client import EngineClient
 from vertex_protocol.engine_client.types import Signer
@@ -16,21 +15,15 @@ class VertexClientContext:
     Context required to use the Vertex client.
     """
 
+    signer: Signer
     engine_client: EngineClient
     indexer_client: IndexerClient
-    # contracts: VertexContracts
-
-
-class VertexClientContextContracts(BaseModel):
-    querier_address: str
-    spot_engine_address: Optional[str]
-    perp_engine_address: Optional[str]
-    clearinghouse_address: Optional[str]
-    endpoint_address: Optional[str]
+    contracts: VertexContracts
 
 
 class VertexClientContextOpts(BaseModel):
-    # contracts: VertexClientContextContracts
+    contracts_context: VertexContractsContext
+    rpc_node_url: str
     engine_endpoint: str
     indexer_endpoint: str
 
@@ -64,5 +57,8 @@ def create_vertex_client_context(
         )
 
     return VertexClientContext(
-        engine_client, IndexerClient({"url": opts.indexer_endpoint})
+        signer=signer,
+        engine_client=engine_client,
+        indexer_client=IndexerClient({"url": opts.indexer_endpoint}),
+        contracts=VertexContracts(opts.rpc_node_url, opts.contracts_context),
     )

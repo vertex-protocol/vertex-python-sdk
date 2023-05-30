@@ -8,12 +8,15 @@ from vertex_protocol.client.context import (
     create_vertex_client_context,
 )
 import pytest
+from vertex_protocol.contracts import VertexContractsContext
 
 from vertex_protocol.utils.endpoint import VertexEndpoint
 
 
 def test_create_vertex_client_context(
     mock_get: MagicMock,
+    mock_web3: MagicMock,
+    mock_load_abi: MagicMock,
     private_keys: list[str],
     url: str,
     endpoint_addr: str,
@@ -34,7 +37,14 @@ def test_create_vertex_client_context(
 
     full_engine_client_setup = create_vertex_client_context(
         private_keys[0],
-        VertexClientContextOpts(engine_endpoint=url, indexer_endpoint=url),
+        VertexClientContextOpts(
+            engine_endpoint=url,
+            indexer_endpoint=url,
+            rpc_node_url=url,
+            contracts_context=VertexContractsContext(
+                endpoint_addr=endpoint_addr, querier_addr=endpoint_addr
+            ),
+        ),
     )
 
     assert full_engine_client_setup.engine_client.chain_id == chain_id
@@ -59,7 +69,14 @@ def test_create_vertex_client_context(
 
     partial_engine_client_setup = create_vertex_client_context(
         private_keys[0],
-        VertexClientContextOpts(engine_endpoint=url, indexer_endpoint=url),
+        VertexClientContextOpts(
+            engine_endpoint=url,
+            indexer_endpoint=url,
+            rpc_node_url=url,
+            contracts_context=VertexContractsContext(
+                endpoint_addr=endpoint_addr, querier_addr=endpoint_addr
+            ),
+        ),
     )
 
     with pytest.raises(AttributeError, match="Endpoint address not set."):
@@ -84,11 +101,14 @@ def test_create_vertex_client_context(
 
 def test_create_vertex_client(
     mock_get: MagicMock,
+    mock_web3: MagicMock,
+    mock_load_abi: MagicMock,
     private_keys: list[str],
     url: str,
     endpoint_addr: str,
     book_addrs: list[str],
     chain_id: int,
+    contracts_context: VertexContractsContext,
 ):
     mock_response = MagicMock()
     mock_response.status_code = 200
@@ -140,7 +160,12 @@ def test_create_vertex_client(
     custom_vertex_client = create_vertex_client(
         VertexClientMode.DEVNET,
         signer,
-        VertexClientContextOpts(engine_endpoint=url, indexer_endpoint=url),
+        VertexClientContextOpts(
+            engine_endpoint=url,
+            indexer_endpoint=url,
+            rpc_node_url=url,
+            contracts_context=contracts_context,
+        ),
     )
 
     assert custom_vertex_client.context.engine_client.url == url

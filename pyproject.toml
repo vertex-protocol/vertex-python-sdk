@@ -5,6 +5,7 @@ description = "Vertex Protocol SDK"
 authors = ["Jeury Mejia <jeury@vertexprotocol.com>"]
 readme = "README.md"
 packages = [{include = "vertex_protocol"}]
+include = ["vertex_protocol/*.json"]
 keywords = ["vertex protocol", "vertex sdk", "vertex protocol api"]
 
 [tool.poetry.dependencies]

@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 from eth_account import Account
 import pytest
 from vertex_protocol.client import VertexClient, create_vertex_client
+from vertex_protocol.contracts import VertexContractsContext
 from vertex_protocol.engine_client import EngineClient
 from vertex_protocol.engine_client.types import EngineClientOpts
 
@@ -200,6 +201,18 @@ def mock_get() -> MagicMock:
 
 
 @pytest.fixture
+def mock_web3() -> MagicMock:
+    with patch("vertex_protocol.contracts.Web3") as mock_web3:
+        yield mock_web3
+
+
+@pytest.fixture
+def mock_load_abi() -> MagicMock:
+    with patch("vertex_protocol.contracts.load_abi") as mock_load_abi:
+        yield mock_load_abi
+
+
+@pytest.fixture
 def mock_execute_response(mock_post: MagicMock) -> MagicMock:
     mock_response = MagicMock()
     mock_response.status_code = 200
@@ -221,3 +234,10 @@ def mock_nonces(mock_get: MagicMock) -> MagicMock:
     }
     mock_get.return_value = mock_response
     return mock_get
+
+
+@pytest.fixture
+def contracts_context(endpoint_addr: str, book_addrs: str) -> VertexContractsContext:
+    return VertexContractsContext(
+        endpoint_addr=endpoint_addr, querier_addr=book_addrs[1]
+    )

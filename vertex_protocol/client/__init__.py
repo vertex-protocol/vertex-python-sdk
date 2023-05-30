@@ -9,6 +9,9 @@ from vertex_protocol.client.context import (
     VertexClientContextOpts,
     create_vertex_client_context,
 )
+from vertex_protocol.contracts import VertexContractsContext
+from vertex_protocol.contracts.loader import load_deployment
+from vertex_protocol.contracts.types import VertexNetwork
 from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.utils.endpoint import VertexEndpoint
 
@@ -68,12 +71,21 @@ def create_vertex_client(
     Returns:
         VertexClient: The created VertexClient instance.
     """
-    mode_to_endpoints = {
-        VertexClientMode.MAINNET: (VertexEndpoint.MAINNET, VertexEndpoint.MAINNET),
-        VertexClientMode.TESTNET: (VertexEndpoint.TESTNET, VertexEndpoint.TESTNET),
+    mode_to_setup = {
+        VertexClientMode.MAINNET: (
+            VertexEndpoint.MAINNET,
+            VertexEndpoint.MAINNET,
+            VertexNetwork.ARBITRUM_ONE,
+        ),
+        VertexClientMode.TESTNET: (
+            VertexEndpoint.TESTNET,
+            VertexEndpoint.TESTNET,
+            VertexNetwork.ARBITRUM_GOERLI,
+        ),
         VertexClientMode.DEVNET: (
             VertexEndpoint.DEVNET_ENGINE,
             VertexEndpoint.DEVNET_INDEXER,
+            VertexNetwork.HARDHAT,
         ),
     }
 
@@ -83,14 +95,22 @@ def create_vertex_client(
     else:
         logging.warning(f"Initializing default {mode} context")
         try:
-            engine_endpoint, indexer_endpoint = mode_to_endpoints[mode]
+            engine_endpoint, indexer_endpoint, network_name = mode_to_setup[mode]
         except KeyError:
             raise Exception(f"Mode provided `{mode}` not supported!")
+        deployment = load_deployment(network_name)
         context = create_vertex_client_context(
             signer,
             VertexClientContextOpts(
+                rpc_node_url=deployment.node_url,
                 engine_endpoint=engine_endpoint,
                 indexer_endpoint=indexer_endpoint,
+                contracts_context=VertexContractsContext(
+                    endpoint_addr=deployment.endpoint_addr,
+                    querier_addr=deployment.querier_addr,
+                    perp_engine_addr=deployment.perp_engine_addr,
+                    spot_engine_addr=deployment.spot_engine_addr,
+                ),
             ),
         )
     return VertexClient(context)
