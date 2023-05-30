@@ -21,7 +21,7 @@ def private_keys() -> list[str]:
 
 
 @pytest.fixture
-def chain_id() -> str:
+def chain_id() -> int:
     return 1337
 
 

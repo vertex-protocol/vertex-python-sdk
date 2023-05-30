@@ -100,7 +100,7 @@ class EngineExecuteClient:
         return self._opts.book_addrs
 
     @property
-    def chain_id(self) -> str:
+    def chain_id(self) -> int:
         if self._opts.chain_id is None:
             raise AttributeError("Chain ID is not set.")
         return self._opts.chain_id
@@ -128,8 +128,8 @@ class EngineExecuteClient:
         self._opts.book_addrs = book_addrs
 
     @chain_id.setter
-    def chain_id(self, chain_id: str) -> None:
-        self._opts.chain_id = chain_id
+    def chain_id(self, chain_id: int | str) -> None:
+        self._opts.chain_id = int(chain_id)
 
     @signer.setter
     def signer(self, signer: LocalAccount) -> None:

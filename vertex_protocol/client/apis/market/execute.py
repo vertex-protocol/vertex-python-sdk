@@ -14,7 +14,7 @@ class MarketExecuteAPI(VertexBaseAPI):
     Provides market execution APIs.
     """
 
-    async def mint_lp(self, params: MintLpParams) -> ExecuteResponse:
+    def mint_lp(self, params: MintLpParams) -> ExecuteResponse:
         """
         Mint LP tokens through the engine.
 
@@ -29,7 +29,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.mint_lp(params)
 
-    async def burn_lp(self, params: BurnLpParams) -> ExecuteResponse:
+    def burn_lp(self, params: BurnLpParams) -> ExecuteResponse:
         """
         Burn LP tokens through the engine.
 
@@ -44,7 +44,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.burn_lp(params)
 
-    async def place_order(self, params: PlaceOrderParams) -> ExecuteResponse:
+    def place_order(self, params: PlaceOrderParams) -> ExecuteResponse:
         """
         Places an order through the engine.
 
@@ -59,7 +59,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.place_order(params)
 
-    async def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
+    def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         """
         Cancels orders through the engine.
 
@@ -74,7 +74,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.cancel_orders(params)
 
-    async def cancel_product_orders(
+    def cancel_product_orders(
         self, params: CancelProductOrdersParams
     ) -> ExecuteResponse:
         """
