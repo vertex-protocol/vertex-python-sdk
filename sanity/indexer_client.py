@@ -13,7 +13,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerEventsParams,
     IndexerEventsRawLimit,
     IndexerMatchesParams,
-    IndexerHistoricalSubaccountOrdersParams,
+    IndexerSubaccountHistoricalOrdersParams,
 )
 from vertex_protocol.utils.bytes32 import subaccount_to_hex
 from vertex_protocol.utils.endpoint import VertexEndpoint
@@ -35,7 +35,7 @@ def run():
 
     print("querying subaccount historical orders...")
     subaccount_historical_orders = client.get_subaccount_historical_orders(
-        IndexerHistoricalSubaccountOrdersParams(subaccount=subaccount, limit=3)
+        IndexerSubaccountHistoricalOrdersParams(subaccount=subaccount, limit=3)
     )
     print("subaccount historical orders:", subaccount_historical_orders.json(indent=2))
 
