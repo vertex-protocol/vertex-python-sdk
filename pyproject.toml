@@ -24,6 +24,7 @@ python-dotenv = "^1.0.0"
 test = "pytest:main"
 engine-sanity = "sanity.engine_client:run"
 indexer-sanity = "sanity.indexer_client:run"
+contracts-sanity = "sanity.contracts:run"
 client-sanity = "sanity.vertex_client:run"
 
 [[tool.poetry.source]]
