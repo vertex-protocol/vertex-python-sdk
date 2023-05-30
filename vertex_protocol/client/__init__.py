@@ -46,7 +46,9 @@ class VertexClient:
 
 
 def create_vertex_client(
-    mode: VertexClientMode, signer: Signer, context_opts: VertexClientContextOpts = None
+    mode: VertexClientMode,
+    signer: Signer = None,
+    context_opts: VertexClientContextOpts = None,
 ) -> VertexClient:
     """
     Create a new VertexClient based on the given mode and signer.
@@ -63,7 +65,7 @@ def create_vertex_client(
             VertexClientMode.TESTNET: For operating in Vertex's testnet environment.
             VertexClientMode.DEVNET: For local development.
 
-        signer (Signer): An instance of LocalAccount or a private key string for signing transactions.
+        signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
 
         context_opts (VertexClientContextOpts, optional): Options for creating the client context.
             If not provided, default options for the given mode will be used.
@@ -91,7 +93,7 @@ def create_vertex_client(
 
     context: VertexClientContext
     if context_opts:
-        context = create_vertex_client_context(signer, context_opts)
+        context = create_vertex_client_context(context_opts, signer)
     else:
         logging.warning(f"Initializing default {mode} context")
         try:
@@ -100,7 +102,6 @@ def create_vertex_client(
             raise Exception(f"Mode provided `{mode}` not supported!")
         deployment = load_deployment(network_name)
         context = create_vertex_client_context(
-            signer,
             VertexClientContextOpts(
                 rpc_node_url=deployment.node_url,
                 engine_endpoint=engine_endpoint,
@@ -112,5 +113,6 @@ def create_vertex_client(
                     spot_engine_addr=deployment.spot_engine_addr,
                 ),
             ),
+            signer,
         )
     return VertexClient(context)

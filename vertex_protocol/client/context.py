@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from typing import Optional
 
 from pydantic import BaseModel
 from vertex_protocol.contracts import VertexContracts, VertexContractsContext
@@ -15,7 +16,7 @@ class VertexClientContext:
     Context required to use the Vertex client.
     """
 
-    signer: Signer
+    signer: Optional[Signer]
     engine_client: EngineClient
     indexer_client: IndexerClient
     contracts: VertexContracts
@@ -29,14 +30,14 @@ class VertexClientContextOpts(BaseModel):
 
 
 def create_vertex_client_context(
-    signer: Signer, opts: VertexClientContextOpts
+    opts: VertexClientContextOpts, signer: Signer = None
 ) -> VertexClientContext:
     """
     Initializes a VertexClientContext instance with the provided signer and options.
 
     Args:
-        signer (Signer): An instance of LocalAccount or a private key string for signing transactions.
         opts (VertexClientContextOpts): Options including endpoints for the engine and indexer clients.
+        signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
 
     Returns:
         VertexClientContext: The initialized Vertex client context.

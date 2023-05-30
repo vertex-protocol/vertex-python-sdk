@@ -36,7 +36,6 @@ def test_create_vertex_client_context(
     mock_get.return_value = mock_response
 
     full_engine_client_setup = create_vertex_client_context(
-        private_keys[0],
         VertexClientContextOpts(
             engine_endpoint=url,
             indexer_endpoint=url,
@@ -45,6 +44,7 @@ def test_create_vertex_client_context(
                 endpoint_addr=endpoint_addr, querier_addr=endpoint_addr
             ),
         ),
+        signer=private_keys[0],
     )
 
     assert full_engine_client_setup.engine_client.chain_id == chain_id
@@ -68,7 +68,6 @@ def test_create_vertex_client_context(
     mock_get.return_value = mock_response
 
     partial_engine_client_setup = create_vertex_client_context(
-        private_keys[0],
         VertexClientContextOpts(
             engine_endpoint=url,
             indexer_endpoint=url,
@@ -77,6 +76,7 @@ def test_create_vertex_client_context(
                 endpoint_addr=endpoint_addr, querier_addr=endpoint_addr
             ),
         ),
+        private_keys[0],
     )
 
     with pytest.raises(AttributeError, match="Endpoint address not set."):
