@@ -13,7 +13,7 @@ from vertex_protocol.utils.nonce import gen_order_nonce
 
 class SubaccountParams(VertexBaseModel):
     subaccount_owner: Optional[str]
-    subaccount_name: str
+    subaccount_name: str = "default"
 
 
 Subaccount = str | bytes | SubaccountParams
@@ -22,7 +22,7 @@ Digest = str | bytes
 
 
 class BaseParams(VertexBaseModel):
-    sender: Subaccount
+    sender: Subaccount = SubaccountParams()
     nonce: Optional[int]
 
     class Config:

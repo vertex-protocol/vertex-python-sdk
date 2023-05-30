@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 from eth_account import Account
 import pytest
+from vertex_protocol.client import VertexClient, create_vertex_client
 from vertex_protocol.engine_client import EngineClient
 from vertex_protocol.engine_client.types import EngineClientOpts
 
@@ -75,6 +76,28 @@ def engine_client(
             linked_signer=Account.from_key(private_keys[1]),
         )
     )
+
+
+@pytest.fixture
+def vertex_client(
+    mock_get: MagicMock,
+    chain_id: int,
+    endpoint_addr: str,
+    book_addrs: list[str],
+    private_keys: list[str],
+) -> VertexClient:
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "status": "success",
+        "data": {
+            "endpoint_addr": endpoint_addr,
+            "book_addrs": book_addrs,
+            "chain_id": chain_id,
+        },
+    }
+    mock_get.return_value = mock_response
+    return create_vertex_client("devnet", private_keys[0])
 
 
 @pytest.fixture
@@ -174,3 +197,27 @@ def mock_post() -> MagicMock:
 def mock_get() -> MagicMock:
     with patch("requests.get") as mock_post:
         yield mock_post
+
+
+@pytest.fixture
+def mock_execute_response(mock_post: MagicMock) -> MagicMock:
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "status": "success",
+        "error": None,
+    }
+    mock_post.return_value = mock_response
+    return mock_post
+
+
+@pytest.fixture
+def mock_nonces(mock_get: MagicMock) -> MagicMock:
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "status": "success",
+        "data": {"tx_nonce": 1, "order_nonce": 1},
+    }
+    mock_get.return_value = mock_response
+    return mock_get
