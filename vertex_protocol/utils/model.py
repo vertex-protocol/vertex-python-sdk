@@ -1,3 +1,4 @@
+from copy import deepcopy
 from types import FunctionType
 from pydantic import BaseModel
 

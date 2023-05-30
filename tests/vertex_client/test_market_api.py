@@ -23,7 +23,7 @@ def test_mint_lp(
         productId=1, amountBase=10, quoteAmountLow=10, quoteAmountHigh=10
     )
     res = vertex_client.market.mint_lp(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     params.nonce = 1
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.MINT_LP,
@@ -55,7 +55,7 @@ def test_burn_lp(
 ):
     params = BurnLpParams(productId=1, amount=10)
     res = vertex_client.market.burn_lp(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     params.nonce = 1
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.BURN_LP,
@@ -86,7 +86,7 @@ def test_place_order(
     order = OrderParams(priceX18=1000, amount=1, expiration=1, nonce=1)
     params = PlaceOrderParams(product_id=1, order=order)
     res = vertex_client.market.place_order(params)
-    order.sender = subaccount_to_bytes32(order.sender)
+    order.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.PLACE_ORDER,
         order.dict(),
@@ -121,7 +121,7 @@ def test_cancel_orders(
         nonce=2,
     )
     res = vertex_client.market.cancel_orders(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.CANCEL_ORDERS,
         params.dict(),
@@ -155,7 +155,7 @@ def test_cancel_product_orders(
         nonce=2,
     )
     res = vertex_client.market.cancel_product_orders(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.CANCEL_PRODUCT_ORDERS,
         params.dict(),

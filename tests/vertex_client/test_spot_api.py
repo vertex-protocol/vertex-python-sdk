@@ -20,7 +20,7 @@ def test_withdraw(
         nonce=2,
     )
     res = vertex_client.spot.withdraw(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.WITHDRAW_COLLATERAL,
         params.dict(),

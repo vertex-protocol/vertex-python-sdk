@@ -23,7 +23,7 @@ def test_liquidate_subaccount(
         nonce=2,
     )
     res = vertex_client.subaccount.liquidate_subaccount(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.LIQUIDATE_SUBACCOUNT,
         params.dict(),
@@ -57,7 +57,7 @@ def test_link_signer(
         nonce=2,
     )
     res = vertex_client.subaccount.link_signer(params)
-    params.sender = subaccount_to_bytes32(params.sender)
+    params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
         VertexExecute.LINK_SIGNER,
         params.dict(),
