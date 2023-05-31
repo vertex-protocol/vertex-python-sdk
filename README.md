@@ -34,4 +34,5 @@ $ poetry run test
 
 - `poetry run engine-sanity`: runs sanity checks for the `engine-client`.
 - `poetry run indexer-sanity`: runs sanity checks for the `indexer-client`.
+- `poetry run contracts-sanity`: runs sanity checks for the contracts module.
 - `poetry run client-sanity`: runs sanity checks for the top-level client.
