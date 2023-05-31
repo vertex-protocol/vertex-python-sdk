@@ -23,6 +23,30 @@ def run():
     print("setting up vertex client...")
     client = create_vertex_client("testnet", private_key)
 
+    print("minting test tokens...")
+    mint_tx_hash = client.spot._mint_mock_erc20(0, to_pow_10(1, 6))
+    print("mint tx hash:", mint_tx_hash)
+
+    print("approving allowance...")
+    approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(1, 6))
+    print("approve allowance tx hash:", approve_allowance_tx_hash)
+
+    print("querying my allowance...")
+    token_allowance = client.spot.get_token_allowance(0, client.context.signer.address)
+    print("token allowance:", token_allowance)
+
+    print("depositing collateral...")
+    deposit_tx_hash = client.spot.deposit(
+        {"subaccount_name": "default", "product_id": 0, "amount": to_pow_10(1, 6)}
+    )
+    print("deposit collateral tx hash:", deposit_tx_hash)
+
+    print("querying my token balance...")
+    token_balance = client.spot.get_token_wallet_balance(
+        1, client.context.signer.address
+    )
+    print("my token balance:", token_balance)
+
     owner = client.context.engine_client.signer.address
     print("placing order...")
     product_id = 1

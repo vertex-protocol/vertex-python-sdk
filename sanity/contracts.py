@@ -2,15 +2,15 @@ from vertex_protocol.contracts import VertexContracts, VertexContractsContext
 from vertex_protocol.contracts.loader import load_deployment
 from vertex_protocol.contracts.types import VertexNetwork
 
-rpc_node = "https://goerli-rollup.arbitrum.io/rpc"
 network = VertexNetwork.ARBITRUM_GOERLI
 
 
 def run():
     print("setting up vertex contracts")
+    deployment = load_deployment(network)
     vertex_contracts = VertexContracts(
-        node_url=rpc_node,
-        contracts_context=VertexContractsContext(**load_deployment(network).dict()),
+        node_url=deployment.node_url,
+        contracts_context=VertexContractsContext(**deployment.dict()),
     )
 
     print("endpoint:", vertex_contracts.endpoint.address)

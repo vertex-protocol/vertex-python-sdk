@@ -1,5 +1,6 @@
 from vertex_protocol.client.apis.spot.base import BaseSpotAPI
 from vertex_protocol.engine_client.types.query import MaxWithdrawableData
+from vertex_protocol.utils.math import from_pow_10
 
 
 class SpotQueryAPI(BaseSpotAPI):
@@ -21,29 +22,37 @@ class SpotQueryAPI(BaseSpotAPI):
             product_id, sender, spot_leverage
         )
 
-    def get_token_wallet_balance(self, product_id: int, address: str):
+    def get_token_wallet_balance(self, product_id: int, address: str) -> float:
         """
-        Placeholder for a function to retrieve the current balance of a specific token in the user's wallet,
-        excluding the amount in any Vertex subaccounts.
+        Retrieves the balance of a specific token in the user's wallet (i.e. not in a Vertex subaccount)
 
         Args:
-            product_id (int): The identifier for the spot product.
-            address (str): The user's wallet address.
+            product_id (int): Identifier for the spot product.
+            address (str): User's wallet address.
 
-        Raises:
-            NotImplementedError: This function is not yet implemented.
+        Returns:
+            float: The balance of the token in the user's wallet in decimal form.
         """
-        raise NotImplementedError("This function is not yet implemented")
+        token = self.get_token_contract_for_product(product_id)
+        decimals = token.functions.decimals().call()
+        return from_pow_10(token.functions.balanceOf(address).call(), decimals)
 
-    def get_token_allowance(self, product_id: int, address: str):
+    def get_token_allowance(self, product_id: int, address: str) -> float:
         """
-        Placeholder for a function to retrieve the current allowance of a specific token for a user's wallet.
+        Retrieves the current token allowance of a specified spot product.
 
         Args:
-            product_id (int): The identifier for the spot product.
+            product_id (int): Identifier for the spot product.
             address (str): The user's wallet address.
 
-        Raises:
-            NotImplementedError: This function is not yet implemented.
+        Returns:
+            float: The current token allowance of the user's wallet address to the associated spot product.
         """
-        raise NotImplementedError("This function is not yet implemented")
+        token = self.get_token_contract_for_product(product_id)
+        decimals = token.functions.decimals().call()
+        return from_pow_10(
+            token.functions.allowance(
+                address, self.context.contracts.endpoint.address
+            ).call(),
+            decimals,
+        )

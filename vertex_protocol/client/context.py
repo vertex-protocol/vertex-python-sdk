@@ -1,10 +1,11 @@
 import logging
 from dataclasses import dataclass
 from typing import Optional
+from eth_account import Account
 
 from pydantic import BaseModel
 from vertex_protocol.contracts import VertexContracts, VertexContractsContext
-
+from eth_account.signers.local import LocalAccount
 from vertex_protocol.engine_client import EngineClient
 from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.indexer_client import IndexerClient
@@ -16,7 +17,7 @@ class VertexClientContext:
     Context required to use the Vertex client.
     """
 
-    signer: Optional[Signer]
+    signer: Optional[LocalAccount]
     engine_client: EngineClient
     indexer_client: IndexerClient
     contracts: VertexContracts
@@ -56,7 +57,7 @@ def create_vertex_client_context(
         logging.warning(
             f"Failed to setup engine client verifying contracts with error: {e}"
         )
-
+    signer = Account.from_key(signer) if isinstance(signer, str) else signer
     return VertexClientContext(
         signer=signer,
         engine_client=engine_client,

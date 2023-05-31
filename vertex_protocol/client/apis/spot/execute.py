@@ -1,19 +1,37 @@
+from vertex_protocol.contracts.types import DepositCollateralParams
+from eth_account.signers.local import LocalAccount
 from vertex_protocol.client.apis.spot.base import BaseSpotAPI
 from vertex_protocol.engine_client.types.execute import (
     ExecuteResponse,
     WithdrawCollateralParams,
 )
+from vertex_protocol.utils.exceptions import MissingSignerException
 
 
 class SpotExecuteAPI(BaseSpotAPI):
-    def deposit(self):
+    def deposit(
+        self, params: DepositCollateralParams, signer: LocalAccount = None
+    ) -> str:
         """
-        Placeholder for a function to deposit a specified amount into a spot product.
+        Executes the operation of depositing a specified amount into a spot product.
+
+        Args:
+            params (DepositCollateralParams): Parameters required for depositing collateral.
+            signer (LocalAccount, optional):  The account that will sign the deposit transaction.
+                If no signer is provided, the signer set in the client context will be used.
 
         Raises:
-            NotImplementedError: This function is not yet implemented.
+            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
+
+        Returns:
+            str: The deposit collateral transaction hash.
         """
-        raise NotImplementedError("This function is not yet implemented")
+        signer = signer if signer else self.context.signer
+        if not signer:
+            raise MissingSignerException(
+                "A signer must be provided or set via the context."
+            )
+        return self.context.contracts.deposit_collateral(params, signer)
 
     def withdraw(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         """
@@ -30,20 +48,54 @@ class SpotExecuteAPI(BaseSpotAPI):
         """
         return self.context.engine_client.withdraw_collateral(params)
 
-    def approve_allowance(self):
+    def approve_allowance(
+        self, product_id: int, amount: int, signer: LocalAccount = None
+    ) -> str:
         """
-        Placeholder for a function to approve an allowance for a certain amount of tokens for a spot product.
+        Approves an allowance for a certain amount of tokens for a spot product.
+
+        Args:
+            product_id (int): The identifier of the spot product for which to approve an allowance.
+            amount (int): The amount of the tokens to be approved.
+            signer (LocalAccount, optional):  The account that will sign the approval transaction.
+                If no signer is provided, the signer set in the client context will be used.
 
         Raises:
-            NotImplementedError: This function is not yet implemented.
-        """
-        raise NotImplementedError("This function is not yet implemented")
+            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
 
-    def _mint_mock_erc20(self):
+        Returns:
+            str: The approve allowance transaction hash.
         """
-        Placeholder for a function to mint a specified amount of mock ERC20 tokens for testing purposes.
+        signer = signer if signer else self.context.signer
+        if not signer:
+            raise MissingSignerException(
+                "A signer must be provided or set via the context."
+            )
+        token = self.get_token_contract_for_product(product_id)
+        return self.context.contracts.approve_allowance(token, amount, signer)
+
+    def _mint_mock_erc20(
+        self, product_id: int, amount: int, signer: LocalAccount = None
+    ):
+        """
+        Mints a specified amount of mock ERC20 tokens for testing purposes.
+
+        Args:
+            product_id (int): The identifier for the spot product.
+            amount (int): The amount of mock ERC20 tokens to mint.
+            signer (LocalAccount, optional):  The account that will sign the mint transaction.
+                If no signer is provided, the signer set in the client context will be used.
 
         Raises:
-            NotImplementedError: This function is not yet implemented.
+            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
+
+        Returns:
+            str: The mock ERC20 mint transaction hash.
         """
-        raise NotImplementedError("This function is not yet implemented")
+        signer = signer if signer else self.context.signer
+        if not signer:
+            raise MissingSignerException(
+                "A signer must be provided or set via the context."
+            )
+        token = self.get_token_contract_for_product(product_id)
+        return self.context.contracts._mint_mock_erc20(token, amount, signer)

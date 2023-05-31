@@ -30,3 +30,9 @@ class VertexDeployment(VertexBaseModel):
     endpoint_addr: str = Field(alias="endpoint")
     spot_engine_addr: str = Field(alias="spotEngine")
     perp_engine_addr: str = Field(alias="perpEngine")
+
+
+class DepositCollateralParams(VertexBaseModel):
+    subaccount_name: str
+    product_id: int
+    amount: int

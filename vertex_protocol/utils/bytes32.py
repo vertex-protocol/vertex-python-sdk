@@ -3,6 +3,14 @@ from vertex_protocol.utils.model import VertexBaseModel
 
 
 def hex_to_bytes32(input: str | bytes) -> bytes:
+    return hex_to_bytes(input, 32)
+
+
+def hex_to_bytes12(input: str | bytes) -> bytes:
+    return hex_to_bytes(input, 12)
+
+
+def hex_to_bytes(input: str | bytes, size: int) -> bytes:
     if isinstance(input, bytes):
         return input
     if input.encode() == zero_subaccount():
@@ -10,7 +18,7 @@ def hex_to_bytes32(input: str | bytes) -> bytes:
     if input.startswith("0x"):
         input = input[2:]
     data_bytes = bytes.fromhex(input)
-    padded_data = data_bytes + b"\x00" * (32 - len(data_bytes))
+    padded_data = data_bytes + b"\x00" * (size - len(data_bytes))
     return padded_data
 
 
@@ -46,6 +54,10 @@ def subaccount_to_hex(
     subaccount: str | bytes | VertexBaseModel, name: str = None
 ) -> str:
     return bytes32_to_hex(subaccount_to_bytes32(subaccount, name))
+
+
+def subaccount_name_to_bytes12(subaccount_name: str) -> bytes:
+    return hex_to_bytes12(str_to_hex(subaccount_name))
 
 
 def bytes32_to_hex(bytes32: bytes) -> str:
