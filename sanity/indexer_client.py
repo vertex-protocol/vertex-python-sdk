@@ -77,49 +77,49 @@ def run():
     subaccount_summary = client.get_subaccount_summary(subaccount)
     print("subaccount summary:", subaccount_summary.json(indent=2))
 
-    # print("querying product snapshots...")
-    # btc_snapshots = client.get_product_snapshots({"product_id": 1, "limit": 3})
-    # print("btc snapshots:", btc_snapshots.json(indent=2))
+    print("querying product snapshots...")
+    btc_snapshots = client.get_product_snapshots({"product_id": 1, "limit": 3})
+    print("btc snapshots:", btc_snapshots.json(indent=2))
 
-    # print("querying candlesticks...")
-    # candlesticks = client.get_candlesticks(
-    #     IndexerCandlesticksParams(
-    #         product_id=1,
-    #         granularity=IndexerCandlesticksGranularity.FIVE_MINUTES,
-    #         limit=3,
-    #     )
-    # )
-    # print("candlesticks:", candlesticks.json(indent=2))
+    print("querying candlesticks...")
+    candlesticks = client.get_candlesticks(
+        IndexerCandlesticksParams(
+            product_id=1,
+            granularity=IndexerCandlesticksGranularity.FIVE_MINUTES,
+            limit=3,
+        )
+    )
+    print("candlesticks:", candlesticks.json(indent=2))
 
-    # print("querying perp funding rate...")
-    # btc_perp_funding_rate = client.get_perp_funding_rate(2)
-    # print("btc-perp funding rate:", btc_perp_funding_rate.json(indent=2))
+    print("querying perp funding rate...")
+    btc_perp_funding_rate = client.get_perp_funding_rate(2)
+    print("btc-perp funding rate:", btc_perp_funding_rate.json(indent=2))
 
-    # print("querying perp prices...")
-    # eth_perp_prices = client.get_perp_prices(4)
-    # print("eth-perp prices:", eth_perp_prices.json(indent=2))
+    print("querying perp prices...")
+    eth_perp_prices = client.get_perp_prices(4)
+    print("eth-perp prices:", eth_perp_prices.json(indent=2))
 
-    # print("querying oracle prices...")
-    # oracle_prices = client.get_oracle_prices(product_ids=[1, 2])
-    # print("oracle prices:", oracle_prices.json(indent=2))
+    print("querying oracle prices...")
+    oracle_prices = client.get_oracle_prices(product_ids=[1, 2])
+    print("oracle prices:", oracle_prices.json(indent=2))
 
-    # print("querying token rewards...")
-    # token_rewards = client.get_token_rewards(owner)
-    # print("token rewards:", token_rewards.json(indent=2))
+    print("querying token rewards...")
+    token_rewards = client.get_token_rewards(owner)
+    print("token rewards:", token_rewards.json(indent=2))
 
-    # print("querying maker stats...")
-    # maker_stats = client.get_maker_statistics(
-    #     {"product_id": 1, "epoch": 2, "interval": 10000}
-    # )
-    # print("maker stats:", maker_stats.json(indent=2))
+    print("querying maker stats...")
+    maker_stats = client.get_maker_statistics(
+        {"product_id": 1, "epoch": 2, "interval": 10000}
+    )
+    print("maker stats:", maker_stats.json(indent=2))
 
-    # print("querying liquidation feed...")
-    # liquidation_feed = client.get_liquidation_feed()
-    # print(
-    #     "liquidation feed:",
-    #     json.dumps([acc.dict() for acc in liquidation_feed], indent=2),
-    # )
+    print("querying liquidation feed...")
+    liquidation_feed = client.get_liquidation_feed()
+    print(
+        "liquidation feed:",
+        json.dumps([acc.dict() for acc in liquidation_feed], indent=2),
+    )
 
-    # print("querying linked signer rate limit...")
-    # linked_signer_rate_limit = client.get_linked_signer_rate_limits(subaccount)
-    # print("linked signer rate limit:", linked_signer_rate_limit.json(indent=2))
+    print("querying linked signer rate limit...")
+    linked_signer_rate_limit = client.get_linked_signer_rate_limits(subaccount)
+    print("linked signer rate limit:", linked_signer_rate_limit.json(indent=2))
