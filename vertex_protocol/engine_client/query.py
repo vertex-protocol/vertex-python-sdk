@@ -46,7 +46,10 @@ from vertex_protocol.utils.exceptions import (
 class EngineQueryClient:
     def __init__(self, opts: EngineClientOpts):
         """
-        Initialize EngineQueryClient with provided options
+        Initialize EngineQueryClient with provided options.
+
+        Args:
+            opts (EngineClientOpts): Options for the client.
         """
         self._opts = EngineClientOpts.parse_obj(opts)
         self.url = self._opts.url
