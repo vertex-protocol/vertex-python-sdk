@@ -15,6 +15,7 @@ def test_withdraw(
     mock_nonces: MagicMock,
 ):
     params = WithdrawCollateralParams(
+        sender=senders[0],
         productId=1,
         amount=10,
         nonce=2,

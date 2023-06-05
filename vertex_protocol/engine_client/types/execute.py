@@ -27,7 +27,7 @@ Digest = str | bytes
 
 
 class BaseParams(VertexBaseModel):
-    sender: Subaccount = SubaccountParams()
+    sender: Subaccount
     nonce: Optional[int]
 
     class Config:

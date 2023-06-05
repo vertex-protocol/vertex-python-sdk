@@ -75,7 +75,7 @@ def run():
 
     print("cancelling order...")
     res = client.market.cancel_orders(
-        {"productIds": [product_id], "digests": [order_digest]}
+        {"productIds": [product_id], "digests": [order_digest], "sender": sender}
     )
     print("cancel order result:", res.json(indent=2))
 
@@ -86,11 +86,13 @@ def run():
     print("placing multiple orders...")
     for product_id in [1, 2]:
         order.nonce = gen_order_nonce()
-        res = client.market.place_order({"product_id": product_id, "order": order})
+        res = client.market.place_order(
+            {"product_id": product_id, "order": order, "sender": sender}
+        )
         print("order result:", res.json(indent=2))
 
     print("cancelling product orders...")
-    res = client.market.cancel_product_orders({"productIds": [1, 2]})
+    res = client.market.cancel_product_orders({"productIds": [1, 2], "sender": sender})
     print("cancel product orders results:", res.json(indent=2))
 
     for product_id in [1, 2]:
@@ -197,7 +199,7 @@ def run():
 
     print("withdrawing collateral...")
     withdraw_collateral_params = WithdrawCollateralParams(
-        productId=0, amount=to_pow_10(1, 6)
+        productId=0, amount=to_pow_10(1, 6), sender=sender
     )
     res = client.spot.withdraw(withdraw_collateral_params)
     print("withdraw result:", res.json(indent=2))

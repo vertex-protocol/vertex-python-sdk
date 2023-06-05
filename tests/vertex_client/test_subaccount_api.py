@@ -16,6 +16,7 @@ def test_liquidate_subaccount(
     mock_nonces: MagicMock,
 ):
     params = LiquidateSubaccountParams(
+        sender=senders[0],
         liquidatee=senders[1],
         mode=1,
         healthGroup=1,
@@ -53,6 +54,7 @@ def test_link_signer(
     mock_nonces: MagicMock,
 ):
     params = LinkSignerParams(
+        sender=senders[0],
         signer=senders[1],
         nonce=2,
     )
