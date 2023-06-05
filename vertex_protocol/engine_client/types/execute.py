@@ -1,6 +1,7 @@
 from enum import StrEnum
 from typing import Optional, Type
 from pydantic import validator
+from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.bytes32 import (
@@ -10,17 +11,6 @@ from vertex_protocol.utils.bytes32 import (
 )
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
-
-
-class EngineExecuteType(StrEnum):
-    PLACE_ORDER = "place_order"
-    CANCEL_ORDERS = "cancel_orders"
-    CANCEL_PRODUCT_ORDERS = "cancel_product_orders"
-    WITHDRAW_COLLATERAL = "withdraw_collateral"
-    LIQUIDATE_SUBACCOUNT = "liquidate_subaccount"
-    MINT_LP = "mint_lp"
-    BURN_LP = "burn_lp"
-    LINK_SIGNER = "link_signer"
 
 
 Digest = str | bytes
@@ -262,23 +252,23 @@ class ExecuteResponse(VertexBaseModel):
 
 def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
     execute_request_mapping = {
-        PlaceOrderParams: (PlaceOrderRequest, EngineExecuteType.PLACE_ORDER),
-        CancelOrdersParams: (CancelOrdersRequest, EngineExecuteType.CANCEL_ORDERS),
+        PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER),
+        CancelOrdersParams: (CancelOrdersRequest, VertexExecuteType.CANCEL_ORDERS),
         CancelProductOrdersParams: (
             CancelProductOrdersRequest,
-            EngineExecuteType.CANCEL_PRODUCT_ORDERS,
+            VertexExecuteType.CANCEL_PRODUCT_ORDERS,
         ),
         WithdrawCollateralParams: (
             WithdrawCollateralRequest,
-            EngineExecuteType.WITHDRAW_COLLATERAL,
+            VertexExecuteType.WITHDRAW_COLLATERAL,
         ),
         LiquidateSubaccountParams: (
             LiquidateSubaccountRequest,
-            EngineExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
         ),
-        MintLpParams: (MintLpRequest, EngineExecuteType.MINT_LP),
-        BurnLpParams: (BurnLpRequest, EngineExecuteType.BURN_LP),
-        LinkSignerParams: (LinkSignerRequest, EngineExecuteType.LINK_SIGNER),
+        MintLpParams: (MintLpRequest, VertexExecuteType.MINT_LP),
+        BurnLpParams: (BurnLpRequest, VertexExecuteType.BURN_LP),
+        LinkSignerParams: (LinkSignerRequest, VertexExecuteType.LINK_SIGNER),
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]

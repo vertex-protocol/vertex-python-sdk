@@ -7,11 +7,11 @@ from vertex_protocol.contracts.eip712.domain import (
 from vertex_protocol.contracts.eip712.types import get_vertex_eip712_type
 from eth_account.messages import encode_structured_data, _hash_eip191_message
 
-from vertex_protocol.engine_client.types.execute import EngineExecuteType
+from vertex_protocol.contracts.types import VertexExecuteType
 
 
 def build_eip712_typed_data(
-    execute: EngineExecuteType, msg: dict, verifying_contract: str, chain_id: int
+    execute: VertexExecuteType, msg: dict, verifying_contract: str, chain_id: int
 ) -> EIP712TypedData:
     eip17_domain = get_vertex_eip712_domain(verifying_contract, chain_id)
     eip712_execute_type = get_vertex_eip712_type(execute)

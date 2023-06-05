@@ -7,8 +7,9 @@ from vertex_protocol.contracts.eip712.sign import (
     sign_eip712_typed_data,
 )
 from vertex_protocol.engine_client import EngineClient
+from vertex_protocol.contracts.types import VertexExecuteType
+
 from vertex_protocol.engine_client.types.execute import (
-    EngineExecuteType,
     OrderParams,
     PlaceOrderParams,
     PlaceOrderRequest,
@@ -168,16 +169,16 @@ def test_place_order_execute_success(
     with pytest.raises(
         ValueError, match="Missing `product_id` to sign place_order execute"
     ):
-        engine_client._sign(EngineExecuteType.PLACE_ORDER, order.dict())
+        engine_client._sign(VertexExecuteType.PLACE_ORDER, order.dict())
 
     expected_signature = engine_client._sign(
-        EngineExecuteType.PLACE_ORDER,
+        VertexExecuteType.PLACE_ORDER,
         order.dict(),
         product_id=place_order_params.product_id,
     )
     computed_signature = sign_eip712_typed_data(
         typed_data=build_eip712_typed_data(
-            EngineExecuteType.PLACE_ORDER,
+            VertexExecuteType.PLACE_ORDER,
             order.dict(),
             engine_client._opts.book_addrs[1],
             engine_client.chain_id,
@@ -218,7 +219,7 @@ def test_place_order_execute_success(
 
     expected_signature = sign_eip712_typed_data(
         typed_data=build_eip712_typed_data(
-            EngineExecuteType.PLACE_ORDER,
+            VertexExecuteType.PLACE_ORDER,
             order.dict(),
             engine_client._opts.book_addrs[1],
             engine_client.chain_id,
@@ -267,7 +268,7 @@ def test_place_order_execute_provide_full_params(
         "expiration": 10000,
     }
     signature = engine_client.sign(
-        EngineExecuteType.PLACE_ORDER, order_params, book_addrs[1], chain_id, signer
+        VertexExecuteType.PLACE_ORDER, order_params, book_addrs[1], chain_id, signer
     )
     order_params["sender"] = bytes32_to_hex(order_params["sender"])
     res = engine_client.place_order(

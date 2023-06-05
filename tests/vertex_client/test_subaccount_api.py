@@ -1,8 +1,9 @@
 from unittest.mock import MagicMock
 
 from vertex_protocol.client import VertexClient
+from vertex_protocol.contracts.types import VertexExecuteType
+
 from vertex_protocol.engine_client.types.execute import (
-    EngineExecuteType,
     LinkSignerParams,
     LiquidateSubaccountParams,
 )
@@ -26,7 +27,7 @@ def test_liquidate_subaccount(
     res = vertex_client.subaccount.liquidate_subaccount(params)
     params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.LIQUIDATE_SUBACCOUNT,
+        VertexExecuteType.LIQUIDATE_SUBACCOUNT,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,
@@ -61,7 +62,7 @@ def test_link_signer(
     res = vertex_client.subaccount.link_signer(params)
     params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.LINK_SIGNER,
+        VertexExecuteType.LINK_SIGNER,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,

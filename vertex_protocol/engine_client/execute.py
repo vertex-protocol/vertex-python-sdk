@@ -29,9 +29,8 @@ from vertex_protocol.engine_client.types.execute import (
     WithdrawCollateralParams,
     to_execute_request,
 )
-from vertex_protocol.engine_client.types.execute import (
-    EngineExecuteType,
-)
+from vertex_protocol.contracts.types import VertexExecuteType
+
 from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
     ExecuteFailedException,
@@ -159,16 +158,16 @@ class EngineExecuteClient:
 
     def get_order_digest(self, order: OrderParams, product_id: int) -> str:
         return self.build_digest(
-            EngineExecuteType.PLACE_ORDER,
+            VertexExecuteType.PLACE_ORDER,
             order.dict(),
             self.book_addr(product_id),
             self.chain_id,
         )
 
     def _sign(
-        self, execute: EngineExecuteType, msg: dict, product_id: int = None
+        self, execute: VertexExecuteType, msg: dict, product_id: int = None
     ) -> str:
-        is_place_order = execute == EngineExecuteType.PLACE_ORDER
+        is_place_order = execute == VertexExecuteType.PLACE_ORDER
         if is_place_order and product_id is None:
             raise ValueError("Missing `product_id` to sign place_order execute")
         verifying_contract = (
@@ -180,7 +179,7 @@ class EngineExecuteClient:
 
     def build_digest(
         self,
-        execute: EngineExecuteType,
+        execute: VertexExecuteType,
         msg: dict,
         verifying_contract: str,
         chain_id: int,
@@ -191,7 +190,7 @@ class EngineExecuteClient:
 
     def sign(
         self,
-        execute: EngineExecuteType,
+        execute: VertexExecuteType,
         msg: dict,
         verifying_contract: str,
         chain_id: int,
@@ -208,14 +207,14 @@ class EngineExecuteClient:
         params = PlaceOrderParams.parse_obj(params)
         params.order = self.prepare_execute_params(params.order)
         params.signature = params.signature or self._sign(
-            EngineExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
+            VertexExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
         )
         return self.execute(params)
 
     def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params))
         params.signature = params.signature or self._sign(
-            EngineExecuteType.CANCEL_ORDERS, params.dict()
+            VertexExecuteType.CANCEL_ORDERS, params.dict()
         )
         return self.execute(params)
 
@@ -226,14 +225,14 @@ class EngineExecuteClient:
             CancelProductOrdersParams.parse_obj(params)
         )
         params.signature = params.signature or self._sign(
-            EngineExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
+            VertexExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
         )
         return self.execute(params)
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))
         params.signature = params.signature or self._sign(
-            EngineExecuteType.WITHDRAW_COLLATERAL, params.dict()
+            VertexExecuteType.WITHDRAW_COLLATERAL, params.dict()
         )
         return self.execute(params)
 
@@ -244,7 +243,7 @@ class EngineExecuteClient:
             LiquidateSubaccountParams.parse_obj(params)
         )
         params.signature = params.signature or self._sign(
-            EngineExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
             params.dict(),
         )
         return self.execute(params)
@@ -252,7 +251,7 @@ class EngineExecuteClient:
     def mint_lp(self, params: MintLpParams) -> ExecuteResponse:
         params = self.prepare_execute_params(MintLpParams.parse_obj(params))
         params.signature = params.signature or self._sign(
-            EngineExecuteType.MINT_LP,
+            VertexExecuteType.MINT_LP,
             params.dict(),
         )
         return self.execute(params)
@@ -260,7 +259,7 @@ class EngineExecuteClient:
     def burn_lp(self, params: BurnLpParams) -> ExecuteResponse:
         params = self.prepare_execute_params(BurnLpParams.parse_obj(params))
         params.signature = params.signature or self._sign(
-            EngineExecuteType.BURN_LP,
+            VertexExecuteType.BURN_LP,
             params.dict(),
         )
         return self.execute(params)
@@ -268,7 +267,7 @@ class EngineExecuteClient:
     def link_signer(self, params: LinkSignerParams) -> ExecuteResponse:
         params = self.prepare_execute_params(LinkSignerParams.parse_obj(params))
         params.signature = params.signature or self._sign(
-            EngineExecuteType.LINK_SIGNER,
+            VertexExecuteType.LINK_SIGNER,
             params.dict(),
         )
         return self.execute(params)

@@ -1,11 +1,11 @@
 from unittest.mock import MagicMock
 
 from vertex_protocol.client import VertexClient
+from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
     CancelOrdersParams,
     CancelProductOrdersParams,
-    EngineExecuteType,
     MintLpParams,
     OrderParams,
     PlaceOrderParams,
@@ -30,7 +30,7 @@ def test_mint_lp(
     params.sender = subaccount_to_bytes32(senders[0])
     params.nonce = 1
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.MINT_LP,
+        VertexExecuteType.MINT_LP,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,
@@ -62,7 +62,7 @@ def test_burn_lp(
     params.sender = subaccount_to_bytes32(senders[0])
     params.nonce = 1
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.BURN_LP,
+        VertexExecuteType.BURN_LP,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,
@@ -94,7 +94,7 @@ def test_place_order(
     res = vertex_client.market.place_order(params)
     order.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.PLACE_ORDER,
+        VertexExecuteType.PLACE_ORDER,
         order.dict(),
         vertex_client.context.engine_client.book_addr(1),
         vertex_client.context.engine_client.chain_id,
@@ -130,7 +130,7 @@ def test_cancel_orders(
     res = vertex_client.market.cancel_orders(params)
     params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.CANCEL_ORDERS,
+        VertexExecuteType.CANCEL_ORDERS,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,
@@ -165,7 +165,7 @@ def test_cancel_product_orders(
     res = vertex_client.market.cancel_product_orders(params)
     params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
-        EngineExecuteType.CANCEL_PRODUCT_ORDERS,
+        VertexExecuteType.CANCEL_PRODUCT_ORDERS,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,
