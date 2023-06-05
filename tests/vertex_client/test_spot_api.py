@@ -2,10 +2,10 @@ from unittest.mock import MagicMock
 
 from vertex_protocol.client import VertexClient
 from vertex_protocol.engine_client.types.execute import (
+    EngineExecuteType,
     WithdrawCollateralParams,
 )
 from vertex_protocol.utils.bytes32 import subaccount_to_bytes32
-from vertex_protocol.utils.engine import VertexExecute
 
 
 def test_withdraw(
@@ -22,7 +22,7 @@ def test_withdraw(
     res = vertex_client.spot.withdraw(params)
     params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
-        VertexExecute.WITHDRAW_COLLATERAL,
+        EngineExecuteType.WITHDRAW_COLLATERAL,
         params.dict(),
         vertex_client.context.engine_client.endpoint_addr,
         vertex_client.context.engine_client.chain_id,

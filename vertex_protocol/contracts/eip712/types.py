@@ -1,9 +1,9 @@
-from vertex_protocol.utils.engine import VertexExecute
+from vertex_protocol.engine_client.types.execute import EngineExecuteType
 
 
-def get_vertex_eip712_type(execute: VertexExecute) -> dict:
+def get_vertex_eip712_type(execute: EngineExecuteType) -> dict:
     return {
-        VertexExecute.PLACE_ORDER: {
+        EngineExecuteType.PLACE_ORDER: {
             "Order": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "priceX18", "type": "int128"},
@@ -12,7 +12,7 @@ def get_vertex_eip712_type(execute: VertexExecute) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecute.CANCEL_ORDERS: {
+        EngineExecuteType.CANCEL_ORDERS: {
             "Cancellation": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productIds", "type": "uint32[]"},
@@ -20,14 +20,14 @@ def get_vertex_eip712_type(execute: VertexExecute) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecute.CANCEL_PRODUCT_ORDERS: {
+        EngineExecuteType.CANCEL_PRODUCT_ORDERS: {
             "CancellationProducts": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productIds", "type": "uint32[]"},
                 {"name": "nonce", "type": "uint64"},
             ],
         },
-        VertexExecute.WITHDRAW_COLLATERAL: {
+        EngineExecuteType.WITHDRAW_COLLATERAL: {
             "WithdrawCollateral": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productId", "type": "uint32"},
@@ -35,7 +35,7 @@ def get_vertex_eip712_type(execute: VertexExecute) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecute.LIQUIDATE_SUBACCOUNT: {
+        EngineExecuteType.LIQUIDATE_SUBACCOUNT: {
             "LiquidateSubaccount": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "liquidatee", "type": "bytes32"},
@@ -45,7 +45,7 @@ def get_vertex_eip712_type(execute: VertexExecute) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ],
         },
-        VertexExecute.MINT_LP: {
+        EngineExecuteType.MINT_LP: {
             "MintLp": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productId", "type": "uint32"},
@@ -55,7 +55,7 @@ def get_vertex_eip712_type(execute: VertexExecute) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ],
         },
-        VertexExecute.BURN_LP: {
+        EngineExecuteType.BURN_LP: {
             "BurnLp": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productId", "type": "uint32"},
@@ -63,7 +63,7 @@ def get_vertex_eip712_type(execute: VertexExecute) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecute.LINK_SIGNER: {
+        EngineExecuteType.LINK_SIGNER: {
             "LinkSigner": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "signer", "type": "bytes32"},

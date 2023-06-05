@@ -8,6 +8,7 @@ from vertex_protocol.contracts.eip712.sign import (
 )
 from vertex_protocol.engine_client import EngineClient
 from vertex_protocol.engine_client.types.execute import (
+    EngineExecuteType,
     OrderParams,
     PlaceOrderParams,
     PlaceOrderRequest,
@@ -20,8 +21,8 @@ from vertex_protocol.utils.bytes32 import (
     subaccount_to_bytes32,
 )
 import pytest
+from vertex_protocol.utils.exceptions import ExecuteFailedException
 
-from vertex_protocol.utils.engine import VertexExecute
 from vertex_protocol.utils.nonce import gen_order_nonce
 
 
@@ -167,16 +168,16 @@ def test_place_order_execute_success(
     with pytest.raises(
         ValueError, match="Missing `product_id` to sign place_order execute"
     ):
-        engine_client._sign(VertexExecute.PLACE_ORDER, order.dict())
+        engine_client._sign(EngineExecuteType.PLACE_ORDER, order.dict())
 
     expected_signature = engine_client._sign(
-        VertexExecute.PLACE_ORDER,
+        EngineExecuteType.PLACE_ORDER,
         order.dict(),
         product_id=place_order_params.product_id,
     )
     computed_signature = sign_eip712_typed_data(
         typed_data=build_eip712_typed_data(
-            VertexExecute.PLACE_ORDER,
+            EngineExecuteType.PLACE_ORDER,
             order.dict(),
             engine_client._opts.book_addrs[1],
             engine_client.chain_id,
@@ -202,14 +203,14 @@ def test_place_order_execute_success(
     assert res.status == "success"
     assert res.error is None
 
-    mock_response.status_code = 429
+    mock_response.status_code = 200
     mock_response.json.return_value = {
         "status": "failure",
         "error": "Too Many Requests!",
     }
     mock_post.return_value = mock_response
 
-    with pytest.raises(Exception, match="Too Many Requests!"):
+    with pytest.raises(ExecuteFailedException, match="Too Many Requests!"):
         engine_client.place_order(place_order_params)
 
     # deactivate linked signer
@@ -217,7 +218,7 @@ def test_place_order_execute_success(
 
     expected_signature = sign_eip712_typed_data(
         typed_data=build_eip712_typed_data(
-            VertexExecute.PLACE_ORDER,
+            EngineExecuteType.PLACE_ORDER,
             order.dict(),
             engine_client._opts.book_addrs[1],
             engine_client.chain_id,
@@ -266,7 +267,7 @@ def test_place_order_execute_provide_full_params(
         "expiration": 10000,
     }
     signature = engine_client.sign(
-        VertexExecute.PLACE_ORDER, order_params, book_addrs[1], chain_id, signer
+        EngineExecuteType.PLACE_ORDER, order_params, book_addrs[1], chain_id, signer
     )
     order_params["sender"] = bytes32_to_hex(order_params["sender"])
     res = engine_client.place_order(

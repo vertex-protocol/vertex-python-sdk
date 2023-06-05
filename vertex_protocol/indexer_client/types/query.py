@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import Optional
 
 from pydantic import Field
@@ -15,8 +16,23 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerTokenReward,
     IndexerTx,
 )
-from vertex_protocol.utils.indexer import VertexIndexer
 from vertex_protocol.utils.model import VertexBaseModel
+
+
+class IndexerQueryType(StrEnum):
+    ORDERS = "orders"
+    MATCHES = "matches"
+    EVENTS = "events"
+    SUMMARY = "summary"
+    PRODUCTS = "products"
+    CANDLESTICKS = "candlesticks"
+    FUNDING_RATE = "funding_rate"
+    PERP_PRICES = "price"
+    ORACLE_PRICES = "oracle_price"
+    REWARDS = "rewards"
+    MAKER_STATISTICS = "maker_statistics"
+    LIQUIDATION_FEED = "liquidation_feed"
+    LINKED_SIGNER_RATE_LIMIT = "linked_signer_rate_limit"
 
 
 class IndexerBaseParams(VertexBaseModel):
@@ -202,11 +218,11 @@ class IndexerMatchesData(VertexBaseModel):
 
 class IndexerEventsData(VertexBaseModel):
     events: list[IndexerEvent]
-    txs: Optional[list[IndexerTx]]
+    txs: list[IndexerTx]
 
 
-class IndexerSubaccountSummaryData(IndexerEventsData):
-    pass
+class IndexerSubaccountSummaryData(VertexBaseModel):
+    events: list[IndexerEvent]
 
 
 class IndexerProductSnapshotsData(VertexBaseModel):
@@ -279,47 +295,53 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
     indexer_request_mapping = {
         IndexerSubaccountHistoricalOrdersParams: (
             IndexerHistoricalOrdersRequest,
-            VertexIndexer.ORDERS,
+            IndexerQueryType.ORDERS,
         ),
         IndexerHistoricalOrdersByDigestParams: (
             IndexerHistoricalOrdersRequest,
-            VertexIndexer.ORDERS,
+            IndexerQueryType.ORDERS,
         ),
-        IndexerMatchesParams: (IndexerMatchesRequest, VertexIndexer.MATCHES),
-        IndexerEventsParams: (IndexerEventsRequest, VertexIndexer.EVENTS),
+        IndexerMatchesParams: (IndexerMatchesRequest, IndexerQueryType.MATCHES),
+        IndexerEventsParams: (IndexerEventsRequest, IndexerQueryType.EVENTS),
         IndexerSubaccountSummaryParams: (
             IndexerSubaccountSummaryRequest,
-            VertexIndexer.SUMMARY,
+            IndexerQueryType.SUMMARY,
         ),
         IndexerProductSnapshotsParams: (
             IndexerProductSnapshotsRequest,
-            VertexIndexer.PRODUCTS,
+            IndexerQueryType.PRODUCTS,
         ),
         IndexerCandlesticksParams: (
             IndexerCandlesticksRequest,
-            VertexIndexer.CANDLESTICKS,
+            IndexerQueryType.CANDLESTICKS,
         ),
         IndexerFundingRateParams: (
             IndexerFundingRateRequest,
-            VertexIndexer.FUNDING_RATE,
+            IndexerQueryType.FUNDING_RATE,
         ),
-        IndexerPerpPricesParams: (IndexerPerpPricesRequest, VertexIndexer.PERP_PRICES),
+        IndexerPerpPricesParams: (
+            IndexerPerpPricesRequest,
+            IndexerQueryType.PERP_PRICES,
+        ),
         IndexerOraclePricesParams: (
             IndexerOraclePricesRequest,
-            VertexIndexer.ORACLE_PRICES,
+            IndexerQueryType.ORACLE_PRICES,
         ),
-        IndexerTokenRewardsParams: (IndexerTokenRewardsRequest, VertexIndexer.REWARDS),
+        IndexerTokenRewardsParams: (
+            IndexerTokenRewardsRequest,
+            IndexerQueryType.REWARDS,
+        ),
         IndexerMakerStatisticsParams: (
             IndexerMakerStatisticsRequest,
-            VertexIndexer.MAKER_STATISTICS,
+            IndexerQueryType.MAKER_STATISTICS,
         ),
         IndexerLiquidationFeedParams: (
             IndexerLiquidationFeedRequest,
-            VertexIndexer.LIQUIDATION_FEED,
+            IndexerQueryType.LIQUIDATION_FEED,
         ),
         IndexerLinkedSignerRateLimitParams: (
             IndexerLinkedSignerRateLimitRequest,
-            VertexIndexer.LINKED_SIGNER_RATE_LIMIT,
+            IndexerQueryType.LINKED_SIGNER_RATE_LIMIT,
         ),
     }
 

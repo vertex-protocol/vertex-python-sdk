@@ -10,7 +10,7 @@ from vertex_protocol.client.context import (
 import pytest
 from vertex_protocol.contracts import VertexContractsContext
 
-from vertex_protocol.utils.endpoint import VertexEndpoint
+from vertex_protocol.utils.backend import VertexBackendURL
 
 
 def test_create_vertex_client_context(
@@ -128,8 +128,8 @@ def test_create_vertex_client(
     assert mainnet_vertex_client.context.engine_client.chain_id == chain_id
     assert mainnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
     assert mainnet_vertex_client.context.engine_client.book_addrs == book_addrs
-    assert mainnet_vertex_client.context.engine_client.url == VertexEndpoint.MAINNET
-    assert mainnet_vertex_client.context.indexer_client.url == VertexEndpoint.MAINNET
+    assert mainnet_vertex_client.context.engine_client.url == VertexBackendURL.MAINNET
+    assert mainnet_vertex_client.context.indexer_client.url == VertexBackendURL.MAINNET
     assert mainnet_vertex_client.context.engine_client.signer == signer
 
     testnet_vertex_client = create_vertex_client(VertexClientMode.TESTNET, signer)
@@ -137,8 +137,8 @@ def test_create_vertex_client(
     assert testnet_vertex_client.context.engine_client.chain_id == chain_id
     assert testnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
     assert testnet_vertex_client.context.engine_client.book_addrs == book_addrs
-    assert testnet_vertex_client.context.engine_client.url == VertexEndpoint.TESTNET
-    assert testnet_vertex_client.context.indexer_client.url == VertexEndpoint.TESTNET
+    assert testnet_vertex_client.context.engine_client.url == VertexBackendURL.TESTNET
+    assert testnet_vertex_client.context.indexer_client.url == VertexBackendURL.TESTNET
     assert testnet_vertex_client.context.engine_client.signer == signer
 
     devnet_vertex_client = create_vertex_client(VertexClientMode.DEVNET, signer)
@@ -147,10 +147,11 @@ def test_create_vertex_client(
     assert devnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
     assert devnet_vertex_client.context.engine_client.book_addrs == book_addrs
     assert (
-        devnet_vertex_client.context.engine_client.url == VertexEndpoint.DEVNET_ENGINE
+        devnet_vertex_client.context.engine_client.url == VertexBackendURL.DEVNET_ENGINE
     )
     assert (
-        devnet_vertex_client.context.indexer_client.url == VertexEndpoint.DEVNET_INDEXER
+        devnet_vertex_client.context.indexer_client.url
+        == VertexBackendURL.DEVNET_INDEXER
     )
     assert devnet_vertex_client.context.engine_client.signer == signer
 

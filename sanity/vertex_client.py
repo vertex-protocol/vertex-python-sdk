@@ -1,5 +1,5 @@
-import os
 import time
+from sanity import SIGNER_PRIVATE_KEY
 
 from vertex_protocol.client import create_vertex_client
 from vertex_protocol.engine_client.types.execute import (
@@ -16,12 +16,9 @@ from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 
 
-private_key = os.getenv("PRIVATE_KEY")
-
-
 def run():
     print("setting up vertex client...")
-    client = create_vertex_client("testnet", private_key)
+    client = create_vertex_client("testnet", SIGNER_PRIVATE_KEY)
 
     print("minting test tokens...")
     mint_tx_hash = client.spot._mint_mock_erc20(0, to_pow_10(1, 6))

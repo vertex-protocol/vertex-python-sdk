@@ -21,7 +21,8 @@ print("Hello Vertex")
 4. Setup an `.env` file and set the following envvars
 
    ```shell
-   PRIVATE_KEY="xxx"
+   SIGNER_PRIVATE_KEY="xxx"
+   LINKED_SIGNER_PRIVATE_KEY="xxx" # not required
    ```
 
 # Run tests

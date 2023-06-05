@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import StrEnum
 import logging
 from vertex_protocol.client.apis.market import MarketAPI
 from vertex_protocol.client.apis.perp import PerpAPI
@@ -13,10 +13,10 @@ from vertex_protocol.contracts import VertexContractsContext
 from vertex_protocol.contracts.loader import load_deployment
 from vertex_protocol.contracts.types import VertexNetwork
 from vertex_protocol.engine_client.types import Signer
-from vertex_protocol.utils.endpoint import VertexEndpoint
+from vertex_protocol.utils.backend import VertexBackendURL
 
 
-class VertexClientMode(str, Enum):
+class VertexClientMode(StrEnum):
     MAINNET = "mainnet"
     TESTNET = "testnet"
     DEVNET = "devnet"
@@ -75,18 +75,18 @@ def create_vertex_client(
     """
     mode_to_setup = {
         VertexClientMode.MAINNET: (
-            VertexEndpoint.MAINNET,
-            VertexEndpoint.MAINNET,
+            VertexBackendURL.MAINNET,
+            VertexBackendURL.MAINNET,
             VertexNetwork.ARBITRUM_ONE,
         ),
         VertexClientMode.TESTNET: (
-            VertexEndpoint.TESTNET,
-            VertexEndpoint.TESTNET,
+            VertexBackendURL.TESTNET,
+            VertexBackendURL.TESTNET,
             VertexNetwork.ARBITRUM_GOERLI,
         ),
         VertexClientMode.DEVNET: (
-            VertexEndpoint.DEVNET_ENGINE,
-            VertexEndpoint.DEVNET_INDEXER,
+            VertexBackendURL.DEVNET_ENGINE,
+            VertexBackendURL.DEVNET_INDEXER,
             VertexNetwork.HARDHAT,
         ),
     }

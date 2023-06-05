@@ -1,7 +1,7 @@
+from enum import StrEnum
 from typing import Optional, Type
 from pydantic import validator
-from vertex_protocol.engine_client.types.models import EngineStatus, ResponseStatus
-from vertex_protocol.utils.engine import VertexExecute
+from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
@@ -9,14 +9,19 @@ from vertex_protocol.utils.bytes32 import (
     subaccount_to_bytes32,
 )
 from vertex_protocol.utils.nonce import gen_order_nonce
+from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
 
-class SubaccountParams(VertexBaseModel):
-    subaccount_owner: Optional[str]
-    subaccount_name: str = "default"
+class EngineExecuteType(StrEnum):
+    PLACE_ORDER = "place_order"
+    CANCEL_ORDERS = "cancel_orders"
+    CANCEL_PRODUCT_ORDERS = "cancel_product_orders"
+    WITHDRAW_COLLATERAL = "withdraw_collateral"
+    LIQUIDATE_SUBACCOUNT = "liquidate_subaccount"
+    MINT_LP = "mint_lp"
+    BURN_LP = "burn_lp"
+    LINK_SIGNER = "link_signer"
 
-
-Subaccount = str | bytes | SubaccountParams
 
 Digest = str | bytes
 
@@ -257,23 +262,23 @@ class ExecuteResponse(VertexBaseModel):
 
 def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
     execute_request_mapping = {
-        PlaceOrderParams: (PlaceOrderRequest, VertexExecute.PLACE_ORDER),
-        CancelOrdersParams: (CancelOrdersRequest, VertexExecute.CANCEL_ORDERS),
+        PlaceOrderParams: (PlaceOrderRequest, EngineExecuteType.PLACE_ORDER),
+        CancelOrdersParams: (CancelOrdersRequest, EngineExecuteType.CANCEL_ORDERS),
         CancelProductOrdersParams: (
             CancelProductOrdersRequest,
-            VertexExecute.CANCEL_PRODUCT_ORDERS,
+            EngineExecuteType.CANCEL_PRODUCT_ORDERS,
         ),
         WithdrawCollateralParams: (
             WithdrawCollateralRequest,
-            VertexExecute.WITHDRAW_COLLATERAL,
+            EngineExecuteType.WITHDRAW_COLLATERAL,
         ),
         LiquidateSubaccountParams: (
             LiquidateSubaccountRequest,
-            VertexExecute.LIQUIDATE_SUBACCOUNT,
+            EngineExecuteType.LIQUIDATE_SUBACCOUNT,
         ),
-        MintLpParams: (MintLpRequest, VertexExecute.MINT_LP),
-        BurnLpParams: (BurnLpRequest, VertexExecute.BURN_LP),
-        LinkSignerParams: (LinkSignerRequest, VertexExecute.LINK_SIGNER),
+        MintLpParams: (MintLpRequest, EngineExecuteType.MINT_LP),
+        BurnLpParams: (BurnLpRequest, EngineExecuteType.BURN_LP),
+        LinkSignerParams: (LinkSignerRequest, EngineExecuteType.LINK_SIGNER),
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]

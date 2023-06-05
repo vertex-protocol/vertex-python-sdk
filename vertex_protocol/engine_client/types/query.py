@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import Optional
 from pydantic import validator
 from vertex_protocol.utils.model import VertexBaseModel
@@ -16,24 +17,40 @@ from vertex_protocol.engine_client.types.models import (
     PerpProductBalance,
 )
 
-from vertex_protocol.utils.engine import VertexQuery
+
+class EngineQueryType(StrEnum):
+    STATUS = "status"
+    CONTRACTS = "contracts"
+    NONCES = "nonces"
+    ORDER = "order"
+    ALL_PRODUCTS = "all_products"
+    FEE_RATES = "fee_rates"
+    HEALTH_GROUPS = "health_groups"
+    LINKED_SIGNER = "linked_signer"
+    MARKET_LIQUIDITY = "market_liquidity"
+    MARKET_PRICE = "market_price"
+    MAX_ORDER_SIZE = "max_order_size"
+    MAX_WITHDRAWABLE = "max_withdrawable"
+    MAX_LP_MINTABLE = "max_lp_mintable"
+    SUBACCOUNT_INFO = "subaccount_info"
+    SUBACCOUNT_ORDERS = "subaccount_orders"
 
 
 class QueryStatusParams(VertexBaseModel):
-    type = VertexQuery.STATUS.value
+    type = EngineQueryType.STATUS.value
 
 
 class QueryContractsParams(VertexBaseModel):
-    type = VertexQuery.CONTRACTS.value
+    type = EngineQueryType.CONTRACTS.value
 
 
 class QueryNoncesParams(VertexBaseModel):
-    type = VertexQuery.NONCES.value
+    type = EngineQueryType.NONCES.value
     address: str
 
 
 class QueryOrderParams(VertexBaseModel):
-    type = VertexQuery.ORDER.value
+    type = EngineQueryType.ORDER.value
     product_id: int
     digest: str
 
@@ -42,34 +59,34 @@ QuerySubaccountInfoTx = MintLpTx | BurnLpTx | ApplyDeltaTx
 
 
 class QuerySubaccountInfoParams(VertexBaseModel):
-    type = VertexQuery.SUBACCOUNT_INFO.value
+    type = EngineQueryType.SUBACCOUNT_INFO.value
     subaccount: str
     txs: Optional[list[QuerySubaccountInfoTx]]
 
 
 class QuerySubaccountOpenOrdersParams(VertexBaseModel):
-    type = VertexQuery.SUBACCOUNT_ORDERS.value
+    type = EngineQueryType.SUBACCOUNT_ORDERS.value
     product_id: int
     sender: str
 
 
 class QueryMarketLiquidityParams(VertexBaseModel):
-    type = VertexQuery.MARKET_LIQUIDITY.value
+    type = EngineQueryType.MARKET_LIQUIDITY.value
     product_id: int
     depth: int
 
 
 class QueryAllProductsParams(VertexBaseModel):
-    type = VertexQuery.ALL_PRODUCTS.value
+    type = EngineQueryType.ALL_PRODUCTS.value
 
 
 class QueryMarketPriceParams(VertexBaseModel):
-    type = VertexQuery.MARKET_PRICE.value
+    type = EngineQueryType.MARKET_PRICE.value
     product_id: int
 
 
 class QueryMaxOrderSizeParams(VertexBaseModel):
-    type = VertexQuery.MAX_ORDER_SIZE.value
+    type = EngineQueryType.MAX_ORDER_SIZE.value
     sender: str
     product_id: int
     price_x18: str
@@ -82,30 +99,30 @@ class QueryMaxOrderSizeParams(VertexBaseModel):
 
 
 class QueryMaxWithdrawableParams(VertexBaseModel):
-    type = VertexQuery.MAX_WITHDRAWABLE.value
+    type = EngineQueryType.MAX_WITHDRAWABLE.value
     sender: str
     product_id: int
     spot_leverage: Optional[bool]
 
 
 class QueryMaxLpMintableParams(VertexBaseModel):
-    type = VertexQuery.MAX_LP_MINTABLE.value
+    type = EngineQueryType.MAX_LP_MINTABLE.value
     sender: str
     product_id: int
     spot_leverage: Optional[bool]
 
 
 class QueryFeeRatesParams(VertexBaseModel):
-    type = VertexQuery.FEE_RATES.value
+    type = EngineQueryType.FEE_RATES.value
     sender: str
 
 
 class QueryHealthGroupsParams(VertexBaseModel):
-    type = VertexQuery.HEALTH_GROUPS.value
+    type = EngineQueryType.HEALTH_GROUPS.value
 
 
 class QueryLinkedSignerParams(VertexBaseModel):
-    type = VertexQuery.LINKED_SIGNER.value
+    type = EngineQueryType.LINKED_SIGNER.value
     subaccount: str
 
 

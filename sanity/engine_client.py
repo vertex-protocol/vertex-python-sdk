@@ -1,6 +1,10 @@
 from pprint import pprint
 import time
-import os
+
+from eth_account import Account
+from eth_account.signers.local import LocalAccount
+
+from sanity import LINKED_SIGNER_PRIVATE_KEY, SIGNER_PRIVATE_KEY
 from vertex_protocol.engine_client import EngineClient, EngineClientOpts
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
@@ -22,18 +26,19 @@ from vertex_protocol.utils.bytes32 import (
     subaccount_to_bytes32,
     zero_subaccount,
 )
-from vertex_protocol.utils.endpoint import VertexEndpoint
+from vertex_protocol.utils.backend import VertexBackendURL
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 
-private_key = os.getenv("PRIVATE_KEY")
-backend_url = VertexEndpoint.TESTNET.value
+backend_url = VertexBackendURL.TESTNET.value
 
 
 def run():
     print("setting up engine client...")
-    client = EngineClient(opts=EngineClientOpts(url=backend_url, signer=private_key))
+    client = EngineClient(
+        opts=EngineClientOpts(url=backend_url, signer=SIGNER_PRIVATE_KEY)
+    )
 
     print("querying status...")
     status_data = client.get_status()
@@ -184,32 +189,60 @@ def run():
     except Exception as e:
         print("liquidate subaccount failed with error:", e)
 
+    linked_signer: LocalAccount = Account.from_key(
+        LINKED_SIGNER_PRIVATE_KEY or SIGNER_PRIVATE_KEY
+    )
+
     print("linking signer...")
     link_signer_params = LinkSignerParams(
         sender=client.signer.address + str_to_hex("default"),
-        signer=subaccount_to_bytes32(
-            "0x13df46D99A81DcA51A7fC9852a0c1b88072B6Ba9", "default"
-        ),
+        signer=subaccount_to_bytes32(linked_signer.address, "default"),
     )
-    res = client.link_signer(link_signer_params)
-    print("link signer result:", res.json(indent=2))
+
+    try:
+        res = client.link_signer(link_signer_params)
+        print("link signer result:", res.json(indent=2))
+    except Exception as e:
+        print("link signer failed with error:", e)
+    else:
+        print("placing order as a linked signer...")
+        client.linked_signer = linked_signer
+        order = OrderParams(
+            sender=SubaccountParams(
+                subaccount_owner=client.signer.address, subaccount_name="default"
+            ),
+            priceX18=to_x18(20000),
+            amount=to_pow_10(1, 17),
+            expiration=get_expiration_timestamp(
+                OrderType.POST_ONLY, int(time.time()) + 40
+            ),
+            nonce=gen_order_nonce(),
+        )
+        order_digest = client.get_order_digest(order, 2)
+        print("order digest:", order_digest)
+
+        place_order = PlaceOrderParams(product_id=2, order=order)
+        res = client.place_order(place_order)
+        print("order result:", res.json(indent=2))
 
     print("querying linked signer post update...")
-    linked_signer = client.get_linked_signer(
+    linked_signer_res = client.get_linked_signer(
         subaccount=bytes32_to_hex(link_signer_params.sender)
     )
-    print("linked signer:", linked_signer.json(indent=2))
+    print("linked signer:", linked_signer_res.json(indent=2))
 
     print("revoking signer...")
     link_signer_params.signer = zero_subaccount()
     res = client.link_signer(link_signer_params)
     print("revoke signer result:", res.json(indent=2))
 
+    client.linked_signer = None
+
     print("querying linked signer post revoking...")
-    linked_signer = client.get_linked_signer(
+    linked_signer_res = client.get_linked_signer(
         subaccount=bytes32_to_hex(link_signer_params.sender)
     )
-    print("linked signer:", linked_signer.json(indent=2))
+    print("linked signer:", linked_signer_res.json(indent=2))
 
     print("withdrawing collateral...")
     withdraw_collateral_params = WithdrawCollateralParams(
@@ -219,5 +252,6 @@ def run():
         productId=0,
         amount=to_pow_10(1, 6),
     )
+
     res = client.withdraw_collateral(withdraw_collateral_params)
     print("withdraw collateral result:", res.json(indent=2))

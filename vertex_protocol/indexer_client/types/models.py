@@ -1,4 +1,4 @@
-from enum import Enum, IntEnum
+from enum import IntEnum, StrEnum
 from typing import Any, Optional
 from vertex_protocol.engine_client.types.models import (
     PerpProduct,
@@ -10,7 +10,7 @@ from vertex_protocol.engine_client.types.models import (
 from vertex_protocol.utils.model import VertexBaseModel
 
 
-class IndexerEventType(str, Enum):
+class IndexerEventType(StrEnum):
     LIQUIDATE_SUBACCOUNT = "liquidate_subaccount"
     DEPOSIT_COLLATERAL = "deposit_collateral"
     WITHDRAW_COLLATERAL = "withdraw_collateral"
@@ -18,6 +18,8 @@ class IndexerEventType(str, Enum):
     MATCH_ORDERS = "match_orders"
     MINT_LP = "mint_lp"
     BURN_LP = "burn_lp"
+    MANUAL_ASSERT = "manual_assert"
+    LINK_SIGNER = "link_signer"
 
 
 class IndexerCandlesticksGranularity(IntEnum):

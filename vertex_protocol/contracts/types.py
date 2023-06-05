@@ -1,16 +1,16 @@
 from pydantic import Field
-from enum import Enum
+from enum import StrEnum
 
 from vertex_protocol.utils.model import VertexBaseModel
 
 
-class VertexNetwork(str, Enum):
+class VertexNetwork(StrEnum):
     ARBITRUM_ONE = "arbitrumOne"
     ARBITRUM_GOERLI = "arbitrumGoerli"
     HARDHAT = "localhost"
 
 
-class VertexAbiName(str, Enum):
+class VertexAbiName(StrEnum):
     ENDPOINT = "Endpoint"
     FQUERIER = "FQuerier"
     ICLEARINGHOUSE = "IClearinghouse"

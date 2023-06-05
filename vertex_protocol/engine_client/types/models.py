@@ -1,14 +1,14 @@
-from enum import Enum
+from enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
 from pydantic import conlist
 
 
-class ResponseStatus(str, Enum):
+class ResponseStatus(StrEnum):
     SUCCESS = "success"
     FAILURE = "failure"
 
 
-class EngineStatus(str, Enum):
+class EngineStatus(StrEnum):
     ACTIVE = "active"
     FAILED = "failed"
 
@@ -161,7 +161,7 @@ class PerpProduct(BaseProduct):
     lp_state: PerpProductLpState
 
 
-class MaxOrderSizeDirection(str, Enum):
+class MaxOrderSizeDirection(StrEnum):
     LONG = "long"
     SHORT = "short"
 
