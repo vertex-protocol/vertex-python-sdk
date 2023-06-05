@@ -1,0 +1,149 @@
+import json
+from typing import Optional
+from pydantic import BaseModel
+from web3 import Web3
+from web3.contract import Contract
+from eth_account.signers.local import LocalAccount
+from vertex_protocol.contracts.loader import load_abi
+from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiName
+from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12
+
+
+class VertexContractsContext(BaseModel):
+    endpoint_addr: str
+    querier_addr: str
+    spot_engine_addr: Optional[str]
+    perp_engine_addr: Optional[str]
+    clearinghouse_addr: Optional[str]
+
+
+class VertexContracts:
+    """
+    Encapsulates the set of Vertex contracts required for querying and executing.
+    """
+
+    def __init__(self, node_url: str, contracts_context: VertexContractsContext):
+        self.w3 = Web3(Web3.HTTPProvider(node_url))
+        self.contracts_context = VertexContractsContext.parse_obj(contracts_context)
+        self.querier: Contract = self.w3.eth.contract(
+            address=contracts_context.querier_addr, abi=load_abi(VertexAbiName.FQUERIER)
+        )
+        self.endpoint: Contract = self.w3.eth.contract(
+            address=self.contracts_context.endpoint_addr,
+            abi=load_abi(VertexAbiName.ENDPOINT),
+        )
+        self.clearinghouse = None
+        self.spot_engine = None
+        self.perp_engine = None
+
+        if self.contracts_context.clearinghouse_addr:
+            self.clearinghouse: Contract = self.w3.eth.contract(
+                address=self.contracts_context.clearinghouse_addr,
+                abi=load_abi(VertexAbiName.ICLEARINGHOUSE),
+            )
+
+        if self.contracts_context.spot_engine_addr:
+            self.spot_engine: Contract = self.w3.eth.contract(
+                address=self.contracts_context.spot_engine_addr,
+                abi=load_abi(VertexAbiName.ISPOT_ENGINE),
+            )
+
+        if self.contracts_context.perp_engine_addr:
+            self.perp_engine: Contract = self.w3.eth.contract(
+                address=self.contracts_context.perp_engine_addr,
+                abi=load_abi(VertexAbiName.IPERP_ENGINE),
+            )
+
+    def deposit_collateral(
+        self, params: DepositCollateralParams, signer: LocalAccount
+    ) -> str:
+        """
+        Deposits a specified amount of collateral into a spot product.
+
+        Args:
+            params (DepositCollateralParams): The parameters for depositing collateral.
+            signer (LocalAccount): The account that will sign the deposit transaction.
+
+        Returns:
+            str: The transaction hash of the deposit operation.
+        """
+        params = DepositCollateralParams.parse_obj(params)
+        tx = self.endpoint.functions.depositCollateral(
+            subaccount_name_to_bytes12(params.subaccount_name),
+            params.product_id,
+            params.amount,
+        ).build_transaction(
+            {
+                "from": signer.address,
+                "nonce": self.w3.eth.get_transaction_count(signer.address),
+            }
+        )
+        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
+        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
+        return signed_tx_hash.hex()
+
+    def approve_allowance(self, erc20: Contract, amount: int, signer: LocalAccount):
+        """
+        Approves a specified amount of allowance for the ERC20 token contract.
+
+        Args:
+            erc20 (Contract): The ERC20 token contract.
+            amount (int): The amount of the ERC20 token to be approved.
+            signer (LocalAccount): The account that will sign the approval transaction.
+
+        Returns:
+            str: The transaction hash of the approval operation.
+        """
+        tx = erc20.functions.approve(self.endpoint.address, amount).build_transaction(
+            {
+                "from": signer.address,
+                "nonce": self.w3.eth.get_transaction_count(signer.address),
+            }
+        )
+        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
+        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
+        return signed_tx_hash.hex()
+
+    def _mint_mock_erc20(
+        self, erc20: Contract, amount: int, signer: LocalAccount
+    ) -> str:
+        """
+        Mints a specified amount of mock ERC20 tokens for testing purposes.
+
+        Args:
+            erc20 (Contract): The contract instance of the ERC20 token to be minted.
+            amount (int): The amount of tokens to mint.
+            signer (LocalAccount): The account that will sign the minting transaction.
+
+        Returns:
+            str: The transaction hash of the mint operation.
+        """
+        tx = erc20.functions.mint(signer.address, amount).build_transaction(
+            {
+                "from": signer.address,
+                "nonce": self.w3.eth.get_transaction_count(signer.address),
+            }
+        )
+        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
+        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
+        return signed_tx_hash.hex()
+
+    def get_token_contract_for_product(self, product_id: int) -> Contract:
+        """
+        Returns the ERC20 token contract for a given product.
+
+        Args:
+            product_id (int): The ID of the product for which to get the ERC20 token contract.
+
+        Returns:
+            Contract: The ERC20 token contract for the specified product.
+        """
+        product_config = self.spot_engine.functions.getConfig(product_id).call()
+        token = product_config[0]
+        return self.w3.eth.contract(
+            address=token,
+            abi=load_abi(VertexAbiName.MOCK_ERC20),
+        )

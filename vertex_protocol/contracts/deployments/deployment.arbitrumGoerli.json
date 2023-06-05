@@ -1,0 +1,17 @@
+{
+  "nodeUrl": "https://goerli-rollup.arbitrum.io/rpc",
+  "explorerUrl": "https://goerli-rollup-explorer.arbitrum.io",
+  "subgraphCoreUrl": "https://api.thegraph.com/subgraphs/name/vertex-protocol/vertex-goerli-core",
+  "subgraphMarketsUrl": "https://api.thegraph.com/subgraphs/name/vertex-protocol/vertex-goerli-markets",
+  "subgraphCandleSticksUrl": "https://api.thegraph.com/subgraphs/name/vertex-protocol/vertex-goerli-candlesticks",
+  "startBlock": 7648965,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0x179522635726710Dd7D2035a81d856de4Aa7836c",
+  "querier": "0x1A599F3C70d6266C5744cd3a73d2AFAb57E32289",
+  "feeCalculator": "0xb49Fb5Fbcd83c37BA843193bD4B7c8BE8567317d",
+  "clearinghouse": "0x66256D9663fc368A1285d94E58615B0bf2Ac38f4",
+  "clearinghouseLiq": "0xF3ba85Fa07cC5a3bF2b497c9DA29326b94D6BD64",
+  "endpoint": "0xBF16E41fb4AC9922545bfc1500F67064dc2dcC3B",
+  "spotEngine": "0x4764083CdA637ff5335326b7e53b3f544E633870",
+  "perpEngine": "0xb5c1dF73e4e5498A9472d27B40A1285b1B83C2d4"
+}

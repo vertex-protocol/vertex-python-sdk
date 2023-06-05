@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "vertex-protocol"
+version = "0.1.0"
+description = "Vertex Protocol SDK"
+authors = ["Jeury Mejia <jeury@vertexprotocol.com>"]
+readme = "README.md"
+packages = [{include = "vertex_protocol"}]
+include = ["vertex_protocol/*.json"]
+keywords = ["vertex protocol", "vertex sdk", "vertex protocol api"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^1.10.7"
+web3 = "^6.4.0"
+eth-account = "^0.8.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "*"
+black = "*"
+pytest = "^7.3.1"
+pre-commit = "^3.3.2"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.scripts]
+test = "pytest:main"
+engine-sanity = "sanity.engine_client:run"
+indexer-sanity = "sanity.indexer_client:run"
+contracts-sanity = "sanity.contracts:run"
+client-sanity = "sanity.vertex_client:run"
+
+[[tool.poetry.source]]
+name = "private"
+url = "https://github.com/vertex-protocol/vertex-python-sdk"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | venv
+)/
+'''
