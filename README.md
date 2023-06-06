@@ -1,4 +1,4 @@
-# Vertex Python's SDK
+# Vertex Python SDK
 
 ```python
 print("Hello Vertex")
