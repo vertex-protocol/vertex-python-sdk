@@ -96,6 +96,7 @@ class VertexContracts:
             {
                 "from": signer.address,
                 "nonce": self.w3.eth.get_transaction_count(signer.address),
+                "gasPrice": self.w3.eth.gas_price,
             }
         )
         signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
@@ -119,6 +120,7 @@ class VertexContracts:
             {
                 "from": signer.address,
                 "nonce": self.w3.eth.get_transaction_count(signer.address),
+                "gasPrice": self.w3.eth.gas_price,
             }
         )
         signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
@@ -144,6 +146,7 @@ class VertexContracts:
             {
                 "from": signer.address,
                 "nonce": self.w3.eth.get_transaction_count(signer.address),
+                "gasPrice": self.w3.eth.gas_price,
             }
         )
         signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)

@@ -1,5 +1,5 @@
 import time
-from sanity import SIGNER_PRIVATE_KEY
+from sanity import CLIENT_MODE, SIGNER_PRIVATE_KEY
 
 from vertex_protocol.client import create_vertex_client
 from vertex_protocol.engine_client.types.execute import (
@@ -9,23 +9,25 @@ from vertex_protocol.engine_client.types.execute import (
     SubaccountParams,
     WithdrawCollateralParams,
 )
+from vertex_protocol.engine_client.types.models import SpotProductBalance
 from vertex_protocol.engine_client.types.query import QueryMaxOrderSizeParams
 from vertex_protocol.utils.bytes32 import subaccount_to_bytes32, subaccount_to_hex
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
+from vertex_protocol.utils.subaccount import parse_subaccount_balance
 
 
 def run():
     print("setting up vertex client...")
-    client = create_vertex_client("testnet", SIGNER_PRIVATE_KEY)
+    client = create_vertex_client(CLIENT_MODE, SIGNER_PRIVATE_KEY)
 
     print("minting test tokens...")
-    mint_tx_hash = client.spot._mint_mock_erc20(0, to_pow_10(1, 6))
+    mint_tx_hash = client.spot._mint_mock_erc20(0, to_pow_10(100000, 6))
     print("mint tx hash:", mint_tx_hash)
 
     print("approving allowance...")
-    approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(1, 6))
+    approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(100000, 6))
     print("approve allowance tx hash:", approve_allowance_tx_hash)
 
     print("querying my allowance...")
@@ -34,15 +36,28 @@ def run():
 
     print("depositing collateral...")
     deposit_tx_hash = client.spot.deposit(
-        {"subaccount_name": "default", "product_id": 0, "amount": to_pow_10(1, 6)}
+        {"subaccount_name": "default", "product_id": 0, "amount": to_pow_10(100000, 6)}
     )
     print("deposit collateral tx hash:", deposit_tx_hash)
 
     print("querying my token balance...")
     token_balance = client.spot.get_token_wallet_balance(
-        1, client.context.signer.address
+        0, client.context.signer.address
     )
+
     print("my token balance:", token_balance)
+
+    subaccount = subaccount_to_hex(client.context.signer.address, "default")
+
+    usdc_balance: SpotProductBalance = parse_subaccount_balance(
+        client.subaccount.get_engine_subaccount_summary(subaccount), 0
+    )
+    while int(usdc_balance.balance.amount) < to_pow_10(100000, 18):
+        print("waiting for deposit...")
+        usdc_balance: SpotProductBalance = parse_subaccount_balance(
+            client.subaccount.get_engine_subaccount_summary(subaccount), 0
+        )
+        time.sleep(1)
 
     owner = client.context.engine_client.signer.address
     print("placing order...")
@@ -194,12 +209,12 @@ def run():
     print("linked signer rate limits:", linked_signer_rate_limits.json(indent=2))
 
     print("querying max withdrawable...")
-    max_withdrawable = client.spot.get_max_withdrawable(1, sender)
+    max_withdrawable = client.spot.get_max_withdrawable(0, sender)
     print("max withdrawable:", max_withdrawable.json(indent=2))
 
     print("withdrawing collateral...")
     withdraw_collateral_params = WithdrawCollateralParams(
-        productId=0, amount=to_pow_10(1, 6), sender=sender
+        productId=0, amount=to_pow_10(10000, 6), sender=sender
     )
     res = client.spot.withdraw(withdraw_collateral_params)
     print("withdraw result:", res.json(indent=2))
