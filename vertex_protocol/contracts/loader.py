@@ -9,11 +9,29 @@ from vertex_protocol.utils.model import to_enum
 
 
 def load_abi(abi_name: VertexAbiName) -> list[dict]:
+    """
+    Load the Application Binary Interface (ABI) for a given contract.
+
+    Args:
+        abi_name (VertexAbiName): The name of the contract for which the ABI is loaded.
+
+    Returns:
+        list[dict]: A list of dictionaries representing the ABI of the contract.
+    """
     file_path = Path(__file__).parent / "abis" / f"{to_enum(abi_name)}.json"
     return _load_json(file_path)
 
 
 def load_deployment(network: VertexNetwork) -> VertexDeployment:
+    """
+    Load the deployment data for a given network.
+
+    Args:
+        network (VertexNetwork): The network for which the deployment data is loaded.
+
+    Returns:
+        VertexDeployment: An instance of VertexDeployment containing the loaded deployment data.
+    """
     file_path = (
         Path(__file__).parent / "deployments" / f"deployment.{to_enum(network)}.json"
     )
@@ -21,6 +39,15 @@ def load_deployment(network: VertexNetwork) -> VertexDeployment:
 
 
 def _load_json(file_path: Path) -> dict:
+    """
+    Load a JSON file.
+
+    Args:
+        file_path (Path): The path to the JSON file.
+
+    Returns:
+        dict: The content of the JSON file as a dictionary.
+    """
     with open(file_path, "r") as f:
         data = json.load(f)
     return data

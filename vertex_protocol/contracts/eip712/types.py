@@ -2,6 +2,15 @@ from vertex_protocol.contracts.types import VertexExecuteType
 
 
 def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
+    """
+    Util that provides the EIP712 type information for Vertex execute types.
+
+    Args:
+        execute (VertexExecuteType): The Vertex execute type for which to retrieve EIP712 type information.
+
+    Returns:
+        dict: A dictionary containing the EIP712 type information for the given execute type.
+    """
     return {
         VertexExecuteType.PLACE_ORDER: {
             "Order": [
@@ -53,7 +62,7 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "quoteAmountLow", "type": "uint128"},
                 {"name": "quoteAmountHigh", "type": "uint128"},
                 {"name": "nonce", "type": "uint64"},
-            ],
+            ]
         },
         VertexExecuteType.BURN_LP: {
             "BurnLp": [
