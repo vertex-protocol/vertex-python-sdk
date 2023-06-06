@@ -21,8 +21,9 @@ print("Hello Vertex")
 4. Setup an `.env` file and set the following envvars
 
    ```shell
-   SIGNER_PRIVATE_KEY="xxx"
-   LINKED_SIGNER_PRIVATE_KEY="xxx" # not required
+   CLIENT_MODE='mainnet|testnet|devnet'
+   SIGNER_PRIVATE_KEY="0x..."
+   LINKED_SIGNER_PRIVATE_KEY="0x..." # not required
    ```
 
 # Run tests
@@ -33,7 +34,7 @@ $ poetry run test
 
 # Run sanity checks
 
+- `poetry run client-sanity`: runs sanity checks for the top-level client.
 - `poetry run engine-sanity`: runs sanity checks for the `engine-client`.
 - `poetry run indexer-sanity`: runs sanity checks for the `indexer-client`.
 - `poetry run contracts-sanity`: runs sanity checks for the contracts module.
-- `poetry run client-sanity`: runs sanity checks for the top-level client.

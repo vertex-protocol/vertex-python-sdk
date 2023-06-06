@@ -4,7 +4,7 @@ import time
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 
-from sanity import LINKED_SIGNER_PRIVATE_KEY, SIGNER_PRIVATE_KEY
+from sanity import ENGINE_BACKEND_URL, LINKED_SIGNER_PRIVATE_KEY, SIGNER_PRIVATE_KEY
 from vertex_protocol.engine_client import EngineClient, EngineClientOpts
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
@@ -31,13 +31,11 @@ from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 
-backend_url = VertexBackendURL.TESTNET.value
-
 
 def run():
     print("setting up engine client...")
     client = EngineClient(
-        opts=EngineClientOpts(url=backend_url, signer=SIGNER_PRIVATE_KEY)
+        opts=EngineClientOpts(url=ENGINE_BACKEND_URL, signer=SIGNER_PRIVATE_KEY)
     )
 
     print("querying status...")
@@ -193,7 +191,7 @@ def run():
         LINKED_SIGNER_PRIVATE_KEY or SIGNER_PRIVATE_KEY
     )
 
-    print("linking signer...")
+    print("linking signer...", linked_signer.address)
     link_signer_params = LinkSignerParams(
         sender=client.signer.address + str_to_hex("default"),
         signer=subaccount_to_bytes32(linked_signer.address, "default"),
@@ -205,8 +203,16 @@ def run():
     except Exception as e:
         print("link signer failed with error:", e)
     else:
+        print(
+            "linked signer:",
+            client.get_linked_signer(
+                subaccount=bytes32_to_hex(link_signer_params.sender)
+            ).json(indent=2),
+        )
+
         print("placing order as a linked signer...")
         client.linked_signer = linked_signer
+
         order = OrderParams(
             sender=SubaccountParams(
                 subaccount_owner=client.signer.address, subaccount_name="default"

@@ -1,13 +1,11 @@
+from sanity import NETWORK
 from vertex_protocol.contracts import VertexContracts, VertexContractsContext
 from vertex_protocol.contracts.loader import load_deployment
-from vertex_protocol.contracts.types import VertexNetwork
-
-network = VertexNetwork.ARBITRUM_GOERLI
 
 
 def run():
     print("setting up vertex contracts")
-    deployment = load_deployment(network)
+    deployment = load_deployment(NETWORK)
     vertex_contracts = VertexContracts(
         node_url=deployment.node_url,
         contracts_context=VertexContractsContext(**deployment.dict()),

@@ -1,7 +1,7 @@
 import json
 
 from eth_account import Account
-from sanity import SIGNER_PRIVATE_KEY
+from sanity import INDEXER_BACKEND_URL, SIGNER_PRIVATE_KEY
 from vertex_protocol.engine_client.types.execute import SubaccountParams
 from vertex_protocol.indexer_client import IndexerClient, IndexerClientOpts
 from vertex_protocol.indexer_client.types.models import (
@@ -19,12 +19,9 @@ from vertex_protocol.utils.bytes32 import subaccount_to_hex
 from vertex_protocol.utils.backend import VertexBackendURL
 
 
-backend_url = VertexBackendURL.TESTNET.value
-
-
 def run():
     print("setting up indexer client...")
-    client = IndexerClient(opts={"url": backend_url})
+    client = IndexerClient(opts={"url": INDEXER_BACKEND_URL})
 
     owner = Account.from_key(SIGNER_PRIVATE_KEY).address
     subaccount = subaccount_to_hex(
