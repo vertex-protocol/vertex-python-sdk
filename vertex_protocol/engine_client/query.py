@@ -44,6 +44,10 @@ from vertex_protocol.utils.exceptions import (
 
 
 class EngineQueryClient:
+    """
+    Client class for querying the off-chain engine.
+    """
+
     def __init__(self, opts: EngineClientOpts):
         """
         Initialize EngineQueryClient with provided options.
