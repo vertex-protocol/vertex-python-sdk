@@ -70,6 +70,10 @@ class DepositCollateralParams(VertexBaseModel):
 
 
 class VertexExecuteType(StrEnum):
+    """
+    Enumeration of possible actions to execute in Vertex.
+    """
+
     PLACE_ORDER = "place_order"
     CANCEL_ORDERS = "cancel_orders"
     CANCEL_PRODUCT_ORDERS = "cancel_product_orders"

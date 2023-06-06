@@ -169,7 +169,7 @@ class LiquidateSubaccountParams(BaseParamsSigned):
         amount (int): The amount to be liquidated.
 
     Methods:
-        serialize_liquidatee(cls, v: Subaccount) -> bytes: Validates and converts the subaccount to bytes32 format.
+        serialize_liquidatee(cls, v: Subaccount) -> bytes: Validates and converts the liquidatee subaccount to bytes32 format.
     """
 
     liquidatee: Subaccount
@@ -313,6 +313,19 @@ class TxRequest(VertexBaseModel):
 
 
 def to_tx_request(cls: Type[VertexBaseModel], v: BaseParamsSigned) -> TxRequest:
+    """
+    Converts a BaseParamsSigned object to a TxRequest object.
+
+    Args:
+        cls (Type[VertexBaseModel]): The type of the model to convert.
+        v (BaseParamsSigned): The signed parameters to be converted.
+
+    Raises:
+        ValueError: If the 'signature' attribute is missing in the BaseParamsSigned object.
+
+    Returns:
+        TxRequest: The converted transaction request.
+    """
     if v.signature is None:
         raise ValueError("Missing `signature`")
     return TxRequest(
@@ -324,10 +337,30 @@ def to_tx_request(cls: Type[VertexBaseModel], v: BaseParamsSigned) -> TxRequest:
 
 
 class CancelOrdersRequest(VertexBaseModel):
+    """
+    Parameters for a cancel orders request.
+
+    Attributes:
+        cancel_orders (CancelOrdersParams): The parameters of the orders to be cancelled.
+
+    Methods:
+        serialize: Serializes 'digests' in 'cancel_orders' into their hexadecimal representation.
+        to_tx_request: Validates and converts 'cancel_orders' into a transaction request.
+    """
+
     cancel_orders: CancelOrdersParams
 
     @validator("cancel_orders")
     def serialize(cls, v: CancelOrdersParams) -> CancelOrdersParams:
+        """
+        Serializes 'digests' in 'cancel_orders' into their hexadecimal representation.
+
+        Args:
+            v (CancelOrdersParams): The parameters of the orders to be cancelled.
+
+        Returns:
+            CancelOrdersParams: The 'cancel_orders' with serialized 'digests'.
+        """
         v.serialize_dict(["digests"], lambda l: [bytes32_to_hex(x) for x in l])
         return v
 
@@ -335,12 +368,33 @@ class CancelOrdersRequest(VertexBaseModel):
 
 
 class CancelProductOrdersRequest(VertexBaseModel):
+    """
+    Parameters for a cancel product orders request.
+
+    Attributes:
+        cancel_product_orders (CancelProductOrdersParams): The parameters of the product orders to be cancelled.
+
+    Methods:
+        to_tx_request: Validates and converts 'cancel_product_orders' into a transaction request.
+    """
+
     cancel_product_orders: CancelProductOrdersParams
 
     _validator = validator("cancel_product_orders", allow_reuse=True)(to_tx_request)
 
 
 class WithdrawCollateralRequest(VertexBaseModel):
+    """
+    Parameters for a withdraw collateral request.
+
+    Attributes:
+        withdraw_collateral (WithdrawCollateralParams): The parameters of the collateral to be withdrawn.
+
+    Methods:
+        serialize: Validates and converts the 'amount' attribute of 'withdraw_collateral' to string.
+        to_tx_request: Validates and converts 'withdraw_collateral' into a transaction request.
+    """
+
     withdraw_collateral: WithdrawCollateralParams
 
     @validator("withdraw_collateral")
@@ -352,6 +406,18 @@ class WithdrawCollateralRequest(VertexBaseModel):
 
 
 class LiquidateSubaccountRequest(VertexBaseModel):
+    """
+    Parameters for a liquidate subaccount request.
+
+    Attributes:
+        liquidate_subaccount (LiquidateSubaccountParams): The parameters for the subaccount to be liquidated.
+
+    Methods:
+        serialize: Validates and converts the 'amount' attribute and the 'liquidatee' attribute
+                   of 'liquidate_subaccount' to their proper serialized forms.
+        to_tx_request: Validates and converts 'liquidate_subaccount' into a transaction request.
+    """
+
     liquidate_subaccount: LiquidateSubaccountParams
 
     @validator("liquidate_subaccount")
@@ -364,6 +430,18 @@ class LiquidateSubaccountRequest(VertexBaseModel):
 
 
 class MintLpRequest(VertexBaseModel):
+    """
+    Parameters for a mint LP request.
+
+    Attributes:
+        mint_lp (MintLpParams): The parameters for minting liquidity.
+
+    Methods:
+        serialize: Validates and converts the 'amountBase', 'quoteAmountLow', and 'quoteAmountHigh'
+                   attributes of 'mint_lp' to their proper serialized forms.
+        to_tx_request: Validates and converts 'mint_lp' into a transaction request.
+    """
+
     mint_lp: MintLpParams
 
     @validator("mint_lp")
@@ -375,6 +453,17 @@ class MintLpRequest(VertexBaseModel):
 
 
 class BurnLpRequest(VertexBaseModel):
+    """
+    Parameters for a burn LP request.
+
+    Attributes:
+        burn_lp (BurnLpParams): The parameters for burning liquidity.
+
+    Methods:
+        serialize: Validates and converts the 'amount' attribute of 'burn_lp' to its proper serialized form.
+        to_tx_request: Validates and converts 'burn_lp' into a transaction request.
+    """
+
     burn_lp: BurnLpParams
 
     @validator("burn_lp")
@@ -386,6 +475,17 @@ class BurnLpRequest(VertexBaseModel):
 
 
 class LinkSignerRequest(VertexBaseModel):
+    """
+    Parameters for a request to link a signer to a subaccount.
+
+    Attributes:
+        link_signer (LinkSignerParams): Parameters including the subaccount to be linked.
+
+    Methods:
+        serialize: Validates and converts the 'signer' attribute of 'link_signer' into its hexadecimal representation.
+        to_tx_request: Validates and converts 'link_signer' into a transaction request.
+    """
+
     link_signer: LinkSignerParams
 
     @validator("link_signer")
@@ -409,6 +509,17 @@ ExecuteRequest = (
 
 
 class ExecuteResponse(VertexBaseModel):
+    """
+    Represents the response returned from executing a request.
+
+    Attributes:
+        status (ResponseStatus): The status of the response.
+        signature (Optional[str]): The signature of the response. Only present if the request was successfully executed.
+        error_code (Optional[int]): The error code, if any error occurred during the execution of the request.
+        error (Optional[str]): The error message, if any error occurred during the execution of the request.
+        req (Optional[dict]): The original request that was executed.
+    """
+
     status: ResponseStatus
     signature: Optional[str]
     error_code: Optional[int]
@@ -417,6 +528,15 @@ class ExecuteResponse(VertexBaseModel):
 
 
 def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
+    """
+    Maps `ExecuteParams` to its corresponding `ExecuteRequest` object based on the parameter type.
+
+    Args:
+        params (ExecuteParams): The parameters to be executed.
+
+    Returns:
+        ExecuteRequest: The corresponding `ExecuteRequest` object.
+    """
     execute_request_mapping = {
         PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER),
         CancelOrdersParams: (CancelOrdersRequest, VertexExecuteType.CANCEL_ORDERS),
