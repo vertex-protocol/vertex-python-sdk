@@ -278,7 +278,7 @@ class EngineQueryClient:
         Retrieves the current linked signer for the specified subaccount.
 
         Args:
-            subaccount (str): Identifier of the subaccount.
+            subaccount (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
 
         Returns:
             LinkedSignerData: Information about the currently linked signer for the subaccount.
