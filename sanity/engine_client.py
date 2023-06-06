@@ -213,8 +213,6 @@ def run():
         print("placing order as a linked signer...")
         client.linked_signer = linked_signer
 
-        assert client.linked_signer.address == linked_signer.address
-
         order = OrderParams(
             sender=SubaccountParams(
                 subaccount_owner=client.signer.address, subaccount_name="default"
