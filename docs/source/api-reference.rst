@@ -9,6 +9,16 @@ vertex_protocol.client
     :special-members: __init__
     :show-inheritance:
 
+
+vertex_protocol.client.apis
+---------------------------
+.. automodule:: vertex_protocol.client.apis
+    :members: 
+    :undoc-members:
+    :special-members: __init__
+    :show-inheritance:
+
+
 vertex-protocol.engine_client
 -----------------------------
 .. automodule:: vertex_protocol.engine_client

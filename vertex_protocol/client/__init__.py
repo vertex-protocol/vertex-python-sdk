@@ -15,6 +15,9 @@ from vertex_protocol.contracts.types import VertexNetwork
 from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.utils.backend import VertexBackendURL
 
+from vertex_protocol.client.context import *
+from vertex_protocol.client.apis import *
+
 
 class VertexClientMode(StrEnum):
     MAINNET = "mainnet"
@@ -118,3 +121,14 @@ def client_mode_to_setup(client_mode: VertexClientMode) -> tuple[str, str, str]:
         }[client_mode]
     except KeyError:
         raise Exception(f"Mode provided `{client_mode}` not supported!")
+
+
+__all__ = [
+    "VertexClientMode",
+    "VertexClient",
+    "VertexClientContext",
+    "VertexClientContextOpts",
+    "create_vertex_client_context",
+    "create_vertex_client",
+    "client_mode_to_setup",
+]

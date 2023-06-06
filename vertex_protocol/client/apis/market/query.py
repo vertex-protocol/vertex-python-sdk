@@ -164,16 +164,6 @@ class MarketQueryAPI(VertexBaseAPI):
             params (IndexerCandlesticksParams): Parameters for the query, which include:
                 'product_id' (int): The identifier for the product.
                 'granularity' (IndexerCandlesticksGranularity): Duration for each candlestick in seconds.
-                    Possible values include:
-                        - ONE_MINUTE = 60
-                        - FIVE_MINUTES = 300
-                        - FIFTEEN_MINUTES = 900
-                        - ONE_HOUR = 3600
-                        - TWO_HOURS = 7200
-                        - FOUR_HOURS = 14400
-                        - ONE_DAY = 86400
-                        - ONE_WEEK = 604800
-                        - FOUR_WEEKS = 2419200
 
         Returns:
             IndexerCandlesticksData: Contains a list of historical candlestick data (IndexerCandlestick)
@@ -182,6 +172,7 @@ class MarketQueryAPI(VertexBaseAPI):
         Note:
             For obtaining the latest orderbook prices, consider using the 'get_latest_market_price()' method.
         """
+
         return self.context.indexer_client.get_candlesticks(params)
 
     def get_perp_funding_rate(self, product_id: int) -> IndexerFundingRateData:

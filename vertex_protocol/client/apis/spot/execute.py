@@ -17,8 +17,7 @@ class SpotExecuteAPI(BaseSpotAPI):
 
         Args:
             params (DepositCollateralParams): Parameters required for depositing collateral.
-            signer (LocalAccount, optional):  The account that will sign the deposit transaction.
-                If no signer is provided, the signer set in the client context will be used.
+            signer (LocalAccount, optional):  The account that will sign the deposit transaction. If no signer is provided, the signer set in the client context will be used.
 
         Raises:
             MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
@@ -57,8 +56,7 @@ class SpotExecuteAPI(BaseSpotAPI):
         Args:
             product_id (int): The identifier of the spot product for which to approve an allowance.
             amount (int): The amount of the tokens to be approved.
-            signer (LocalAccount, optional):  The account that will sign the approval transaction.
-                If no signer is provided, the signer set in the client context will be used.
+            signer (LocalAccount, optional):  The account that will sign the approval transaction. If no signer is provided, the signer set in the client context will be used.
 
         Raises:
             MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
