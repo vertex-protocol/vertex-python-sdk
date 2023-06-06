@@ -12,5 +12,8 @@ class BaseSpotAPI(VertexBaseAPI):
 
         Returns:
             Contract: The associated ERC20 token contract for the specified spot product.
+
+        Raises:
+            InvalidProductId: If the provided product ID is not valid.
         """
         return self.context.contracts.get_token_contract_for_product(product_id)

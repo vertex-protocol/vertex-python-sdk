@@ -28,3 +28,11 @@ class MissingSignerException(Exception):
     def __init__(self, message="Signer not provided"):
         self.message = message
         super().__init__(self.message)
+
+
+class InvalidProductId(Exception):
+    """Raised when product id is invalid."""
+
+    def __init__(self, message="Invalid product id provided"):
+        self.message = message
+        super().__init__(self.message)
