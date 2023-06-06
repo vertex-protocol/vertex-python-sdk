@@ -1,4 +1,3 @@
-import json
 from typing import Optional
 from pydantic import BaseModel
 from web3 import Web3
@@ -10,6 +9,17 @@ from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12
 
 
 class VertexContractsContext(BaseModel):
+    """
+    Holds the context for various Vertex contracts.
+
+    Attributes:
+        endpoint_addr (str): The endpoint address.
+        querier_addr (str): The querier address.
+        spot_engine_addr (Optional[str]): The spot engine address. This may be None.
+        perp_engine_addr (Optional[str]): The perpetual engine address. This may be None.
+        clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
+    """
+
     endpoint_addr: str
     querier_addr: str
     spot_engine_addr: Optional[str]
@@ -23,6 +33,16 @@ class VertexContracts:
     """
 
     def __init__(self, node_url: str, contracts_context: VertexContractsContext):
+        """
+        Initialize a VertexContracts instance.
+
+        This will set up the Web3 instance and contract addresses for querying and executing the Vertex contracts.
+        It will also load and parse the ABI for the given contracts.
+
+        Args:
+            node_url (str): The Ethereum node URL.
+            contracts_context (VertexContractsContext): The Vertex contracts context, holding the relevant addresses.
+        """
         self.w3 = Web3(Web3.HTTPProvider(node_url))
         self.contracts_context = VertexContractsContext.parse_obj(contracts_context)
         self.querier: Contract = self.w3.eth.contract(
