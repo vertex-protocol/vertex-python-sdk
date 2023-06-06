@@ -58,8 +58,3 @@ exclude = '''
   | venv
 )/
 '''
-
-[tool.flake8]
-exclude = '''
-/(docs)/
-'''
