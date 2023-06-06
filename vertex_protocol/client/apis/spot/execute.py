@@ -60,11 +60,12 @@ class SpotExecuteAPI(BaseSpotAPI):
             signer (LocalAccount, optional):  The account that will sign the approval transaction.
                 If no signer is provided, the signer set in the client context will be used.
 
-        Raises:
-            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
-
         Returns:
             str: The approve allowance transaction hash.
+
+        Raises:
+            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
+            InvalidProductId: If the provided product ID is not valid.
         """
         signer = signer if signer else self.context.signer
         if not signer:
@@ -86,11 +87,12 @@ class SpotExecuteAPI(BaseSpotAPI):
             signer (LocalAccount, optional):  The account that will sign the mint transaction.
                 If no signer is provided, the signer set in the client context will be used.
 
-        Raises:
-            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
-
         Returns:
             str: The mock ERC20 mint transaction hash.
+
+        Raises:
+            MissingSignerException: Raised when there is no signer provided and no signer set in the client context.
+            InvalidProductId: If the provided product ID is not valid.
         """
         signer = signer if signer else self.context.signer
         if not signer:
