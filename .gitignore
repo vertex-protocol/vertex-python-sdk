@@ -166,3 +166,5 @@ cython_debug/
 **/deployment.localhost.json
 
 .DS_Store
+
+docs/.DS_Store
