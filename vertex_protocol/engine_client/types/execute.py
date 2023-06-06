@@ -1,4 +1,3 @@
-from enum import StrEnum
 from typing import Optional, Type
 from pydantic import validator
 from vertex_protocol.contracts.types import VertexExecuteType
