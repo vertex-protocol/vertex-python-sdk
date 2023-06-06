@@ -1,7 +1,9 @@
+import os
 from typing import Optional
 from pydantic import BaseModel
 from web3 import Web3
 from web3.contract import Contract
+from web3.contract.contract import ContractFunction
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.loader import load_abi
 from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiName
@@ -44,6 +46,7 @@ class VertexContracts:
             contracts_context (VertexContractsContext): The Vertex contracts context, holding the relevant addresses.
         """
         self.w3 = Web3(Web3.HTTPProvider(node_url))
+
         self.contracts_context = VertexContractsContext.parse_obj(contracts_context)
         self.querier: Contract = self.w3.eth.contract(
             address=contracts_context.querier_addr, abi=load_abi(VertexAbiName.FQUERIER)
@@ -88,21 +91,14 @@ class VertexContracts:
             str: The transaction hash of the deposit operation.
         """
         params = DepositCollateralParams.parse_obj(params)
-        tx = self.endpoint.functions.depositCollateral(
-            subaccount_name_to_bytes12(params.subaccount_name),
-            params.product_id,
-            params.amount,
-        ).build_transaction(
-            {
-                "from": signer.address,
-                "nonce": self.w3.eth.get_transaction_count(signer.address),
-                "gasPrice": self.w3.eth.gas_price,
-            }
+        return self.execute(
+            self.endpoint.functions.depositCollateral(
+                subaccount_name_to_bytes12(params.subaccount_name),
+                params.product_id,
+                params.amount,
+            ),
+            signer,
         )
-        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
-        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
-        return signed_tx_hash.hex()
 
     def approve_allowance(self, erc20: Contract, amount: int, signer: LocalAccount):
         """
@@ -116,17 +112,9 @@ class VertexContracts:
         Returns:
             str: The transaction hash of the approval operation.
         """
-        tx = erc20.functions.approve(self.endpoint.address, amount).build_transaction(
-            {
-                "from": signer.address,
-                "nonce": self.w3.eth.get_transaction_count(signer.address),
-                "gasPrice": self.w3.eth.gas_price,
-            }
+        return self.execute(
+            erc20.functions.approve(self.endpoint.address, amount), signer
         )
-        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
-        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
-        return signed_tx_hash.hex()
 
     def _mint_mock_erc20(
         self, erc20: Contract, amount: int, signer: LocalAccount
@@ -142,17 +130,7 @@ class VertexContracts:
         Returns:
             str: The transaction hash of the mint operation.
         """
-        tx = erc20.functions.mint(signer.address, amount).build_transaction(
-            {
-                "from": signer.address,
-                "nonce": self.w3.eth.get_transaction_count(signer.address),
-                "gasPrice": self.w3.eth.gas_price,
-            }
-        )
-        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
-        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
-        return signed_tx_hash.hex()
+        return self.execute(erc20.functions.mint(signer.address, amount), signer)
 
     def get_token_contract_for_product(self, product_id: int) -> Contract:
         """
@@ -170,3 +148,19 @@ class VertexContracts:
             address=token,
             abi=load_abi(VertexAbiName.MOCK_ERC20),
         )
+
+    def execute(self, func: ContractFunction, signer: LocalAccount) -> str:
+        tx = func.build_transaction(self._build_tx_params(signer))
+        signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
+        signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
+        return signed_tx_hash.hex()
+
+    def _build_tx_params(self, signer: LocalAccount) -> dict:
+        tx_params = {
+            "from": signer.address,
+            "nonce": self.w3.eth.get_transaction_count(signer.address),
+        }
+        if os.getenv("CLIENT_MODE") == "devnet":
+            tx_params["gasPrice"] = self.w3.eth.gas_price
+        return tx_params

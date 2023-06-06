@@ -73,33 +73,12 @@ def create_vertex_client(
     Returns:
         VertexClient: The created VertexClient instance.
     """
-    mode_to_setup = {
-        VertexClientMode.MAINNET: (
-            VertexBackendURL.MAINNET,
-            VertexBackendURL.MAINNET,
-            VertexNetwork.ARBITRUM_ONE,
-        ),
-        VertexClientMode.TESTNET: (
-            VertexBackendURL.TESTNET,
-            VertexBackendURL.TESTNET,
-            VertexNetwork.ARBITRUM_GOERLI,
-        ),
-        VertexClientMode.DEVNET: (
-            VertexBackendURL.DEVNET_ENGINE,
-            VertexBackendURL.DEVNET_INDEXER,
-            VertexNetwork.HARDHAT,
-        ),
-    }
-
     context: VertexClientContext
     if context_opts:
         context = create_vertex_client_context(context_opts, signer)
     else:
         logging.warning(f"Initializing default {mode} context")
-        try:
-            engine_endpoint, indexer_endpoint, network_name = mode_to_setup[mode]
-        except KeyError:
-            raise Exception(f"Mode provided `{mode}` not supported!")
+        engine_endpoint, indexer_endpoint, network_name = client_mode_to_setup(mode)
         deployment = load_deployment(network_name)
         context = create_vertex_client_context(
             VertexClientContextOpts(
@@ -116,3 +95,26 @@ def create_vertex_client(
             signer,
         )
     return VertexClient(context)
+
+
+def client_mode_to_setup(client_mode: VertexClientMode) -> tuple[str, str, str]:
+    try:
+        return {
+            VertexClientMode.MAINNET: (
+                VertexBackendURL.MAINNET,
+                VertexBackendURL.MAINNET,
+                VertexNetwork.ARBITRUM_ONE,
+            ),
+            VertexClientMode.TESTNET: (
+                VertexBackendURL.TESTNET,
+                VertexBackendURL.TESTNET,
+                VertexNetwork.ARBITRUM_GOERLI,
+            ),
+            VertexClientMode.DEVNET: (
+                VertexBackendURL.DEVNET_ENGINE,
+                VertexBackendURL.DEVNET_INDEXER,
+                VertexNetwork.HARDHAT,
+            ),
+        }[client_mode]
+    except KeyError:
+        raise Exception(f"Mode provided `{client_mode}` not supported!")
