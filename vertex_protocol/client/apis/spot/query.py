@@ -45,6 +45,9 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Returns:
             float: The balance of the token in the user's wallet in decimal form.
+
+        Raises:
+            InvalidProductId: If the provided product ID is not valid.
         """
         token = self.get_token_contract_for_product(product_id)
         decimals = token.functions.decimals().call()
@@ -61,6 +64,9 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Returns:
             float: The current token allowance of the user's wallet address to the associated spot product.
+
+        Raises:
+            InvalidProductId: If the provided product ID is not valid.
         """
         token = self.get_token_contract_for_product(product_id)
         decimals = token.functions.decimals().call()

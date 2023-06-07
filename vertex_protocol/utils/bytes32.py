@@ -146,3 +146,12 @@ def zero_subaccount() -> bytes:
         bytes: A bytes object of length 32 filled with zero bytes.
     """
     return b"\x00" * 32
+
+
+def zero_address() -> bytes:
+    """Generates a bytes object of length 20 filled with zero bytes.
+
+    Returns:
+        bytes: A bytes object of length 20 filled with zero bytes.
+    """
+    return b"\x00" * 20

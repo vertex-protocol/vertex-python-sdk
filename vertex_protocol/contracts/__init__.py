@@ -8,7 +8,8 @@ from web3.contract.contract import ContractFunction
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.loader import load_abi
 from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiName
-from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12
+from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12, zero_address
+from vertex_protocol.utils.exceptions import InvalidProductId
 from vertex_protocol.contracts.types import *
 
 
@@ -157,11 +158,16 @@ class VertexContracts:
 
         Returns:
             Contract: The ERC20 token contract for the specified product.
+
+        Raises:
+            InvalidProductId: If the provided product ID is not valid.
         """
         if self.spot_engine is None:
             raise Exception("SpotEngine contract not initialized")
         product_config = self.spot_engine.functions.getConfig(product_id).call()
         token = product_config[0]
+        if token == f"0x{zero_address().hex()}":
+            raise InvalidProductId(f"Invalid product id provided: {product_id}")
         return self.w3.eth.contract(
             address=token,
             abi=load_abi(VertexAbiName.MOCK_ERC20),
