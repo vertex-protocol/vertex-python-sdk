@@ -1,8 +1,8 @@
 name: Publish docs to GH pages
 
 on:
-  push:
-    branches: ["main"]
+  release:
+    types: [created]
 
   workflow_dispatch:
 
