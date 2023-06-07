@@ -1,0 +1,56 @@
+name: CI/CD 
+
+on:
+  push:
+  release:
+    types: [created]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy: 
+      matrix:
+        python-version: [3.8, 3.9, 3.10, 3.11]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run image # install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.0.10
+      - name: Install dependencies # install all dependencies
+        run: poetry install
+      - name: mypy
+        run: |
+          poetry run mypy -p vertex_protocol
+      - name: Pytest
+        run: |
+          poetry run coverage run -m --source=vertex_protocol pytest tests
+          poetry run coverage report
+      - name: Pycycle
+        run: |
+          poetry run pycycle vertex_protocol
+
+  publish:
+    # Our publish job will only run on release creation events,
+    # and only if the test job has passed
+    if: github.event_name == 'release' && github.event.action == 'created'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.0.10
+      - name: Build and publish
+        env:
+          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: poetry publish -u $PYPI_USERNAME -p $PYPI_PASSWORD --build
