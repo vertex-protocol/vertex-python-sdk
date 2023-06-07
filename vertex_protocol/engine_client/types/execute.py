@@ -9,7 +9,7 @@ from vertex_protocol.utils.bytes32 import (
     subaccount_to_bytes32,
 )
 from vertex_protocol.utils.nonce import gen_order_nonce
-from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
+from vertex_protocol.utils.subaccount import Subaccount
 
 
 Digest = str | bytes

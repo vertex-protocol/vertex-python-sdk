@@ -16,10 +16,20 @@ from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.utils.backend import VertexBackendURL
 
 from vertex_protocol.client.context import *
-from vertex_protocol.client.apis import *
 
 
 class VertexClientMode(StrEnum):
+    """
+    VertexClientMode is an enumeration representing the operational modes of the VertexClient.
+
+    Attributes:
+        MAINNET: For operating in Vertex's mainnet environment.
+
+        TESTNET: For operating in Vertex's testnet environment.
+
+        DEVNET: For local development.
+    """
+
     MAINNET = "mainnet"
     TESTNET = "testnet"
     DEVNET = "devnet"
@@ -124,11 +134,10 @@ def client_mode_to_setup(client_mode: VertexClientMode) -> tuple[str, str, str]:
 
 
 __all__ = [
-    "VertexClientMode",
     "VertexClient",
+    "VertexClientMode",
+    "create_vertex_client",
     "VertexClientContext",
     "VertexClientContextOpts",
     "create_vertex_client_context",
-    "create_vertex_client",
-    "client_mode_to_setup",
 ]

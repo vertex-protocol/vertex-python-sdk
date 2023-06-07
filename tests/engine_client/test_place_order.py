@@ -13,7 +13,6 @@ from vertex_protocol.engine_client.types.execute import (
     OrderParams,
     PlaceOrderParams,
     PlaceOrderRequest,
-    SubaccountParams,
     to_execute_request,
 )
 from vertex_protocol.utils.bytes32 import (
@@ -25,6 +24,7 @@ import pytest
 from vertex_protocol.utils.exceptions import ExecuteFailedException
 
 from vertex_protocol.utils.nonce import gen_order_nonce
+from vertex_protocol.utils.subaccount import SubaccountParams
 
 
 def test_place_order_params(senders: list[str], owners: list[str], order_params: dict):
