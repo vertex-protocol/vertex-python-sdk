@@ -38,3 +38,11 @@ $ poetry run test
 - `poetry run engine-sanity`: runs sanity checks for the `engine-client`.
 - `poetry run indexer-sanity`: runs sanity checks for the `indexer-client`.
 - `poetry run contracts-sanity`: runs sanity checks for the contracts module.
+
+# Docs
+
+Regenerates SDK docs.
+
+```
+$ poetry run sphinx-build docs/source docs/build
+```
