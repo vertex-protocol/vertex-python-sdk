@@ -1,0 +1,49 @@
+name: Publish docs to GH pages
+
+on:
+  push:
+    branches: ["main"]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Run image # install poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.3.2
+      - name: Install dependencies # install all dependencies
+        run: poetry install
+      - name: Build docs
+        run : |
+          poetry run sphinx-build docs/source docs/build
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: './docs/build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main

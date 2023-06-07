@@ -248,7 +248,7 @@ class OrderData(VertexBaseModel):
 
 class SubaccountInfoData(VertexBaseModel):
     """
-    Data model for detailed information of a subaccount.
+    Model for detailed info about a subaccount, including balances.
     """
 
     subaccount: str
@@ -261,6 +261,31 @@ class SubaccountInfoData(VertexBaseModel):
     perp_balances: list[PerpProductBalance]
     spot_products: list[SpotProduct]
     perp_products: list[PerpProduct]
+
+    def parse_subaccount_balance(
+        self, product_id: int
+    ) -> SpotProductBalance | PerpProductBalance:
+        """
+        Parses the balance of a subaccount for a given product.
+
+        Args:
+            product_id (int): The ID of the product to lookup.
+
+        Returns:
+            Union[SpotProductBalance, PerpProductBalance]: The balance of the product in the subaccount.
+
+        Raises:
+            ValueError: If the product ID provided is not found.
+        """
+        for spot_balance in self.spot_balances:
+            if spot_balance.product_id == product_id:
+                return spot_balance
+
+        for perp_balance in self.perp_balances:
+            if perp_balance.product_id == product_id:
+                return perp_balance
+
+        raise ValueError(f"Invalid product id provided: {product_id}")
 
 
 class SubaccountOpenOrdersData(VertexBaseModel):

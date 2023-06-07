@@ -160,3 +160,7 @@ cython_debug/
 .ruff_cache
 
 **/deployment.localhost.json
+
+.DS_Store
+
+docs/.DS_Store

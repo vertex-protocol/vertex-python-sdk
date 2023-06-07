@@ -14,6 +14,7 @@ def get_expiration_timestamp(order_type: OrderType, expiration: int) -> int:
 
     Args:
         order_type (OrderType): The type of order.
+
         expiration (int): The expiration timestamp in UNIX seconds.
 
     Returns:

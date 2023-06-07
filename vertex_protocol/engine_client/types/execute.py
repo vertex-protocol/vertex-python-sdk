@@ -1,4 +1,3 @@
-from enum import StrEnum
 from typing import Optional, Type
 from pydantic import validator
 from vertex_protocol.contracts.types import VertexExecuteType
@@ -35,7 +34,7 @@ class BaseParams(VertexBaseModel):
         validate_assignment = True
 
     @validator("sender")
-    def serialize_sender(cls, v: Subaccount) -> bytes:
+    def serialize_sender(cls, v: Subaccount) -> bytes | Subaccount:
         """
         Validates and serializes the sender to bytes32 format.
 
@@ -43,9 +42,12 @@ class BaseParams(VertexBaseModel):
             v (Subaccount): The sender's subaccount identifier.
 
         Returns:
-            bytes: The serialized sender in bytes32 format.
+            (bytes|Subaccount): The serialized sender in bytes32 format or the original Subaccount if it cannot be converted to bytes32.
         """
-        return subaccount_to_bytes32(v)
+        try:
+            return subaccount_to_bytes32(v)
+        except ValueError:
+            return v
 
 
 class SignatureParams(VertexBaseModel):
@@ -109,9 +111,11 @@ class CancelOrdersParams(BaseParamsSigned):
 
     Args:
         productIds (list[int]): List of product IDs for the orders to be canceled.
+
         digests (list[Digest]): List of digests of the orders to be canceled.
+
         nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-            see `gen_order_nonce` for more info.
+        see `gen_order_nonce` for more info.
 
     Methods:
         serialize_digests: Validates and converts a list of hex digests to bytes32.
@@ -132,9 +136,11 @@ class CancelProductOrdersParams(BaseParamsSigned):
 
     Args:
         productIds (list[int]): List of product IDs for the orders to be canceled.
+
         digest (str, optional): Optional EIP-712 digest of the CancelProductOrder request.
+
         nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-            see `gen_order_nonce` for more info.
+        see `gen_order_nonce` for more info.
     """
 
     productIds: list[int]
@@ -318,6 +324,7 @@ def to_tx_request(cls: Type[VertexBaseModel], v: BaseParamsSigned) -> TxRequest:
 
     Args:
         cls (Type[VertexBaseModel]): The type of the model to convert.
+
         v (BaseParamsSigned): The signed parameters to be converted.
 
     Raises:
@@ -538,23 +545,26 @@ def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
         ExecuteRequest: The corresponding `ExecuteRequest` object.
     """
     execute_request_mapping = {
-        PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER),
-        CancelOrdersParams: (CancelOrdersRequest, VertexExecuteType.CANCEL_ORDERS),
+        PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER.value),
+        CancelOrdersParams: (
+            CancelOrdersRequest,
+            VertexExecuteType.CANCEL_ORDERS.value,
+        ),
         CancelProductOrdersParams: (
             CancelProductOrdersRequest,
-            VertexExecuteType.CANCEL_PRODUCT_ORDERS,
+            VertexExecuteType.CANCEL_PRODUCT_ORDERS.value,
         ),
         WithdrawCollateralParams: (
             WithdrawCollateralRequest,
-            VertexExecuteType.WITHDRAW_COLLATERAL,
+            VertexExecuteType.WITHDRAW_COLLATERAL.value,
         ),
         LiquidateSubaccountParams: (
             LiquidateSubaccountRequest,
-            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexExecuteType.LIQUIDATE_SUBACCOUNT.value,
         ),
-        MintLpParams: (MintLpRequest, VertexExecuteType.MINT_LP),
-        BurnLpParams: (BurnLpRequest, VertexExecuteType.BURN_LP),
-        LinkSignerParams: (LinkSignerRequest, VertexExecuteType.LINK_SIGNER),
+        MintLpParams: (MintLpRequest, VertexExecuteType.MINT_LP.value),
+        BurnLpParams: (BurnLpRequest, VertexExecuteType.BURN_LP.value),
+        LinkSignerParams: (LinkSignerRequest, VertexExecuteType.LINK_SIGNER.value),
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]

@@ -45,12 +45,15 @@ class EngineExecuteClient:
     Client class for executing operations against the off-chain engine.
     """
 
-    def __init__(self, opts: EngineClientOpts, querier: EngineQueryClient = None):
+    def __init__(
+        self, opts: EngineClientOpts, querier: EngineQueryClient | None = None
+    ):
         """
         Initialize the EngineExecuteClient with provided options.
 
         Args:
             opts (EngineClientOpts): Options for the client.
+
             querier (EngineQueryClient, optional): An EngineQueryClient instance. If not provided, a new one is created.
         """
         self._querier = querier or EngineQueryClient(opts)
@@ -98,7 +101,7 @@ class EngineExecuteClient:
         """
         return int(self._querier.get_nonces(self.signer.address).tx_nonce)
 
-    def order_nonce(self, recv_time_ms: int = None) -> str:
+    def order_nonce(self, recv_time_ms: int | None = None) -> int:
         """
         Generate the order nonce. Used for oder placements and cancellations.
 
@@ -106,11 +109,11 @@ class EngineExecuteClient:
             recv_time_ms (int, optional): Received time in milliseconds.
 
         Returns:
-            str: The generated order nonce.
+            int: The generated order nonce.
         """
         return gen_order_nonce(recv_time_ms)
 
-    def prepare_execute_params(self, params: Type[BaseParams]) -> Type[BaseParams]:
+    def prepare_execute_params(self, params: Type[BaseParams]) -> Type[BaseParams]:  # type: ignore
         """
         Prepares the parameters for execution by ensuring that both owner and nonce are correctly set.
 
@@ -149,7 +152,8 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: The response from the executed operation.
         """
-        return self._execute(VertexBaseModel.parse_obj(req))
+        parsed_req: ExecuteRequest = VertexBaseModel.parse_obj(req)  # type: ignore
+        return self._execute(parsed_req)
 
     def _execute(self, req: ExecuteRequest) -> ExecuteResponse:
         """
@@ -182,11 +186,19 @@ class EngineExecuteClient:
             raise AttributeError("Endpoint address not set.")
         return self._opts.endpoint_addr
 
+    @endpoint_addr.setter
+    def endpoint_addr(self, addr: str) -> None:
+        self._opts.endpoint_addr = addr
+
     @property
-    def book_addrs(self) -> str:
+    def book_addrs(self) -> list[str]:
         if self._opts.book_addrs is None:
             raise AttributeError("Book addresses are not set.")
         return self._opts.book_addrs
+
+    @book_addrs.setter
+    def book_addrs(self, book_addrs: list[str]) -> None:
+        self._opts.book_addrs = book_addrs
 
     @property
     def chain_id(self) -> int:
@@ -194,35 +206,30 @@ class EngineExecuteClient:
             raise AttributeError("Chain ID is not set.")
         return self._opts.chain_id
 
-    @property
-    def signer(self) -> LocalAccount:
-        if self._opts.signer is None:
-            raise AttributeError("Signer is not set.")
-        return self._opts.signer
-
-    @property
-    def linked_signer(self) -> LocalAccount:
-        if self._opts.linked_signer is not None:
-            return self._opts.linked_signer
-        if self._opts.signer is not None:
-            return self.signer
-        raise AttributeError("Signer is not set.")
-
-    @endpoint_addr.setter
-    def endpoint_addr(self, addr: str) -> None:
-        self._opts.endpoint_addr = addr
-
-    @book_addrs.setter
-    def book_addrs(self, book_addrs: list[str]) -> None:
-        self._opts.book_addrs = book_addrs
-
     @chain_id.setter
     def chain_id(self, chain_id: int | str) -> None:
         self._opts.chain_id = int(chain_id)
 
+    @property
+    def signer(self) -> LocalAccount:
+        if self._opts.signer is None:
+            raise AttributeError("Signer is not set.")
+        assert isinstance(self._opts.signer, LocalAccount)
+        return self._opts.signer
+
     @signer.setter
     def signer(self, signer: LocalAccount) -> None:
         self._opts.signer = signer
+
+    @property
+    def linked_signer(self) -> LocalAccount:
+        if self._opts.linked_signer is not None:
+            assert isinstance(self._opts.linked_signer, LocalAccount)
+            return self._opts.linked_signer
+        if self._opts.signer is not None:
+            assert isinstance(self._opts.signer, LocalAccount)
+            return self.signer
+        raise AttributeError("Signer is not set.")
 
     @linked_signer.setter
     def linked_signer(self, linked_signer: LocalAccount) -> None:
@@ -257,6 +264,7 @@ class EngineExecuteClient:
 
         Args:
             order (OrderParams): The order parameters.
+
             product_id (int): The ID of the product.
 
         Returns:
@@ -270,14 +278,16 @@ class EngineExecuteClient:
         )
 
     def _sign(
-        self, execute: VertexExecuteType, msg: dict, product_id: int = None
+        self, execute: VertexExecuteType, msg: dict, product_id: int | None = None
     ) -> str:
         """
         Internal method to create an EIP-712 signature for the given operation type and message.
 
         Args:
             execute (VertexExecuteType): The Vertex execute type to sign.
+
             msg (dict): The message to be signed.
+
             product_id (int, optional): Required for 'PLACE_ORDER' operation, specifying the product ID.
 
         Returns:
@@ -295,7 +305,9 @@ class EngineExecuteClient:
         if is_place_order and product_id is None:
             raise ValueError("Missing `product_id` to sign place_order execute")
         verifying_contract = (
-            self.book_addr(product_id) if is_place_order else self.endpoint_addr
+            self.book_addr(product_id)
+            if is_place_order and product_id
+            else self.endpoint_addr
         )
         return self.sign(
             execute, msg, verifying_contract, self.chain_id, self.linked_signer
@@ -315,8 +327,11 @@ class EngineExecuteClient:
 
         Args:
             execute (VertexExecuteType): The Vertex execute type to build digest for.
+
             msg (dict): The EIP712 message.
+
             verifying_contract (str): The contract used for verification.
+
             chain_id (int): The network chain ID.
 
         Returns:
@@ -339,9 +354,13 @@ class EngineExecuteClient:
 
         Args:
             execute (VertexExecuteType): The type of operation.
+
             msg (dict): The message to be signed.
+
             verifying_contract (str): The contract used for verification.
+
             chain_id (int): The network chain ID.
+
             signer (LocalAccount): The account used to sign the data.
 
         Returns:
@@ -360,13 +379,13 @@ class EngineExecuteClient:
 
         Args:
             params (PlaceOrderParams): Parameters required for placing an order.
-                The parameters include the order details and the product_id.
+            The parameters include the order details and the product_id.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         params = PlaceOrderParams.parse_obj(params)
-        params.order = self.prepare_execute_params(params.order)
+        params.order = self.prepare_execute_params(params.order)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
         )
@@ -378,12 +397,12 @@ class EngineExecuteClient:
 
         Args:
             params (CancelOrdersParams): Parameters required for canceling orders.
-                The parameters include the order digests to be cancelled.
+            The parameters include the order digests to be cancelled.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params))
+        params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params))  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_ORDERS, params.dict()
         )
@@ -397,13 +416,13 @@ class EngineExecuteClient:
 
         Args:
             params (CancelProductOrdersParams): Parameters required for bulk canceling orders of specific products.
-                The parameters include a list of product ids to bulk cancel orders for.
+            The parameters include a list of product ids to bulk cancel orders for.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         params = self.prepare_execute_params(
-            CancelProductOrdersParams.parse_obj(params)
+            CancelProductOrdersParams.parse_obj(params)  # type: ignore
         )
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
@@ -416,12 +435,12 @@ class EngineExecuteClient:
 
         Args:
             params (WithdrawCollateralParams): Parameters required for withdrawing collateral.
-                The parameters include the collateral details.
+            The parameters include the collateral details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))
+        params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.WITHDRAW_COLLATERAL, params.dict()
         )
@@ -435,13 +454,13 @@ class EngineExecuteClient:
 
         Args:
             params (LiquidateSubaccountParams): Parameters required for liquidating a subaccount.
-                The parameters include the liquidatee details.
+            The parameters include the liquidatee details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         params = self.prepare_execute_params(
-            LiquidateSubaccountParams.parse_obj(params)
+            LiquidateSubaccountParams.parse_obj(params)  # type: ignore
         )
         params.signature = params.signature or self._sign(
             VertexExecuteType.LIQUIDATE_SUBACCOUNT,
@@ -455,12 +474,12 @@ class EngineExecuteClient:
 
         Args:
             params (MintLpParams): Parameters required for minting LP tokens.
-                The parameters include the LP details.
+            The parameters include the LP details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(MintLpParams.parse_obj(params))
+        params = self.prepare_execute_params(MintLpParams.parse_obj(params))  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.MINT_LP,
             params.dict(),
@@ -473,12 +492,12 @@ class EngineExecuteClient:
 
         Args:
             params (BurnLpParams): Parameters required for burning LP tokens.
-                The parameters include the LP details.
+            The parameters include the LP details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(BurnLpParams.parse_obj(params))
+        params = self.prepare_execute_params(BurnLpParams.parse_obj(params))  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.BURN_LP,
             params.dict(),
@@ -491,12 +510,12 @@ class EngineExecuteClient:
 
         Args:
             params (LinkSignerParams): Parameters required for linking a signer.
-                The parameters include the signer details.
+            The parameters include the signer details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(LinkSignerParams.parse_obj(params))
+        params = self.prepare_execute_params(LinkSignerParams.parse_obj(params))  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.LINK_SIGNER,
             params.dict(),

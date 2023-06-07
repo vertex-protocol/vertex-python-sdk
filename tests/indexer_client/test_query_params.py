@@ -31,28 +31,77 @@ def test_indexer_obj_query_params(
 
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = []
+    mock_response.json.return_value = {"orders": []}
     mock_post.return_value = mock_response
 
     indexer_client.get_subaccount_historical_orders(
         IndexerSubaccountHistoricalOrdersParams(subaccount="xxx")
     )
     indexer_client.get_historical_orders_by_digest([])
+
+    mock_response.json.return_value = {"matches": [], "txs": []}
+    mock_post.return_value = mock_response
     indexer_client.get_matches(IndexerMatchesParams(subaccount="xxx"))
+
+    mock_response.json.return_value = {"events": [], "txs": []}
+    mock_post.return_value = mock_response
     indexer_client.get_events(IndexerEventsParams(submission_idx=10))
+
+    mock_response.json.return_value = {"events": []}
+    mock_post.return_value = mock_response
     indexer_client.get_subaccount_summary("xxx")
+
+    mock_response.json.return_value = {"products": [], "txs": []}
+    mock_post.return_value = mock_response
     indexer_client.get_product_snapshots(IndexerProductSnapshotsParams(product_id=1))
+
+    mock_response.json.return_value = {"candlesticks": []}
+    mock_post.return_value = mock_response
     indexer_client.get_candlesticks(
         IndexerCandlesticksParams(granularity=60, product_id=1)
     )
+
+    mock_response.json.return_value = {
+        "product_id": 1,
+        "funding_rate_x18": "0",
+        "update_time": "0",
+    }
+    mock_post.return_value = mock_response
     indexer_client.get_perp_funding_rate(product_id=1)
+
+    mock_response.json.return_value = {
+        "product_id": 1,
+        "index_price_x18": "0",
+        "mark_price_x18": "0",
+        "update_time": "0",
+    }
+    mock_post.return_value = mock_response
     indexer_client.get_perp_prices(product_id=1)
+
+    mock_response.json.return_value = {"prices": []}
+    mock_post.return_value = mock_response
     indexer_client.get_oracle_prices([])
+
+    mock_response.json.return_value = {"rewards": [], "update_time": "0"}
+    mock_post.return_value = mock_response
     indexer_client.get_token_rewards("xxx")
+
+    mock_response.json.return_value = {"reward_coefficient": 0.0, "makers": []}
+    mock_post.return_value = mock_response
     indexer_client.get_maker_statistics(
         IndexerMakerStatisticsParams(product_id=1, epoch=1, interval=1)
     )
+
+    mock_response.json.return_value = []
+    mock_post.return_value = mock_response
     indexer_client.get_liquidation_feed()
+
+    mock_response.json.return_value = {
+        "remaining_tx": "0",
+        "wait_time": 0,
+        "signer": "xxx",
+    }
+    mock_post.return_value = mock_response
     indexer_client.get_linked_signer_rate_limits("xxx")
 
 
@@ -64,14 +113,29 @@ def test_indexer_raw_query_params(
 
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = []
-    mock_post.return_value = mock_response
 
+    mock_response.json.return_value = {"orders": []}
+    mock_post.return_value = mock_response
     indexer_client.get_subaccount_historical_orders({"subaccount": "xxx"})
+
+    mock_response.json.return_value = {"matches": [], "txs": []}
+    mock_post.return_value = mock_response
     indexer_client.get_matches({"subaccount": "xxx"})
+
+    mock_response.json.return_value = {"events": [], "txs": []}
+    mock_post.return_value = mock_response
     indexer_client.get_events({"submission_idx": 10})
+
+    mock_response.json.return_value = {"products": [], "txs": []}
+    mock_post.return_value = mock_response
     indexer_client.get_product_snapshots({"product_id": 1})
+
+    mock_response.json.return_value = {"candlesticks": []}
+    mock_post.return_value = mock_response
     indexer_client.get_candlesticks({"granularity": 60, "product_id": 1})
+
+    mock_response.json.return_value = {"reward_coefficient": 0.0, "makers": []}
+    mock_post.return_value = mock_response
     indexer_client.get_maker_statistics({"product_id": 1, "epoch": 1, "interval": 1})
 
 

@@ -20,6 +20,19 @@ from vertex_protocol.indexer_client.types.query import (
 
 
 class MarketQueryAPI(VertexBaseAPI):
+    """
+    The MarketQueryAPI class provides methods to interact with the Vertex's market querying APIs.
+
+    This class provides functionality for querying various details about the market including fetching
+    information about order books, fetching historical orders, and retrieving market matches, among others.
+
+    Attributes:
+        context (VertexClientContext): The context that provides connectivity configuration for VertexClient.
+
+    Note:
+        This class should not be instantiated directly, it is designed to be used through a VertexClient instance.
+    """
+
     def get_all_engine_markets(self) -> AllProductsData:
         """
         Retrieves all market states from the off-chain engine.
@@ -69,6 +82,7 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             product_id (int): The identifier for the product to fetch open orders.
+
             sender (str): The address and subaccount identifier as a bytes32 hex string.
 
         Returns:
@@ -89,11 +103,11 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             params (IndexerSubaccountHistoricalOrdersParams): Parameters to filter the historical orders data:
-                'subaccount' (str): The address and subaccount identifier as a bytes32 hex string.
-                'product_ids' (list[int], optional): A list of identifiers for the products to fetch orders for. If provided, the function will return orders related to these products.
-                'idx' (int, optional): Submission index. If provided, the function will return orders submitted before this index.
-                'max_time' (int, optional): Maximum timestamp for the orders. The function will return orders submitted before this time.
-                'limit' (int, optional): Maximum number of orders to return. If provided, the function will return at most 'limit' number of orders.
+                - subaccount (str): The address and subaccount identifier as a bytes32 hex string.
+                - product_ids (list[int], optional): A list of identifiers for the products to fetch orders for. If provided, the function will return orders related to these products.
+                - idx (int, optional): Submission index. If provided, the function will return orders submitted before this index.
+                - max_time (int, optional): Maximum timestamp for the orders. The function will return orders submitted before this time.
+                - limit (int, optional): Maximum number of orders to return. If provided, the function will return at most 'limit' number of orders.
 
         Returns:
             IndexerHistoricalOrdersData: A data class object containing information about the historical orders of a subaccount.
@@ -125,11 +139,11 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             params (QueryMaxOrderSizeParams):
-                'sender' (str): The address and subaccount identifier in a bytes32 hex string.
-                'product_id' (int): The identifier for the spot/perp product.
-                'price_x18' (str): The price of the order in x18 format as a string.
-                'direction' (MaxOrderSizeDirection): 'long' for max bid or 'short' for max ask.
-                'spot_leverage' (Optional[bool]): If False, calculates max size without borrowing. Defaults to True.
+                - sender (str): The address and subaccount identifier in a bytes32 hex string.
+                - product_id (int): The identifier for the spot/perp product.
+                - price_x18 (str): The price of the order in x18 format as a string.
+                - direction (MaxOrderSizeDirection): 'long' for max bid or 'short' for max ask.
+                - spot_leverage (Optional[bool]): If False, calculates max size without borrowing. Defaults to True.
 
         Returns:
             MaxOrderSizeData: The maximum size of the order that can be placed.
@@ -137,14 +151,16 @@ class MarketQueryAPI(VertexBaseAPI):
         return self.context.engine_client.get_max_order_size(params)
 
     def get_max_lp_mintable(
-        self, product_id: int, sender: str, spot_leverage: bool = None
+        self, product_id: int, sender: str, spot_leverage: bool | None = None
     ) -> MaxLpMintableData:
         """
         Queries the engine to determine the maximum base amount that can be contributed for minting LPs.
 
         Args:
             product_id (int): The identifier for the spot/perp product.
+
             sender (str): The address and subaccount identifier in a bytes32 hex string.
+
             spot_leverage (Optional[bool]): If False, calculates max amount without considering leverage. Defaults to True.
 
         Returns:
@@ -162,18 +178,8 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             params (IndexerCandlesticksParams): Parameters for the query, which include:
-                'product_id' (int): The identifier for the product.
-                'granularity' (IndexerCandlesticksGranularity): Duration for each candlestick in seconds.
-                    Possible values include:
-                        - ONE_MINUTE = 60
-                        - FIVE_MINUTES = 300
-                        - FIFTEEN_MINUTES = 900
-                        - ONE_HOUR = 3600
-                        - TWO_HOURS = 7200
-                        - FOUR_HOURS = 14400
-                        - ONE_DAY = 86400
-                        - ONE_WEEK = 604800
-                        - FOUR_WEEKS = 2419200
+                - product_id (int): The identifier for the product.
+                - granularity (IndexerCandlesticksGranularity): Duration for each candlestick in seconds.
 
         Returns:
             IndexerCandlesticksData: Contains a list of historical candlestick data (IndexerCandlestick)
@@ -182,6 +188,7 @@ class MarketQueryAPI(VertexBaseAPI):
         Note:
             For obtaining the latest orderbook prices, consider using the 'get_latest_market_price()' method.
         """
+
         return self.context.indexer_client.get_candlesticks(params)
 
     def get_perp_funding_rate(self, product_id: int) -> IndexerFundingRateData:
@@ -204,10 +211,10 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             params (IndexerProductSnapshotsParams): Query parameters consisting of:
-                'product_id' (int): Identifier for the product.
-                'idx' (int, optional): Submission index to filter the returned snapshots.
-                'max_time' (int, optional): Maximum timestamp to filter the returned snapshots.
-                'limit' (int, optional): Maximum number of snapshots to return.
+                - product_id (int): Identifier for the product.
+                - idx (int, optional): Submission index to filter the returned snapshots.
+                - max_time (int, optional): Maximum timestamp to filter the returned snapshots.
+                - limit (int, optional): Maximum number of snapshots to return.
 
         Returns:
             IndexerProductSnapshotsData: Object containing lists of product snapshots and related transaction data.

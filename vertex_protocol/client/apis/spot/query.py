@@ -4,15 +4,27 @@ from vertex_protocol.utils.math import from_pow_10
 
 
 class SpotQueryAPI(BaseSpotAPI):
+    """
+    Class providing querying operations for the spot market in the Vertex Protocol.
+
+    This class allows for retrieval of various kinds of information related to spot products,
+    such as getting wallet token balance of a given spot product.
+
+    Inheritance:
+        BaseSpotAPI: Base class for Spot operations. Inherits connectivity context and base functionalities.
+    """
+
     def get_max_withdrawable(
-        self, product_id: int, sender: str, spot_leverage: bool = None
+        self, product_id: int, sender: str, spot_leverage: bool | None = None
     ) -> MaxWithdrawableData:
         """
         Retrieves the estimated maximum withdrawable amount for a provided spot product.
 
         Args:
             product_id (int): The identifier for the spot product.
+
             sender (str): The address and subaccount identifier in a bytes32 hex string.
+
             spot_leverage (Optional[bool]): If False, calculates max amount without considering leverage. Defaults to True.
 
         Returns:
@@ -28,6 +40,7 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Args:
             product_id (int): Identifier for the spot product.
+
             address (str): User's wallet address.
 
         Returns:
@@ -46,6 +59,7 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Args:
             product_id (int): Identifier for the spot product.
+
             address (str): The user's wallet address.
 
         Returns:

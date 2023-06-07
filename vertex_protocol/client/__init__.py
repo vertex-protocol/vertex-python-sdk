@@ -15,8 +15,23 @@ from vertex_protocol.contracts.types import VertexNetwork
 from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.utils.backend import VertexBackendURL
 
+from vertex_protocol.client.context import *
+
+from pydantic import parse_obj_as
+
 
 class VertexClientMode(StrEnum):
+    """
+    VertexClientMode is an enumeration representing the operational modes of the VertexClient.
+
+    Attributes:
+        MAINNET: For operating in Vertex's mainnet environment.
+
+        TESTNET: For operating in Vertex's testnet environment.
+
+        DEVNET: For local development.
+    """
+
     MAINNET = "mainnet"
     TESTNET = "testnet"
     DEVNET = "devnet"
@@ -24,13 +39,34 @@ class VertexClientMode(StrEnum):
 
 class VertexClient:
     """
-    Client for querying and executing against Vertex Clearinghouse.
-    Use `create_vertex_client` for initialization.
+    The primary client interface for interacting with Vertex Protocol.
+
+    This client consolidates the functionality of various aspects of Vertex such as spot, market,
+    subaccount, and perpetual (perp) operations.
+
+    To initialize an instance of this client, use the `create_vertex_client` utility.
+
+    Attributes:
+        - context (VertexClientContext): The client context containing configuration for interacting with Vertex.
+        - market (MarketAPI): Sub-client for executing and querying market operations.
+        - subaccount (SubaccountAPI): Sub-client for executing and querying subaccount operations.
+        - spot (SpotAPI): Sub-client for executing and querying spot operations.
+        - perp (PerpAPI): Sub-client for executing and querying perpetual operations.
     """
+
+    context: VertexClientContext
+    market: MarketAPI
+    subaccount: SubaccountAPI
+    spot: SpotAPI
+    perp: PerpAPI
 
     def __init__(self, context: VertexClientContext):
         """
         Initialize a new instance of the VertexClient.
+
+        This constructor should not be called directly. Instead, use the `create_vertex_client` utility to
+        create a new VertexClient. This is because the `create_vertex_client` utility includes important
+        additional setup steps that aren't included in this constructor.
 
         Args:
             context (VertexClientContext): The client context.
@@ -47,8 +83,8 @@ class VertexClient:
 
 def create_vertex_client(
     mode: VertexClientMode,
-    signer: Signer = None,
-    context_opts: VertexClientContextOpts = None,
+    signer: Signer | None = None,
+    context_opts: VertexClientContextOpts | None = None,
 ) -> VertexClient:
     """
     Create a new VertexClient based on the given mode and signer.
@@ -78,18 +114,21 @@ def create_vertex_client(
         context = create_vertex_client_context(context_opts, signer)
     else:
         logging.warning(f"Initializing default {mode} context")
-        engine_endpoint, indexer_endpoint, network_name = client_mode_to_setup(mode)
-        deployment = load_deployment(network_name)
+        engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(
+            mode
+        )
+        deployment = load_deployment(VertexNetwork(network_name))
         context = create_vertex_client_context(
             VertexClientContextOpts(
                 rpc_node_url=deployment.node_url,
-                engine_endpoint=engine_endpoint,
-                indexer_endpoint=indexer_endpoint,
+                engine_endpoint_url=parse_obj_as(AnyUrl, engine_endpoint_url),
+                indexer_endpoint_url=parse_obj_as(AnyUrl, indexer_endpoint_url),
                 contracts_context=VertexContractsContext(
                     endpoint_addr=deployment.endpoint_addr,
                     querier_addr=deployment.querier_addr,
                     perp_engine_addr=deployment.perp_engine_addr,
                     spot_engine_addr=deployment.spot_engine_addr,
+                    clearinghouse_addr=deployment.clearinghouse_addr,
                 ),
             ),
             signer,
@@ -97,24 +136,36 @@ def create_vertex_client(
     return VertexClient(context)
 
 
-def client_mode_to_setup(client_mode: VertexClientMode) -> tuple[str, str, str]:
+def client_mode_to_setup(
+    client_mode: VertexClientMode,
+) -> tuple[str, str, str]:
     try:
         return {
             VertexClientMode.MAINNET: (
-                VertexBackendURL.MAINNET,
-                VertexBackendURL.MAINNET,
-                VertexNetwork.ARBITRUM_ONE,
+                VertexBackendURL.MAINNET.value,
+                VertexBackendURL.MAINNET.value,
+                VertexNetwork.ARBITRUM_ONE.value,
             ),
             VertexClientMode.TESTNET: (
-                VertexBackendURL.TESTNET,
-                VertexBackendURL.TESTNET,
-                VertexNetwork.ARBITRUM_GOERLI,
+                VertexBackendURL.TESTNET.value,
+                VertexBackendURL.TESTNET.value,
+                VertexNetwork.ARBITRUM_GOERLI.value,
             ),
             VertexClientMode.DEVNET: (
-                VertexBackendURL.DEVNET_ENGINE,
-                VertexBackendURL.DEVNET_INDEXER,
-                VertexNetwork.HARDHAT,
+                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_INDEXER.value,
+                VertexNetwork.HARDHAT.value,
             ),
         }[client_mode]
     except KeyError:
         raise Exception(f"Mode provided `{client_mode}` not supported!")
+
+
+__all__ = [
+    "VertexClient",
+    "VertexClientMode",
+    "create_vertex_client",
+    "VertexClientContext",
+    "VertexClientContextOpts",
+    "create_vertex_client_context",
+]

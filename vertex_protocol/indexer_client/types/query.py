@@ -102,7 +102,7 @@ class IndexerEventsParams(IndexerBaseParams):
     subaccount: Optional[str]
     product_ids: Optional[list[int]]
     event_types: Optional[list[IndexerEventType]]
-    limit: Optional[IndexerEventsLimit]
+    limit: Optional[IndexerEventsLimit]  # type: ignore
 
 
 class IndexerSubaccountSummaryParams(VertexBaseModel):
@@ -483,53 +483,53 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
     indexer_request_mapping = {
         IndexerSubaccountHistoricalOrdersParams: (
             IndexerHistoricalOrdersRequest,
-            IndexerQueryType.ORDERS,
+            IndexerQueryType.ORDERS.value,
         ),
         IndexerHistoricalOrdersByDigestParams: (
             IndexerHistoricalOrdersRequest,
-            IndexerQueryType.ORDERS,
+            IndexerQueryType.ORDERS.value,
         ),
-        IndexerMatchesParams: (IndexerMatchesRequest, IndexerQueryType.MATCHES),
-        IndexerEventsParams: (IndexerEventsRequest, IndexerQueryType.EVENTS),
+        IndexerMatchesParams: (IndexerMatchesRequest, IndexerQueryType.MATCHES.value),
+        IndexerEventsParams: (IndexerEventsRequest, IndexerQueryType.EVENTS.value),
         IndexerSubaccountSummaryParams: (
             IndexerSubaccountSummaryRequest,
-            IndexerQueryType.SUMMARY,
+            IndexerQueryType.SUMMARY.value,
         ),
         IndexerProductSnapshotsParams: (
             IndexerProductSnapshotsRequest,
-            IndexerQueryType.PRODUCTS,
+            IndexerQueryType.PRODUCTS.value,
         ),
         IndexerCandlesticksParams: (
             IndexerCandlesticksRequest,
-            IndexerQueryType.CANDLESTICKS,
+            IndexerQueryType.CANDLESTICKS.value,
         ),
         IndexerFundingRateParams: (
             IndexerFundingRateRequest,
-            IndexerQueryType.FUNDING_RATE,
+            IndexerQueryType.FUNDING_RATE.value,
         ),
         IndexerPerpPricesParams: (
             IndexerPerpPricesRequest,
-            IndexerQueryType.PERP_PRICES,
+            IndexerQueryType.PERP_PRICES.value,
         ),
         IndexerOraclePricesParams: (
             IndexerOraclePricesRequest,
-            IndexerQueryType.ORACLE_PRICES,
+            IndexerQueryType.ORACLE_PRICES.value,
         ),
         IndexerTokenRewardsParams: (
             IndexerTokenRewardsRequest,
-            IndexerQueryType.REWARDS,
+            IndexerQueryType.REWARDS.value,
         ),
         IndexerMakerStatisticsParams: (
             IndexerMakerStatisticsRequest,
-            IndexerQueryType.MAKER_STATISTICS,
+            IndexerQueryType.MAKER_STATISTICS.value,
         ),
         IndexerLiquidationFeedParams: (
             IndexerLiquidationFeedRequest,
-            IndexerQueryType.LIQUIDATION_FEED,
+            IndexerQueryType.LIQUIDATION_FEED.value,
         ),
         IndexerLinkedSignerRateLimitParams: (
             IndexerLinkedSignerRateLimitRequest,
-            IndexerQueryType.LINKED_SIGNER_RATE_LIMIT,
+            IndexerQueryType.LINKED_SIGNER_RATE_LIMIT.value,
         ),
     }
 

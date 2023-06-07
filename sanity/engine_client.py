@@ -14,7 +14,6 @@ from vertex_protocol.engine_client.types.execute import (
     MintLpParams,
     PlaceOrderParams,
     OrderParams,
-    SubaccountParams,
     WithdrawCollateralParams,
 )
 from vertex_protocol.engine_client.types.query import (
@@ -26,10 +25,10 @@ from vertex_protocol.utils.bytes32 import (
     subaccount_to_bytes32,
     zero_subaccount,
 )
-from vertex_protocol.utils.backend import VertexBackendURL
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
+from vertex_protocol.utils.subaccount import SubaccountParams
 
 
 def run():

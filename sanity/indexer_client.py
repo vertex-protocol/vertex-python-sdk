@@ -2,8 +2,7 @@ import json
 
 from eth_account import Account
 from sanity import INDEXER_BACKEND_URL, SIGNER_PRIVATE_KEY
-from vertex_protocol.engine_client.types.execute import SubaccountParams
-from vertex_protocol.indexer_client import IndexerClient, IndexerClientOpts
+from vertex_protocol.indexer_client import IndexerClient
 from vertex_protocol.indexer_client.types.models import (
     IndexerCandlesticksGranularity,
     IndexerEventType,
@@ -16,7 +15,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerSubaccountHistoricalOrdersParams,
 )
 from vertex_protocol.utils.bytes32 import subaccount_to_hex
-from vertex_protocol.utils.backend import VertexBackendURL
+from vertex_protocol.utils.subaccount import SubaccountParams
 
 
 def run():

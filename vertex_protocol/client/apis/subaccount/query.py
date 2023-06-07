@@ -11,8 +11,18 @@ from vertex_protocol.indexer_client.types.query import (
 
 
 class SubaccountQueryAPI(VertexBaseAPI):
+    """
+    Provides functionalities for querying data related to subaccounts in the Vertex Protocol.
+
+    Inherits from VertexBaseAPI, which provides a basic context setup for accessing Vertex Clearinghouse.
+    This class extends the base class to provide specific functionalities for querying data related to subaccounts.
+
+    Attributes:
+        context (VertexClientContext): Provides connectivity details for accessing Vertex APIs.
+    """
+
     def get_engine_subaccount_summary(
-        self, subaccount: str, txs: list[QuerySubaccountInfoTx] = None
+        self, subaccount: str, txs: list[QuerySubaccountInfoTx] | None = None
     ) -> SubaccountInfoData:
         """
         Retrieve a comprehensive summary of the specified subaccount's state as per the off-chain engine.
@@ -21,6 +31,7 @@ class SubaccountQueryAPI(VertexBaseAPI):
 
         Args:
             subaccount (str): Unique identifier for the subaccount.
+
             txs (list[QuerySubaccountInfoTx], optional): Optional list of transactions for the subaccount.
 
         Returns:

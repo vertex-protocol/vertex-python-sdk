@@ -6,7 +6,6 @@ from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
     MintLpParams,
     OrderParams,
-    SubaccountParams,
     WithdrawCollateralParams,
 )
 from vertex_protocol.engine_client.types.models import SpotProductBalance
@@ -15,7 +14,7 @@ from vertex_protocol.utils.bytes32 import subaccount_to_bytes32, subaccount_to_h
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
-from vertex_protocol.utils.subaccount import parse_subaccount_balance
+from vertex_protocol.utils.subaccount import SubaccountParams
 
 
 def run():
@@ -49,13 +48,15 @@ def run():
 
     subaccount = subaccount_to_hex(client.context.signer.address, "default")
 
-    usdc_balance: SpotProductBalance = parse_subaccount_balance(
-        client.subaccount.get_engine_subaccount_summary(subaccount), 0
-    )
+    usdc_balance: SpotProductBalance = client.subaccount.get_engine_subaccount_summary(
+        subaccount
+    ).parse_subaccount_balance(0)
     while int(usdc_balance.balance.amount) < to_pow_10(100000, 18):
         print("waiting for deposit...")
-        usdc_balance: SpotProductBalance = parse_subaccount_balance(
-            client.subaccount.get_engine_subaccount_summary(subaccount), 0
+        usdc_balance: SpotProductBalance = (
+            client.subaccount.get_engine_subaccount_summary(
+                subaccount
+            ).parse_subaccount_balance(0)
         )
         time.sleep(1)
 

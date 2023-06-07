@@ -37,8 +37,8 @@ def test_create_vertex_client_context(
 
     full_engine_client_setup = create_vertex_client_context(
         VertexClientContextOpts(
-            engine_endpoint=url,
-            indexer_endpoint=url,
+            engine_endpoint_url=url,
+            indexer_endpoint_url=url,
             rpc_node_url=url,
             contracts_context=VertexContractsContext(
                 endpoint_addr=endpoint_addr, querier_addr=endpoint_addr
@@ -69,8 +69,8 @@ def test_create_vertex_client_context(
 
     partial_engine_client_setup = create_vertex_client_context(
         VertexClientContextOpts(
-            engine_endpoint=url,
-            indexer_endpoint=url,
+            engine_endpoint_url=url,
+            indexer_endpoint_url=url,
             rpc_node_url=url,
             contracts_context=VertexContractsContext(
                 endpoint_addr=endpoint_addr, querier_addr=endpoint_addr
@@ -162,8 +162,8 @@ def test_create_vertex_client(
         VertexClientMode.DEVNET,
         signer,
         VertexClientContextOpts(
-            engine_endpoint=url,
-            indexer_endpoint=url,
+            engine_endpoint_url=url,
+            indexer_endpoint_url=url,
             rpc_node_url=url,
             contracts_context=contracts_context,
         ),

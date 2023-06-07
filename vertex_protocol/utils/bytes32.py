@@ -31,6 +31,7 @@ def hex_to_bytes(input: str | bytes, size: int) -> bytes:
 
     Args:
         input (str | bytes): The hexadecimal string or bytes to be converted.
+
         size (int): The specified size for the output bytes object.
 
     Returns:
@@ -59,46 +60,53 @@ def str_to_hex(input: str) -> str:
     return binascii.hexlify(input.encode()).decode()
 
 
-def subaccount_to_bytes32(subaccount: Subaccount, name: str | bytes = None) -> bytes:
+def subaccount_to_bytes32(
+    subaccount: Subaccount, name: str | bytes | None = None
+) -> bytes:
     """Converts a subaccount representation to a bytes object of length 32.
 
     Args:
         subaccount (Subaccount): The subaccount, which can be a string, bytes, or SubaccountParams instance.
+
         name (str|bytes, optional): The subaccount name, when provided `subaccount` is expected to be the owner address.
 
     Returns:
-        bytes: The bytes object of length 32 representing the subaccount.
+        (bytes|SubaccountParams): The bytes object of length 32 representing the subaccount.
+
+    Raises:
+        ValueError: If the `subaccount` is a `SubaccountParams` instance and is missing either `subaccount_owner` or `subaccount_name`
 
     Note:
         If `name` is provided, `subaccount` must be the owner address, otherwise `subaccount`
         can be the bytes32 or hex representation of the subaccount or a SubaccountParams object.
     """
-    name = name.hex() if name and isinstance(name, bytes) else name
     if isinstance(subaccount, str):
         if name is None:
             return hex_to_bytes32(subaccount)
         else:
+            name = name.hex() if isinstance(name, bytes) else name
             return hex_to_bytes32(subaccount + str_to_hex(name))
     elif isinstance(subaccount, SubaccountParams):
         subaccount_owner = subaccount.dict().get("subaccount_owner")
         subaccount_name = subaccount.dict().get("subaccount_name")
         if subaccount_owner is None or subaccount_name is None:
-            return subaccount
+            raise ValueError("Missing `subaccount_owner` or `subaccount_name`")
         else:
             return hex_to_bytes32(subaccount_owner + str_to_hex(subaccount_name))
     else:
         return subaccount
 
 
-def subaccount_to_hex(subaccount: Subaccount, name: str = None) -> str:
+def subaccount_to_hex(subaccount: Subaccount, name: str | None = None) -> str:
     """Converts a subaccount representation to its hexadecimal representation.
 
     Args:
         subaccount (Subaccount): The subaccount, which can be a string, bytes, or SubaccountParams instance.
+
         name (str|bytes, optional): Additional string, if any, to be appended to the subaccount string before conversion. Defaults to None.
 
     Returns:
-        str: The hexadecimal representation of the subaccount.
+        (str|SubaccountParams): The hexadecimal representation of the subaccount.
     """
     return bytes32_to_hex(subaccount_to_bytes32(subaccount, name))
 

@@ -18,8 +18,11 @@ def build_eip712_typed_data(
 
     Args:
         execute (VertexExecuteType): The Vertex execute type being signed.
+
         msg (dict): The message being signed.
+
         verifying_contract (str): The contract that will verify the signature.
+
         chain_id (int): The chain ID of the originating network.
 
     Returns:
@@ -62,6 +65,7 @@ def sign_eip712_typed_data(typed_data: EIP712TypedData, signer: LocalAccount) ->
 
     Args:
         typed_data (EIP712TypedData): The EIP-712 typed data to sign.
+
         signer (LocalAccount): The local Ethereum account to sign the data.
 
     Returns:

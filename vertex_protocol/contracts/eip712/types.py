@@ -79,4 +79,4 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-    }.get(execute)
+    }[execute]

@@ -2,6 +2,7 @@ import os
 from typing import Optional
 from pydantic import BaseModel
 from web3 import Web3
+from web3.types import TxParams
 from web3.contract import Contract
 from web3.contract.contract import ContractFunction
 from eth_account.signers.local import LocalAccount
@@ -9,6 +10,11 @@ from vertex_protocol.contracts.loader import load_abi
 from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiName
 from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12, zero_address
 from vertex_protocol.utils.exceptions import InvalidProductId
+from vertex_protocol.contracts.types import *
+from vertex_protocol.contracts.eip712 import *
+from vertex_protocol.contracts.eip712.domain import *
+from vertex_protocol.contracts.eip712.sign import *
+from vertex_protocol.contracts.eip712.types import *
 
 
 class VertexContractsContext(BaseModel):
@@ -17,9 +23,13 @@ class VertexContractsContext(BaseModel):
 
     Attributes:
         endpoint_addr (str): The endpoint address.
+
         querier_addr (str): The querier address.
+
         spot_engine_addr (Optional[str]): The spot engine address. This may be None.
-        perp_engine_addr (Optional[str]): The perpetual engine address. This may be None.
+
+        perp_engine_addr (Optional[str]): The perp engine address. This may be None.
+
         clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
     """
 
@@ -35,6 +45,14 @@ class VertexContracts:
     Encapsulates the set of Vertex contracts required for querying and executing.
     """
 
+    w3: Web3
+    contracts_context: VertexContractsContext
+    querier: Contract
+    endpoint: Contract
+    clearinghouse: Optional[Contract]
+    spot_engine: Optional[Contract]
+    perp_engine: Optional[Contract]
+
     def __init__(self, node_url: str, contracts_context: VertexContractsContext):
         """
         Initialize a VertexContracts instance.
@@ -44,17 +62,18 @@ class VertexContracts:
 
         Args:
             node_url (str): The Ethereum node URL.
+
             contracts_context (VertexContractsContext): The Vertex contracts context, holding the relevant addresses.
         """
         self.w3 = Web3(Web3.HTTPProvider(node_url))
 
         self.contracts_context = VertexContractsContext.parse_obj(contracts_context)
         self.querier: Contract = self.w3.eth.contract(
-            address=contracts_context.querier_addr, abi=load_abi(VertexAbiName.FQUERIER)
+            address=contracts_context.querier_addr, abi=load_abi(VertexAbiName.FQUERIER)  # type: ignore
         )
         self.endpoint: Contract = self.w3.eth.contract(
             address=self.contracts_context.endpoint_addr,
-            abi=load_abi(VertexAbiName.ENDPOINT),
+            abi=load_abi(VertexAbiName.ENDPOINT),  # type: ignore
         )
         self.clearinghouse = None
         self.spot_engine = None
@@ -63,19 +82,19 @@ class VertexContracts:
         if self.contracts_context.clearinghouse_addr:
             self.clearinghouse: Contract = self.w3.eth.contract(
                 address=self.contracts_context.clearinghouse_addr,
-                abi=load_abi(VertexAbiName.ICLEARINGHOUSE),
+                abi=load_abi(VertexAbiName.ICLEARINGHOUSE),  # type: ignore
             )
 
         if self.contracts_context.spot_engine_addr:
             self.spot_engine: Contract = self.w3.eth.contract(
                 address=self.contracts_context.spot_engine_addr,
-                abi=load_abi(VertexAbiName.ISPOT_ENGINE),
+                abi=load_abi(VertexAbiName.ISPOT_ENGINE),  # type: ignore
             )
 
         if self.contracts_context.perp_engine_addr:
             self.perp_engine: Contract = self.w3.eth.contract(
                 address=self.contracts_context.perp_engine_addr,
-                abi=load_abi(VertexAbiName.IPERP_ENGINE),
+                abi=load_abi(VertexAbiName.IPERP_ENGINE),  # type: ignore
             )
 
     def deposit_collateral(
@@ -86,6 +105,7 @@ class VertexContracts:
 
         Args:
             params (DepositCollateralParams): The parameters for depositing collateral.
+
             signer (LocalAccount): The account that will sign the deposit transaction.
 
         Returns:
@@ -107,7 +127,9 @@ class VertexContracts:
 
         Args:
             erc20 (Contract): The ERC20 token contract.
+
             amount (int): The amount of the ERC20 token to be approved.
+
             signer (LocalAccount): The account that will sign the approval transaction.
 
         Returns:
@@ -125,7 +147,9 @@ class VertexContracts:
 
         Args:
             erc20 (Contract): The contract instance of the ERC20 token to be minted.
+
             amount (int): The amount of tokens to mint.
+
             signer (LocalAccount): The account that will sign the minting transaction.
 
         Returns:
@@ -146,6 +170,8 @@ class VertexContracts:
         Raises:
             InvalidProductId: If the provided product ID is not valid.
         """
+        if self.spot_engine is None:
+            raise Exception("SpotEngine contract not initialized")
         product_config = self.spot_engine.functions.getConfig(product_id).call()
         token = product_config[0]
         if token == f"0x{zero_address().hex()}":
@@ -156,17 +182,43 @@ class VertexContracts:
         )
 
     def execute(self, func: ContractFunction, signer: LocalAccount) -> str:
+        """
+        Executes a smart contract function.
+
+        This method builds a transaction for a given contract function, signs the transaction with the provided signer's private key,
+        sends the raw signed transaction to the network, and waits for the transaction to be mined.
+
+        Args:
+            func (ContractFunction): The contract function to be executed.
+
+            signer (LocalAccount): The local account object that will sign the transaction. It should contain the private key.
+
+        Returns:
+            str: The hexadecimal representation of the transaction hash.
+
+        Raises:
+            ValueError: If the transaction is invalid, the method will not catch the error.
+            TimeExhausted: If the transaction receipt isn't available within the timeout limit set by the Web3 provider.
+        """
         tx = func.build_transaction(self._build_tx_params(signer))
         signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
         signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
         self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
         return signed_tx_hash.hex()
 
-    def _build_tx_params(self, signer: LocalAccount) -> dict:
-        tx_params = {
+    def _build_tx_params(self, signer: LocalAccount) -> TxParams:
+        tx_params: TxParams = {
             "from": signer.address,
             "nonce": self.w3.eth.get_transaction_count(signer.address),
         }
         if os.getenv("CLIENT_MODE") == "devnet":
             tx_params["gasPrice"] = self.w3.eth.gas_price
         return tx_params
+
+
+__all__ = [
+    "VertexContractsContext",
+    "VertexContracts",
+    "DepositCollateralParams",
+    "VertexExecuteType",
+]
