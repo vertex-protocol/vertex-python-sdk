@@ -9,7 +9,7 @@ include = ["vertex_protocol/*.json"]
 keywords = ["vertex protocol", "vertex sdk", "vertex protocol api"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
 pydantic = "^1.10.7"
 web3 = "^6.4.0"
 eth-account = "^0.8.0"
