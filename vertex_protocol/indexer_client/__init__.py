@@ -23,3 +23,6 @@ class IndexerClient(IndexerQueryClient):
             opts (IndexerClientOpts): Client configuration options for connecting and interacting with the indexer service.
         """
         super().__init__(opts)
+
+
+__all__ = ["IndexerClient", "IndexerClientOpts", "IndexerQueryClient"]

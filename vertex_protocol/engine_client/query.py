@@ -140,7 +140,7 @@ class EngineQueryClient:
         Args:
             subaccount (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
             txs (list[QuerySubaccountInfoTx], optional): You can optionally provide a list of txs, to get an estimated view
-                of what the subaccount state would look like if the transactions were applied.
+            of what the subaccount state would look like if the transactions were applied.
 
         Returns:
             SubaccountInfoData: Information about the specified subaccount.

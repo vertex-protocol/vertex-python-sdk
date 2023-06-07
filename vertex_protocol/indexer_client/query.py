@@ -88,7 +88,13 @@ class IndexerQueryClient:
         self, params: IndexerSubaccountHistoricalOrdersParams
     ) -> IndexerHistoricalOrdersData:
         """
-        Queries historical orders of a subaccount.
+        Retrieves the historical orders associated with a specific subaccount.
+
+        Args:
+            params (IndexerSubaccountHistoricalOrdersParams): The parameters specifying the subaccount for which to retrieve historical orders.
+
+        Returns:
+            IndexerHistoricalOrdersData: The historical orders associated with the specified subaccount.
         """
         return ensure_data_type(
             self.query(IndexerSubaccountHistoricalOrdersParams.parse_obj(params)).data,
@@ -99,7 +105,13 @@ class IndexerQueryClient:
         self, digests: list[str]
     ) -> IndexerHistoricalOrdersData:
         """
-        Queries historical orders by their digest.
+        Retrieves historical orders using their unique digests.
+
+        Args:
+            digests (list[str]): A list of order digests.
+
+        Returns:
+            IndexerHistoricalOrdersData: The historical orders corresponding to the provided digests.
         """
         return ensure_data_type(
             self.query(IndexerHistoricalOrdersByDigestParams(digests=digests)).data,
@@ -108,7 +120,13 @@ class IndexerQueryClient:
 
     def get_matches(self, params: IndexerMatchesParams) -> IndexerMatchesData:
         """
-        Queries match data.
+        Retrieves match data based on provided parameters.
+
+        Args:
+            params (IndexerMatchesParams): The parameters for the match data retrieval request.
+
+        Returns:
+            IndexerMatchesData: The match data corresponding to the provided parameters.
         """
         return ensure_data_type(
             self.query(IndexerMatchesParams.parse_obj(params)).data, IndexerMatchesData
@@ -116,7 +134,13 @@ class IndexerQueryClient:
 
     def get_events(self, params: IndexerEventsParams) -> IndexerEventsData:
         """
-        Queries event data.
+        Retrieves event data based on provided parameters.
+
+        Args:
+            params (IndexerEventsParams): The parameters for the event data retrieval request.
+
+        Returns:
+            IndexerEventsData: The event data corresponding to the provided parameters.
         """
         return ensure_data_type(
             self.query(IndexerEventsParams.parse_obj(params)).data, IndexerEventsData
@@ -126,7 +150,14 @@ class IndexerQueryClient:
         self, subaccount: str, timestamp: int | None = None
     ) -> IndexerSubaccountSummaryData:
         """
-        Queries a summary of a subaccount.
+        Retrieves a summary of a specified subaccount at a certain timestamp.
+
+        Args:
+            subaccount (str): The identifier for the subaccount.
+            timestamp (int | None, optional): The timestamp for which to retrieve the subaccount summary. If not provided, the most recent summary is retrieved.
+
+        Returns:
+            IndexerSubaccountSummaryData: The summary of the specified subaccount at the provided timestamp.
         """
         return ensure_data_type(
             self.query(
@@ -141,7 +172,13 @@ class IndexerQueryClient:
         self, params: IndexerProductSnapshotsParams
     ) -> IndexerProductSnapshotsData:
         """
-        Queries product snapshot data.
+        Retrieves snapshot data for specific products.
+
+        Args:
+            params (IndexerProductSnapshotsParams): Parameters specifying the products for which to retrieve snapshot data.
+
+        Returns:
+            IndexerProductSnapshotsData: The product snapshot data corresponding to the provided parameters.
         """
         return ensure_data_type(
             self.query(IndexerProductSnapshotsParams.parse_obj(params)).data,
@@ -152,7 +189,13 @@ class IndexerQueryClient:
         self, params: IndexerCandlesticksParams
     ) -> IndexerCandlesticksData:
         """
-        Queries candlestick data.
+        Retrieves candlestick data based on provided parameters.
+
+        Args:
+            params (IndexerCandlesticksParams): The parameters for retrieving candlestick data.
+
+        Returns:
+            IndexerCandlesticksData: The candlestick data corresponding to the provided parameters.
         """
         return ensure_data_type(
             self.query(IndexerCandlesticksParams.parse_obj(params)).data,
@@ -161,7 +204,13 @@ class IndexerQueryClient:
 
     def get_perp_funding_rate(self, product_id: int) -> IndexerFundingRateData:
         """
-        Queries perp funding rate data.
+        Retrieves the funding rate data for a specific perp product.
+
+        Args:
+            product_id (int): The identifier of the perp product.
+
+        Returns:
+            IndexerFundingRateData: The funding rate data for the specified perp product.
         """
         return ensure_data_type(
             self.query(IndexerFundingRateParams(product_id=product_id)).data,
@@ -170,7 +219,13 @@ class IndexerQueryClient:
 
     def get_perp_prices(self, product_id: int) -> IndexerPerpPricesData:
         """
-        Queries perp price data.
+        Retrieves the price data for a specific perp product.
+
+        Args:
+            product_id (int): The identifier of the perp product.
+
+        Returns:
+            IndexerPerpPricesData: The price data for the specified perp product.
         """
         return ensure_data_type(
             self.query(IndexerPerpPricesParams(product_id=product_id)).data,
@@ -179,7 +234,13 @@ class IndexerQueryClient:
 
     def get_oracle_prices(self, product_ids: list[int]) -> IndexerOraclePricesData:
         """
-        Queries oracle price data.
+        Retrieves the oracle price data for specific products.
+
+        Args:
+            product_ids (list[int]): A list of product identifiers.
+
+        Returns:
+            IndexerOraclePricesData: The oracle price data for the specified products.
         """
         return ensure_data_type(
             self.query(IndexerOraclePricesParams(product_ids=product_ids)).data,
@@ -188,7 +249,13 @@ class IndexerQueryClient:
 
     def get_token_rewards(self, address: str) -> IndexerTokenRewardsData:
         """
-        Queries token reward data.
+        Retrieves the token reward data for a specific address.
+
+        Args:
+            address (str): The address for which to retrieve token reward data.
+
+        Returns:
+            IndexerTokenRewardsData: The token reward data for the specified address.
         """
         return ensure_data_type(
             self.query(IndexerTokenRewardsParams(address=address)).data,
@@ -199,7 +266,13 @@ class IndexerQueryClient:
         self, params: IndexerMakerStatisticsParams
     ) -> IndexerMakerStatisticsData:
         """
-        Queries maker statistic data.
+        Retrieves maker statistics based on provided parameters.
+
+        Args:
+            params (IndexerMakerStatisticsParams): The parameters for retrieving maker statistics.
+
+        Returns:
+            IndexerMakerStatisticsData: The maker statistics corresponding to the provided parameters.
         """
         return ensure_data_type(
             self.query(IndexerMakerStatisticsParams.parse_obj(params)).data,
@@ -208,7 +281,10 @@ class IndexerQueryClient:
 
     def get_liquidation_feed(self) -> IndexerLiquidationFeedData:
         """
-        Queries liquidation feed data.
+        Retrieves the liquidation feed data.
+
+        Returns:
+            IndexerLiquidationFeedData: The latest liquidation feed data.
         """
         return ensure_data_type(self.query(IndexerLiquidationFeedParams()).data, list)
 
@@ -216,7 +292,13 @@ class IndexerQueryClient:
         self, subaccount: str
     ) -> IndexerLinkedSignerRateLimitData:
         """
-        Queries rate limits for a linked signer.
+        Retrieves the rate limits for a linked signer of a specific subaccount.
+
+        Args:
+            subaccount (str): The identifier of the subaccount.
+
+        Returns:
+            IndexerLinkedSignerRateLimitData: The rate limits for the linked signer of the specified subaccount.
         """
         return ensure_data_type(
             self.query(IndexerLinkedSignerRateLimitParams(subaccount=subaccount)).data,

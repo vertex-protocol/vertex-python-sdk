@@ -25,3 +25,11 @@ class EngineClient(EngineQueryClient, EngineExecuteClient):
         """
         EngineQueryClient.__init__(self, opts)
         EngineExecuteClient.__init__(self, opts)
+
+
+__all__ = [
+    "EngineClient",
+    "EngineClientOpts",
+    "EngineExecuteClient",
+    "EngineQueryClient",
+]
