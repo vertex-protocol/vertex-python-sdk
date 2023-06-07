@@ -41,6 +41,7 @@ from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
     QueryFailedException,
 )
+from vertex_protocol.utils.model import ensure_data_type
 
 
 class EngineQueryClient:
@@ -87,7 +88,7 @@ class EngineQueryClient:
         Returns:
             StatusData: The status of the engine.
         """
-        return self.query(QueryStatusParams()).data
+        return ensure_data_type(self.query(QueryStatusParams()).data, StatusData)
 
     def get_contracts(self) -> ContractsData:
         """
@@ -98,7 +99,7 @@ class EngineQueryClient:
         Returns:
             ContractsData: Vertex contracts info.
         """
-        return self.query(QueryContractsParams()).data
+        return ensure_data_type(self.query(QueryContractsParams()).data, ContractsData)
 
     def get_nonces(self, address: str) -> NoncesData:
         """
@@ -110,7 +111,9 @@ class EngineQueryClient:
         Returns:
             NoncesData: The nonces of the address.
         """
-        return self.query(QueryNoncesParams(address=address)).data
+        return ensure_data_type(
+            self.query(QueryNoncesParams(address=address)).data, NoncesData
+        )
 
     def get_order(self, product_id: int, digest: str) -> OrderData:
         """
@@ -123,10 +126,13 @@ class EngineQueryClient:
         Returns:
             OrderData: The order data.
         """
-        return self.query(QueryOrderParams(product_id=product_id, digest=digest)).data
+        return ensure_data_type(
+            self.query(QueryOrderParams(product_id=product_id, digest=digest)).data,
+            OrderData,
+        )
 
     def get_subaccount_info(
-        self, subaccount: str, txs: list[QuerySubaccountInfoTx] = None
+        self, subaccount: str, txs: list[QuerySubaccountInfoTx] | None = None
     ) -> SubaccountInfoData:
         """
         Query the engine for the state of a subaccount, including balances.
@@ -139,9 +145,10 @@ class EngineQueryClient:
         Returns:
             SubaccountInfoData: Information about the specified subaccount.
         """
-        return self.query(
-            QuerySubaccountInfoParams(subaccount=subaccount, txs=txs)
-        ).data
+        return ensure_data_type(
+            self.query(QuerySubaccountInfoParams(subaccount=subaccount, txs=txs)).data,
+            SubaccountInfoData,
+        )
 
     def get_subaccount_open_orders(
         self, product_id: int, sender: str
@@ -157,9 +164,12 @@ class EngineQueryClient:
             SubaccountOpenOrdersData: A data object containing the open orders for the
             specified subaccount on the provided product.
         """
-        return self.query(
-            QuerySubaccountOpenOrdersParams(product_id=product_id, sender=sender)
-        ).data
+        return ensure_data_type(
+            self.query(
+                QuerySubaccountOpenOrdersParams(product_id=product_id, sender=sender)
+            ).data,
+            SubaccountOpenOrdersData,
+        )
 
     def get_market_liquidity(self, product_id: int, depth: int) -> MarketLiquidityData:
         """
@@ -172,9 +182,12 @@ class EngineQueryClient:
         Returns:
             MarketLiquidityData: Market liquidity data for the specified product.
         """
-        return self.query(
-            QueryMarketLiquidityParams(product_id=product_id, depth=depth)
-        ).data
+        return ensure_data_type(
+            self.query(
+                QueryMarketLiquidityParams(product_id=product_id, depth=depth)
+            ).data,
+            MarketLiquidityData,
+        )
 
     def get_all_products(self) -> AllProductsData:
         """
@@ -184,7 +197,9 @@ class EngineQueryClient:
         Returns:
             AllProductsData: Data about all products.
         """
-        return self.query(QueryAllProductsParams()).data
+        return ensure_data_type(
+            self.query(QueryAllProductsParams()).data, AllProductsData
+        )
 
     def get_market_price(self, product_id: int) -> MarketPriceData:
         """
@@ -197,7 +212,10 @@ class EngineQueryClient:
         Returns:
             MarketPriceData: Market price data for the specified product.
         """
-        return self.query(QueryMarketPriceParams(product_id=product_id)).data
+        return ensure_data_type(
+            self.query(QueryMarketPriceParams(product_id=product_id)).data,
+            MarketPriceData,
+        )
 
     def get_max_order_size(self, params: QueryMaxOrderSizeParams) -> MaxOrderSizeData:
         """
@@ -211,10 +229,12 @@ class EngineQueryClient:
             MaxOrderSizeData: A data object containing the maximum order size possible
             for the given subaccount and product.
         """
-        return self.query(QueryMaxOrderSizeParams.parse_obj(params)).data
+        return ensure_data_type(
+            self.query(QueryMaxOrderSizeParams.parse_obj(params)).data, MaxOrderSizeData
+        )
 
     def get_max_withdrawable(
-        self, product_id: int, sender: str, spot_leverage: bool = None
+        self, product_id: int, sender: str, spot_leverage: bool | None = None
     ) -> MaxWithdrawableData:
         """
         Retrieves the maximum withdrawable amount for a given spot product for a subaccount.
@@ -227,14 +247,17 @@ class EngineQueryClient:
         Returns:
             MaxWithdrawableData: Contains the maximum withdrawable amount.
         """
-        return self.query(
-            QueryMaxWithdrawableParams(
-                product_id=product_id, sender=sender, spot_leverage=spot_leverage
-            )
-        ).data
+        return ensure_data_type(
+            self.query(
+                QueryMaxWithdrawableParams(
+                    product_id=product_id, sender=sender, spot_leverage=spot_leverage
+                )
+            ).data,
+            MaxWithdrawableData,
+        )
 
     def get_max_lp_mintable(
-        self, product_id: int, sender: str, spot_leverage: bool = None
+        self, product_id: int, sender: str, spot_leverage: bool | None = None
     ) -> MaxLpMintableData:
         """
         Retrieves the maximum LP token amount mintable for a given product for a subaccount.
@@ -247,11 +270,14 @@ class EngineQueryClient:
         Returns:
             MaxLpMintableData: Contains the maximum LP token mintable amount.
         """
-        return self.query(
-            QueryMaxLpMintableParams(
-                product_id=product_id, sender=sender, spot_leverage=spot_leverage
-            )
-        ).data
+        return ensure_data_type(
+            self.query(
+                QueryMaxLpMintableParams(
+                    product_id=product_id, sender=sender, spot_leverage=spot_leverage
+                )
+            ).data,
+            MaxLpMintableData,
+        )
 
     def get_fee_rates(self, sender: str) -> FeeRatesData:
         """
@@ -263,7 +289,9 @@ class EngineQueryClient:
         Returns:
             FeeRatesData: Contains fee rates information associated with the subaccount.
         """
-        return self.query(QueryFeeRatesParams(sender=sender)).data
+        return ensure_data_type(
+            self.query(QueryFeeRatesParams(sender=sender)).data, FeeRatesData
+        )
 
     def get_health_groups(self) -> HealthGroupsData:
         """
@@ -275,7 +303,9 @@ class EngineQueryClient:
             HealthGroupsData: Contains health group information, each including both a spot
             and a perp product.
         """
-        return self.query(QueryHealthGroupsParams()).data
+        return ensure_data_type(
+            self.query(QueryHealthGroupsParams()).data, HealthGroupsData
+        )
 
     def get_linked_signer(self, subaccount: str) -> LinkedSignerData:
         """
@@ -287,4 +317,7 @@ class EngineQueryClient:
         Returns:
             LinkedSignerData: Information about the currently linked signer for the subaccount.
         """
-        return self.query(QueryLinkedSignerParams(subaccount=subaccount))
+        return ensure_data_type(
+            self.query(QueryLinkedSignerParams(subaccount=subaccount)).data,
+            LinkedSignerData,
+        )

@@ -20,7 +20,7 @@ def get_vertex_eip712_domain(verifying_contract: str, chain_id: int) -> EIP712Do
     )
 
 
-def get_eip712_domain_type() -> dict:
+def get_eip712_domain_type() -> list[dict[str, str]]:
     """
     Util to return the structure of an EIP712Domain as per EIP-712.
 

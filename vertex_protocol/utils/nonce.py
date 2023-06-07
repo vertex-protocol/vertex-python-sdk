@@ -2,7 +2,9 @@ import datetime
 import random
 
 
-def gen_order_nonce(recv_time_ms: int = None, random_int: int = None) -> int:
+def gen_order_nonce(
+    recv_time_ms: int | None = None, random_int: int | None = None
+) -> int:
     """
     Generates an order nonce based on a received timestamp and a random integer.
 

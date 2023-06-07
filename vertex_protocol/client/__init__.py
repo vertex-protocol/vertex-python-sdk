@@ -17,6 +17,8 @@ from vertex_protocol.utils.backend import VertexBackendURL
 
 from vertex_protocol.client.context import *
 
+from pydantic import parse_obj_as
+
 
 class VertexClientMode(StrEnum):
     """
@@ -81,8 +83,8 @@ class VertexClient:
 
 def create_vertex_client(
     mode: VertexClientMode,
-    signer: Signer = None,
-    context_opts: VertexClientContextOpts = None,
+    signer: Signer | None = None,
+    context_opts: VertexClientContextOpts | None = None,
 ) -> VertexClient:
     """
     Create a new VertexClient based on the given mode and signer.
@@ -112,18 +114,21 @@ def create_vertex_client(
         context = create_vertex_client_context(context_opts, signer)
     else:
         logging.warning(f"Initializing default {mode} context")
-        engine_endpoint, indexer_endpoint, network_name = client_mode_to_setup(mode)
-        deployment = load_deployment(network_name)
+        engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(
+            mode
+        )
+        deployment = load_deployment(VertexNetwork(network_name))
         context = create_vertex_client_context(
             VertexClientContextOpts(
                 rpc_node_url=deployment.node_url,
-                engine_endpoint=engine_endpoint,
-                indexer_endpoint=indexer_endpoint,
+                engine_endpoint_url=parse_obj_as(AnyUrl, engine_endpoint_url),
+                indexer_endpoint_url=parse_obj_as(AnyUrl, indexer_endpoint_url),
                 contracts_context=VertexContractsContext(
                     endpoint_addr=deployment.endpoint_addr,
                     querier_addr=deployment.querier_addr,
                     perp_engine_addr=deployment.perp_engine_addr,
                     spot_engine_addr=deployment.spot_engine_addr,
+                    clearinghouse_addr=deployment.clearinghouse_addr,
                 ),
             ),
             signer,
@@ -131,23 +136,25 @@ def create_vertex_client(
     return VertexClient(context)
 
 
-def client_mode_to_setup(client_mode: VertexClientMode) -> tuple[str, str, str]:
+def client_mode_to_setup(
+    client_mode: VertexClientMode,
+) -> tuple[str, str, str]:
     try:
         return {
             VertexClientMode.MAINNET: (
-                VertexBackendURL.MAINNET,
-                VertexBackendURL.MAINNET,
-                VertexNetwork.ARBITRUM_ONE,
+                VertexBackendURL.MAINNET.value,
+                VertexBackendURL.MAINNET.value,
+                VertexNetwork.ARBITRUM_ONE.value,
             ),
             VertexClientMode.TESTNET: (
-                VertexBackendURL.TESTNET,
-                VertexBackendURL.TESTNET,
-                VertexNetwork.ARBITRUM_GOERLI,
+                VertexBackendURL.TESTNET.value,
+                VertexBackendURL.TESTNET.value,
+                VertexNetwork.ARBITRUM_GOERLI.value,
             ),
             VertexClientMode.DEVNET: (
-                VertexBackendURL.DEVNET_ENGINE,
-                VertexBackendURL.DEVNET_INDEXER,
-                VertexNetwork.HARDHAT,
+                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_INDEXER.value,
+                VertexNetwork.HARDHAT.value,
             ),
         }[client_mode]
     except KeyError:

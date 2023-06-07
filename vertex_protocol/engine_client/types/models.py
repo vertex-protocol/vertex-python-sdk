@@ -1,3 +1,4 @@
+from typing import Annotated
 from enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
 from pydantic import conlist
@@ -167,4 +168,4 @@ class MaxOrderSizeDirection(StrEnum):
 
 
 # (price, amount)
-Liquidity = conlist(str, min_items=2, max_items=2)
+Liquidity = Annotated[list, conlist(str, min_items=2, max_items=2)]

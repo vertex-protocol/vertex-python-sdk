@@ -15,7 +15,7 @@ class SpotQueryAPI(BaseSpotAPI):
     """
 
     def get_max_withdrawable(
-        self, product_id: int, sender: str, spot_leverage: bool = None
+        self, product_id: int, sender: str, spot_leverage: bool | None = None
     ) -> MaxWithdrawableData:
         """
         Retrieves the estimated maximum withdrawable amount for a provided spot product.

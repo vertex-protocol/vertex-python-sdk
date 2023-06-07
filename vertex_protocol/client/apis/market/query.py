@@ -150,7 +150,7 @@ class MarketQueryAPI(VertexBaseAPI):
         return self.context.engine_client.get_max_order_size(params)
 
     def get_max_lp_mintable(
-        self, product_id: int, sender: str, spot_leverage: bool = None
+        self, product_id: int, sender: str, spot_leverage: bool | None = None
     ) -> MaxLpMintableData:
         """
         Queries the engine to determine the maximum base amount that can be contributed for minting LPs.

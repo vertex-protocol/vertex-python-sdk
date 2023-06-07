@@ -1,4 +1,4 @@
-from pydantic import Field
+from pydantic import AnyUrl, Field
 from enum import StrEnum
 
 from vertex_protocol.utils.model import VertexBaseModel
@@ -34,7 +34,7 @@ class VertexDeployment(VertexBaseModel):
     Class representing deployment data for Vertex protocol contracts.
 
     Attributes:
-        node_url (str): The URL of the node.
+        node_url (AnyUrl): The URL of the node.
         quote_addr (str): The address of the quote contract.
         querier_addr (str): The address of the querier contract.
         fee_calculator_addr (str): The address of the fee calculator contract.
@@ -44,7 +44,7 @@ class VertexDeployment(VertexBaseModel):
         perp_engine_addr (str): The address of the perpetual engine contract.
     """
 
-    node_url: str = Field(alias="nodeUrl")
+    node_url: AnyUrl = Field(alias="nodeUrl")
     quote_addr: str = Field(alias="quote")
     querier_addr: str = Field(alias="querier")
     fee_calculator_addr: str = Field(alias="feeCalculator")

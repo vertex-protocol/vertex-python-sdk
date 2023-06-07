@@ -20,7 +20,7 @@ class SpotExecuteAPI(BaseSpotAPI):
     """
 
     def deposit(
-        self, params: DepositCollateralParams, signer: LocalAccount = None
+        self, params: DepositCollateralParams, signer: LocalAccount | None = None
     ) -> str:
         """
         Executes the operation of depositing a specified amount into a spot product.
@@ -58,7 +58,7 @@ class SpotExecuteAPI(BaseSpotAPI):
         return self.context.engine_client.withdraw_collateral(params)
 
     def approve_allowance(
-        self, product_id: int, amount: int, signer: LocalAccount = None
+        self, product_id: int, amount: int, signer: LocalAccount | None = None
     ) -> str:
         """
         Approves an allowance for a certain amount of tokens for a spot product.
@@ -83,7 +83,7 @@ class SpotExecuteAPI(BaseSpotAPI):
         return self.context.contracts.approve_allowance(token, amount, signer)
 
     def _mint_mock_erc20(
-        self, product_id: int, amount: int, signer: LocalAccount = None
+        self, product_id: int, amount: int, signer: LocalAccount | None = None
     ):
         """
         Mints a specified amount of mock ERC20 tokens for testing purposes.

@@ -2,6 +2,7 @@ import os
 from typing import Optional
 from pydantic import BaseModel
 from web3 import Web3
+from web3.types import TxParams
 from web3.contract import Contract
 from web3.contract.contract import ContractFunction
 from eth_account.signers.local import LocalAccount
@@ -34,6 +35,14 @@ class VertexContracts:
     Encapsulates the set of Vertex contracts required for querying and executing.
     """
 
+    w3: Web3
+    contracts_context: VertexContractsContext
+    querier: Contract
+    endpoint: Contract
+    clearinghouse: Optional[Contract]
+    spot_engine: Optional[Contract]
+    perp_engine: Optional[Contract]
+
     def __init__(self, node_url: str, contracts_context: VertexContractsContext):
         """
         Initialize a VertexContracts instance.
@@ -49,11 +58,11 @@ class VertexContracts:
 
         self.contracts_context = VertexContractsContext.parse_obj(contracts_context)
         self.querier: Contract = self.w3.eth.contract(
-            address=contracts_context.querier_addr, abi=load_abi(VertexAbiName.FQUERIER)
+            address=contracts_context.querier_addr, abi=load_abi(VertexAbiName.FQUERIER)  # type: ignore
         )
         self.endpoint: Contract = self.w3.eth.contract(
             address=self.contracts_context.endpoint_addr,
-            abi=load_abi(VertexAbiName.ENDPOINT),
+            abi=load_abi(VertexAbiName.ENDPOINT),  # type: ignore
         )
         self.clearinghouse = None
         self.spot_engine = None
@@ -62,19 +71,19 @@ class VertexContracts:
         if self.contracts_context.clearinghouse_addr:
             self.clearinghouse: Contract = self.w3.eth.contract(
                 address=self.contracts_context.clearinghouse_addr,
-                abi=load_abi(VertexAbiName.ICLEARINGHOUSE),
+                abi=load_abi(VertexAbiName.ICLEARINGHOUSE),  # type: ignore
             )
 
         if self.contracts_context.spot_engine_addr:
             self.spot_engine: Contract = self.w3.eth.contract(
                 address=self.contracts_context.spot_engine_addr,
-                abi=load_abi(VertexAbiName.ISPOT_ENGINE),
+                abi=load_abi(VertexAbiName.ISPOT_ENGINE),  # type: ignore
             )
 
         if self.contracts_context.perp_engine_addr:
             self.perp_engine: Contract = self.w3.eth.contract(
                 address=self.contracts_context.perp_engine_addr,
-                abi=load_abi(VertexAbiName.IPERP_ENGINE),
+                abi=load_abi(VertexAbiName.IPERP_ENGINE),  # type: ignore
             )
 
     def deposit_collateral(
@@ -142,6 +151,8 @@ class VertexContracts:
         Returns:
             Contract: The ERC20 token contract for the specified product.
         """
+        if self.spot_engine is None:
+            raise Exception("SpotEngine contract not initialized")
         product_config = self.spot_engine.functions.getConfig(product_id).call()
         token = product_config[0]
         return self.w3.eth.contract(
@@ -156,8 +167,8 @@ class VertexContracts:
         self.w3.eth.wait_for_transaction_receipt(signed_tx_hash)
         return signed_tx_hash.hex()
 
-    def _build_tx_params(self, signer: LocalAccount) -> dict:
-        tx_params = {
+    def _build_tx_params(self, signer: LocalAccount) -> TxParams:
+        tx_params: TxParams = {
             "from": signer.address,
             "nonce": self.w3.eth.get_transaction_count(signer.address),
         }

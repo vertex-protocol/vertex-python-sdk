@@ -35,7 +35,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerTokenRewardsParams,
     to_indexer_request,
 )
-from vertex_protocol.utils.model import VertexBaseModel
+from vertex_protocol.utils.model import VertexBaseModel, ensure_data_type
 
 
 class IndexerQueryClient:
@@ -76,7 +76,7 @@ class IndexerQueryClient:
 
     @query.register
     def _(self, req: dict | IndexerRequest) -> IndexerResponse:
-        return self._query(VertexBaseModel.parse_obj(req))
+        return self._query(VertexBaseModel.parse_obj(req))  # type: ignore
 
     def _query(self, req: IndexerRequest) -> IndexerResponse:
         res = requests.post(f"{self.url}/indexer", json=req.dict())
@@ -90,9 +90,10 @@ class IndexerQueryClient:
         """
         Queries historical orders of a subaccount.
         """
-        return self.query(
-            IndexerSubaccountHistoricalOrdersParams.parse_obj(params)
-        ).data
+        return ensure_data_type(
+            self.query(IndexerSubaccountHistoricalOrdersParams.parse_obj(params)).data,
+            IndexerHistoricalOrdersData,
+        )
 
     def get_historical_orders_by_digest(
         self, digests: list[str]
@@ -100,29 +101,41 @@ class IndexerQueryClient:
         """
         Queries historical orders by their digest.
         """
-        return self.query(IndexerHistoricalOrdersByDigestParams(digests=digests)).data
+        return ensure_data_type(
+            self.query(IndexerHistoricalOrdersByDigestParams(digests=digests)).data,
+            IndexerHistoricalOrdersData,
+        )
 
     def get_matches(self, params: IndexerMatchesParams) -> IndexerMatchesData:
         """
         Queries match data.
         """
-        return self.query(IndexerMatchesParams.parse_obj(params)).data
+        return ensure_data_type(
+            self.query(IndexerMatchesParams.parse_obj(params)).data, IndexerMatchesData
+        )
 
     def get_events(self, params: IndexerEventsParams) -> IndexerEventsData:
         """
         Queries event data.
         """
-        return self.query(IndexerEventsParams.parse_obj(params)).data
+        return ensure_data_type(
+            self.query(IndexerEventsParams.parse_obj(params)).data, IndexerEventsData
+        )
 
     def get_subaccount_summary(
-        self, subaccount: str, timestamp: int = None
+        self, subaccount: str, timestamp: int | None = None
     ) -> IndexerSubaccountSummaryData:
         """
         Queries a summary of a subaccount.
         """
-        return self.query(
-            IndexerSubaccountSummaryParams(subaccount=subaccount, timestamp=timestamp)
-        ).data
+        return ensure_data_type(
+            self.query(
+                IndexerSubaccountSummaryParams(
+                    subaccount=subaccount, timestamp=timestamp
+                )
+            ).data,
+            IndexerSubaccountSummaryData,
+        )
 
     def get_product_snapshots(
         self, params: IndexerProductSnapshotsParams
@@ -130,7 +143,10 @@ class IndexerQueryClient:
         """
         Queries product snapshot data.
         """
-        return self.query(IndexerProductSnapshotsParams.parse_obj(params)).data
+        return ensure_data_type(
+            self.query(IndexerProductSnapshotsParams.parse_obj(params)).data,
+            IndexerProductSnapshotsData,
+        )
 
     def get_candlesticks(
         self, params: IndexerCandlesticksParams
@@ -138,31 +154,46 @@ class IndexerQueryClient:
         """
         Queries candlestick data.
         """
-        return self.query(IndexerCandlesticksParams.parse_obj(params)).data
+        return ensure_data_type(
+            self.query(IndexerCandlesticksParams.parse_obj(params)).data,
+            IndexerCandlesticksData,
+        )
 
     def get_perp_funding_rate(self, product_id: int) -> IndexerFundingRateData:
         """
         Queries perp funding rate data.
         """
-        return self.query(IndexerFundingRateParams(product_id=product_id)).data
+        return ensure_data_type(
+            self.query(IndexerFundingRateParams(product_id=product_id)).data,
+            IndexerFundingRateData,
+        )
 
     def get_perp_prices(self, product_id: int) -> IndexerPerpPricesData:
         """
         Queries perp price data.
         """
-        return self.query(IndexerPerpPricesParams(product_id=product_id)).data
+        return ensure_data_type(
+            self.query(IndexerPerpPricesParams(product_id=product_id)).data,
+            IndexerPerpPricesData,
+        )
 
     def get_oracle_prices(self, product_ids: list[int]) -> IndexerOraclePricesData:
         """
         Queries oracle price data.
         """
-        return self.query(IndexerOraclePricesParams(product_ids=product_ids)).data
+        return ensure_data_type(
+            self.query(IndexerOraclePricesParams(product_ids=product_ids)).data,
+            IndexerOraclePricesData,
+        )
 
     def get_token_rewards(self, address: str) -> IndexerTokenRewardsData:
         """
         Queries token reward data.
         """
-        return self.query(IndexerTokenRewardsParams(address=address)).data
+        return ensure_data_type(
+            self.query(IndexerTokenRewardsParams(address=address)).data,
+            IndexerTokenRewardsData,
+        )
 
     def get_maker_statistics(
         self, params: IndexerMakerStatisticsParams
@@ -170,13 +201,16 @@ class IndexerQueryClient:
         """
         Queries maker statistic data.
         """
-        return self.query(IndexerMakerStatisticsParams.parse_obj(params)).data
+        return ensure_data_type(
+            self.query(IndexerMakerStatisticsParams.parse_obj(params)).data,
+            IndexerMakerStatisticsData,
+        )
 
     def get_liquidation_feed(self) -> IndexerLiquidationFeedData:
         """
         Queries liquidation feed data.
         """
-        return self.query(IndexerLiquidationFeedParams()).data
+        return ensure_data_type(self.query(IndexerLiquidationFeedParams()).data, list)
 
     def get_linked_signer_rate_limits(
         self, subaccount: str
@@ -184,6 +218,7 @@ class IndexerQueryClient:
         """
         Queries rate limits for a linked signer.
         """
-        return self.query(
-            IndexerLinkedSignerRateLimitParams(subaccount=subaccount)
-        ).data
+        return ensure_data_type(
+            self.query(IndexerLinkedSignerRateLimitParams(subaccount=subaccount)).data,
+            IndexerLinkedSignerRateLimitData,
+        )

@@ -55,7 +55,7 @@ class EngineClientOpts(BaseModel):
         return values
 
     @validator("url")
-    def clean_url(cls, v: AnyUrl) -> AnyUrl:
+    def clean_url(cls, v: AnyUrl) -> str:
         """
         Cleans the URL input by removing trailing slashes.
 
@@ -63,7 +63,7 @@ class EngineClientOpts(BaseModel):
             v (AnyUrl): The input URL.
 
         Returns:
-            AnyUrl: The cleaned URL.
+            str: The cleaned URL.
         """
         return v.rstrip("/")
 

@@ -9,7 +9,7 @@ from vertex_protocol.utils.bytes32 import (
     subaccount_to_bytes32,
 )
 from vertex_protocol.utils.nonce import gen_order_nonce
-from vertex_protocol.utils.subaccount import Subaccount
+from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
 
 Digest = str | bytes
@@ -34,7 +34,7 @@ class BaseParams(VertexBaseModel):
         validate_assignment = True
 
     @validator("sender")
-    def serialize_sender(cls, v: Subaccount) -> bytes:
+    def serialize_sender(cls, v: Subaccount) -> bytes | Subaccount:
         """
         Validates and serializes the sender to bytes32 format.
 
@@ -42,9 +42,12 @@ class BaseParams(VertexBaseModel):
             v (Subaccount): The sender's subaccount identifier.
 
         Returns:
-            bytes: The serialized sender in bytes32 format.
+            (bytes|Subaccount): The serialized sender in bytes32 format or the original Subaccount if it cannot be converted to bytes32.
         """
-        return subaccount_to_bytes32(v)
+        try:
+            return subaccount_to_bytes32(v)
+        except ValueError:
+            return v
 
 
 class SignatureParams(VertexBaseModel):
@@ -537,23 +540,26 @@ def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
         ExecuteRequest: The corresponding `ExecuteRequest` object.
     """
     execute_request_mapping = {
-        PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER),
-        CancelOrdersParams: (CancelOrdersRequest, VertexExecuteType.CANCEL_ORDERS),
+        PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER.value),
+        CancelOrdersParams: (
+            CancelOrdersRequest,
+            VertexExecuteType.CANCEL_ORDERS.value,
+        ),
         CancelProductOrdersParams: (
             CancelProductOrdersRequest,
-            VertexExecuteType.CANCEL_PRODUCT_ORDERS,
+            VertexExecuteType.CANCEL_PRODUCT_ORDERS.value,
         ),
         WithdrawCollateralParams: (
             WithdrawCollateralRequest,
-            VertexExecuteType.WITHDRAW_COLLATERAL,
+            VertexExecuteType.WITHDRAW_COLLATERAL.value,
         ),
         LiquidateSubaccountParams: (
             LiquidateSubaccountRequest,
-            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexExecuteType.LIQUIDATE_SUBACCOUNT.value,
         ),
-        MintLpParams: (MintLpRequest, VertexExecuteType.MINT_LP),
-        BurnLpParams: (BurnLpRequest, VertexExecuteType.BURN_LP),
-        LinkSignerParams: (LinkSignerRequest, VertexExecuteType.LINK_SIGNER),
+        MintLpParams: (MintLpRequest, VertexExecuteType.MINT_LP.value),
+        BurnLpParams: (BurnLpRequest, VertexExecuteType.BURN_LP.value),
+        LinkSignerParams: (LinkSignerRequest, VertexExecuteType.LINK_SIGNER.value),
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]

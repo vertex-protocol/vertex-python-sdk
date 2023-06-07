@@ -5,7 +5,7 @@ from vertex_protocol.contracts.types import (
     VertexDeployment,
     VertexNetwork,
 )
-from vertex_protocol.utils.model import to_enum
+from vertex_protocol.utils.model import ensure_data_type, parse_enum_value
 
 
 def load_abi(abi_name: VertexAbiName) -> list[dict]:
@@ -18,8 +18,8 @@ def load_abi(abi_name: VertexAbiName) -> list[dict]:
     Returns:
         list[dict]: A list of dictionaries representing the ABI of the contract.
     """
-    file_path = Path(__file__).parent / "abis" / f"{to_enum(abi_name)}.json"
-    return _load_json(file_path)
+    file_path = Path(__file__).parent / "abis" / f"{parse_enum_value(abi_name)}.json"
+    return ensure_data_type(_load_json(file_path), list)
 
 
 def load_deployment(network: VertexNetwork) -> VertexDeployment:
@@ -33,7 +33,9 @@ def load_deployment(network: VertexNetwork) -> VertexDeployment:
         VertexDeployment: An instance of VertexDeployment containing the loaded deployment data.
     """
     file_path = (
-        Path(__file__).parent / "deployments" / f"deployment.{to_enum(network)}.json"
+        Path(__file__).parent
+        / "deployments"
+        / f"deployment.{parse_enum_value(network)}.json"
     )
     return VertexDeployment(**_load_json(file_path))
 
