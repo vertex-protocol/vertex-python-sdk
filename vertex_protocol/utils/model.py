@@ -1,7 +1,6 @@
 from enum import Enum
-from typing import Any, Callable
 from pydantic import BaseModel
-from typing import Type, TypeVar
+from typing import Callable, Type, TypeVar
 
 
 class VertexBaseModel(BaseModel):
@@ -68,7 +67,7 @@ def parse_enum_value(value: str | Enum) -> str:
 T = TypeVar("T")
 
 
-def ensure_data_type(data: Any, expected_type: Type[T]) -> T:
+def ensure_data_type(data, expected_type: Type[T]) -> T:
     assert isinstance(
         data, expected_type
     ), f"Expected {expected_type.__name__}, but got {type(data).__name__}"

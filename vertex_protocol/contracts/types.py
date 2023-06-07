@@ -60,7 +60,9 @@ class DepositCollateralParams(VertexBaseModel):
 
     Attributes:
         subaccount_name (str): The name of the subaccount.
+
         product_id (int): The ID of the spot product to deposit collateral for.
+
         amount (int): The amount of collateral to be deposited.
     """
 

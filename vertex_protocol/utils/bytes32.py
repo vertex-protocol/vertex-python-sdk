@@ -1,5 +1,4 @@
 import binascii
-from typing import Union
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
 

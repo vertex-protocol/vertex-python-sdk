@@ -11,6 +11,10 @@ from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiNa
 from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12, zero_address
 from vertex_protocol.utils.exceptions import InvalidProductId
 from vertex_protocol.contracts.types import *
+from vertex_protocol.contracts.eip712 import *
+from vertex_protocol.contracts.eip712.domain import *
+from vertex_protocol.contracts.eip712.sign import *
+from vertex_protocol.contracts.eip712.types import *
 
 
 class VertexContractsContext(BaseModel):
@@ -19,9 +23,13 @@ class VertexContractsContext(BaseModel):
 
     Attributes:
         endpoint_addr (str): The endpoint address.
+
         querier_addr (str): The querier address.
+
         spot_engine_addr (Optional[str]): The spot engine address. This may be None.
-        perp_engine_addr (Optional[str]): The perpetual engine address. This may be None.
+
+        perp_engine_addr (Optional[str]): The perp engine address. This may be None.
+
         clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
     """
 
