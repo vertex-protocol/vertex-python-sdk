@@ -22,7 +22,9 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Args:
             product_id (int): The identifier for the spot product.
+
             sender (str): The address and subaccount identifier in a bytes32 hex string.
+
             spot_leverage (Optional[bool]): If False, calculates max amount without considering leverage. Defaults to True.
 
         Returns:
@@ -38,6 +40,7 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Args:
             product_id (int): Identifier for the spot product.
+
             address (str): User's wallet address.
 
         Returns:
@@ -53,6 +56,7 @@ class SpotQueryAPI(BaseSpotAPI):
 
         Args:
             product_id (int): Identifier for the spot product.
+
             address (str): The user's wallet address.
 
         Returns:

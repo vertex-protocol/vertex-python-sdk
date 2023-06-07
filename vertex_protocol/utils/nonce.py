@@ -10,6 +10,7 @@ def gen_order_nonce(
 
     Args:
         recv_time_ms (int, optional): Received timestamp in milliseconds. Defaults to the current time plus 90 seconds.
+
         random_int (int, optional): An integer for the nonce. Defaults to a random integer between 0 and 999.
 
     Returns:

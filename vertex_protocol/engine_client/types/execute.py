@@ -111,9 +111,11 @@ class CancelOrdersParams(BaseParamsSigned):
 
     Args:
         productIds (list[int]): List of product IDs for the orders to be canceled.
+
         digests (list[Digest]): List of digests of the orders to be canceled.
+
         nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-            see `gen_order_nonce` for more info.
+        see `gen_order_nonce` for more info.
 
     Methods:
         serialize_digests: Validates and converts a list of hex digests to bytes32.
@@ -134,9 +136,11 @@ class CancelProductOrdersParams(BaseParamsSigned):
 
     Args:
         productIds (list[int]): List of product IDs for the orders to be canceled.
+
         digest (str, optional): Optional EIP-712 digest of the CancelProductOrder request.
+
         nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-            see `gen_order_nonce` for more info.
+        see `gen_order_nonce` for more info.
     """
 
     productIds: list[int]
@@ -320,6 +324,7 @@ def to_tx_request(cls: Type[VertexBaseModel], v: BaseParamsSigned) -> TxRequest:
 
     Args:
         cls (Type[VertexBaseModel]): The type of the model to convert.
+
         v (BaseParamsSigned): The signed parameters to be converted.
 
     Raises:

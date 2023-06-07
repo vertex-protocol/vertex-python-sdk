@@ -121,6 +121,7 @@ class EngineQueryClient:
 
         Args:
             product_id (int): The id of the product.
+
             digest (str): The digest of the order.
 
         Returns:
@@ -139,6 +140,7 @@ class EngineQueryClient:
 
         Args:
             subaccount (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
+
             txs (list[QuerySubaccountInfoTx], optional): You can optionally provide a list of txs, to get an estimated view
             of what the subaccount state would look like if the transactions were applied.
 
@@ -158,6 +160,7 @@ class EngineQueryClient:
 
         Args:
             product_id (int): The identifier of the product for which open orders are to be fetched.
+
             sender (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
 
         Returns:
@@ -177,6 +180,7 @@ class EngineQueryClient:
 
         Args:
             product_id (int): The id of the product.
+
             depth (int): The depth of the market.
 
         Returns:
@@ -241,7 +245,9 @@ class EngineQueryClient:
 
         Args:
             product_id (int): ID of the spot product.
+
             sender (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
+
             spot_leverage (bool, optional): If False, calculates without borrowing. Defaults to True.
 
         Returns:
@@ -264,7 +270,9 @@ class EngineQueryClient:
 
         Args:
             product_id (int): ID of the product.
+
             sender (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
+
             spot_leverage (bool, optional): If False, calculates without considering borrowing. Defaults to True.
 
         Returns:

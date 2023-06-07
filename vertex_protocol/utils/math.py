@@ -4,6 +4,7 @@ def to_pow_10(x: int, pow: int) -> int:
 
     Args:
         x (int): Integer value.
+
         pow (int): Power of 10.
 
     Returns:
@@ -31,6 +32,7 @@ def from_pow_10(x: int, pow: int) -> float:
 
     Args:
         x (int): Converted value.
+
         pow (int): Power of 10.
 
     Returns:

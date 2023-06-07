@@ -32,6 +32,7 @@ def hex_to_bytes(input: str | bytes, size: int) -> bytes:
 
     Args:
         input (str | bytes): The hexadecimal string or bytes to be converted.
+
         size (int): The specified size for the output bytes object.
 
     Returns:
@@ -67,6 +68,7 @@ def subaccount_to_bytes32(
 
     Args:
         subaccount (Subaccount): The subaccount, which can be a string, bytes, or SubaccountParams instance.
+
         name (str|bytes, optional): The subaccount name, when provided `subaccount` is expected to be the owner address.
 
     Returns:
@@ -101,6 +103,7 @@ def subaccount_to_hex(subaccount: Subaccount, name: str | None = None) -> str:
 
     Args:
         subaccount (Subaccount): The subaccount, which can be a string, bytes, or SubaccountParams instance.
+
         name (str|bytes, optional): Additional string, if any, to be appended to the subaccount string before conversion. Defaults to None.
 
     Returns:

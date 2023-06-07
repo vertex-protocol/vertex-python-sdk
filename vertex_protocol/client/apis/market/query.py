@@ -82,6 +82,7 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             product_id (int): The identifier for the product to fetch open orders.
+
             sender (str): The address and subaccount identifier as a bytes32 hex string.
 
         Returns:
@@ -157,7 +158,9 @@ class MarketQueryAPI(VertexBaseAPI):
 
         Args:
             product_id (int): The identifier for the spot/perp product.
+
             sender (str): The address and subaccount identifier in a bytes32 hex string.
+
             spot_leverage (Optional[bool]): If False, calculates max amount without considering leverage. Defaults to True.
 
         Returns:

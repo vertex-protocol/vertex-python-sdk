@@ -9,6 +9,7 @@ from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.loader import load_abi
 from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiName
 from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12
+from vertex_protocol.contracts.types import *
 
 
 class VertexContractsContext(BaseModel):
@@ -52,6 +53,7 @@ class VertexContracts:
 
         Args:
             node_url (str): The Ethereum node URL.
+
             contracts_context (VertexContractsContext): The Vertex contracts context, holding the relevant addresses.
         """
         self.w3 = Web3(Web3.HTTPProvider(node_url))
@@ -94,6 +96,7 @@ class VertexContracts:
 
         Args:
             params (DepositCollateralParams): The parameters for depositing collateral.
+
             signer (LocalAccount): The account that will sign the deposit transaction.
 
         Returns:
@@ -115,7 +118,9 @@ class VertexContracts:
 
         Args:
             erc20 (Contract): The ERC20 token contract.
+
             amount (int): The amount of the ERC20 token to be approved.
+
             signer (LocalAccount): The account that will sign the approval transaction.
 
         Returns:
@@ -133,7 +138,9 @@ class VertexContracts:
 
         Args:
             erc20 (Contract): The contract instance of the ERC20 token to be minted.
+
             amount (int): The amount of tokens to mint.
+
             signer (LocalAccount): The account that will sign the minting transaction.
 
         Returns:
@@ -161,6 +168,24 @@ class VertexContracts:
         )
 
     def execute(self, func: ContractFunction, signer: LocalAccount) -> str:
+        """
+        Executes a smart contract function.
+
+        This method builds a transaction for a given contract function, signs the transaction with the provided signer's private key,
+        sends the raw signed transaction to the network, and waits for the transaction to be mined.
+
+        Args:
+            func (ContractFunction): The contract function to be executed.
+
+            signer (LocalAccount): The local account object that will sign the transaction. It should contain the private key.
+
+        Returns:
+            str: The hexadecimal representation of the transaction hash.
+
+        Raises:
+            ValueError: If the transaction is invalid, the method will not catch the error.
+            TimeExhausted: If the transaction receipt isn't available within the timeout limit set by the Web3 provider.
+        """
         tx = func.build_transaction(self._build_tx_params(signer))
         signed_tx = self.w3.eth.account.sign_transaction(tx, private_key=signer.key)
         signed_tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
@@ -175,3 +200,11 @@ class VertexContracts:
         if os.getenv("CLIENT_MODE") == "devnet":
             tx_params["gasPrice"] = self.w3.eth.gas_price
         return tx_params
+
+
+__all__ = [
+    "VertexContractsContext",
+    "VertexContracts",
+    "DepositCollateralParams",
+    "VertexExecuteType",
+]

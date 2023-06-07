@@ -154,6 +154,7 @@ class IndexerQueryClient:
 
         Args:
             subaccount (str): The identifier for the subaccount.
+
             timestamp (int | None, optional): The timestamp for which to retrieve the subaccount summary. If not provided, the most recent summary is retrieved.
 
         Returns:

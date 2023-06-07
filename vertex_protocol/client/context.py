@@ -39,6 +39,7 @@ def create_vertex_client_context(
 
     Args:
         opts (VertexClientContextOpts): Options including endpoints for the engine and indexer clients.
+
         signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
 
     Returns:

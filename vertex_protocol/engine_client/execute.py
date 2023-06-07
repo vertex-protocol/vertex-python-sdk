@@ -53,6 +53,7 @@ class EngineExecuteClient:
 
         Args:
             opts (EngineClientOpts): Options for the client.
+
             querier (EngineQueryClient, optional): An EngineQueryClient instance. If not provided, a new one is created.
         """
         self._querier = querier or EngineQueryClient(opts)
@@ -263,6 +264,7 @@ class EngineExecuteClient:
 
         Args:
             order (OrderParams): The order parameters.
+
             product_id (int): The ID of the product.
 
         Returns:
@@ -283,7 +285,9 @@ class EngineExecuteClient:
 
         Args:
             execute (VertexExecuteType): The Vertex execute type to sign.
+
             msg (dict): The message to be signed.
+
             product_id (int, optional): Required for 'PLACE_ORDER' operation, specifying the product ID.
 
         Returns:
@@ -323,8 +327,11 @@ class EngineExecuteClient:
 
         Args:
             execute (VertexExecuteType): The Vertex execute type to build digest for.
+
             msg (dict): The EIP712 message.
+
             verifying_contract (str): The contract used for verification.
+
             chain_id (int): The network chain ID.
 
         Returns:
@@ -347,9 +354,13 @@ class EngineExecuteClient:
 
         Args:
             execute (VertexExecuteType): The type of operation.
+
             msg (dict): The message to be signed.
+
             verifying_contract (str): The contract used for verification.
+
             chain_id (int): The network chain ID.
+
             signer (LocalAccount): The account used to sign the data.
 
         Returns:
@@ -368,7 +379,7 @@ class EngineExecuteClient:
 
         Args:
             params (PlaceOrderParams): Parameters required for placing an order.
-                The parameters include the order details and the product_id.
+            The parameters include the order details and the product_id.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -386,7 +397,7 @@ class EngineExecuteClient:
 
         Args:
             params (CancelOrdersParams): Parameters required for canceling orders.
-                The parameters include the order digests to be cancelled.
+            The parameters include the order digests to be cancelled.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -405,7 +416,7 @@ class EngineExecuteClient:
 
         Args:
             params (CancelProductOrdersParams): Parameters required for bulk canceling orders of specific products.
-                The parameters include a list of product ids to bulk cancel orders for.
+            The parameters include a list of product ids to bulk cancel orders for.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -424,7 +435,7 @@ class EngineExecuteClient:
 
         Args:
             params (WithdrawCollateralParams): Parameters required for withdrawing collateral.
-                The parameters include the collateral details.
+            The parameters include the collateral details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -443,7 +454,7 @@ class EngineExecuteClient:
 
         Args:
             params (LiquidateSubaccountParams): Parameters required for liquidating a subaccount.
-                The parameters include the liquidatee details.
+            The parameters include the liquidatee details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -463,7 +474,7 @@ class EngineExecuteClient:
 
         Args:
             params (MintLpParams): Parameters required for minting LP tokens.
-                The parameters include the LP details.
+            The parameters include the LP details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -481,7 +492,7 @@ class EngineExecuteClient:
 
         Args:
             params (BurnLpParams): Parameters required for burning LP tokens.
-                The parameters include the LP details.
+            The parameters include the LP details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
@@ -499,7 +510,7 @@ class EngineExecuteClient:
 
         Args:
             params (LinkSignerParams): Parameters required for linking a signer.
-                The parameters include the signer details.
+            The parameters include the signer details.
 
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.

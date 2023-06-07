@@ -42,6 +42,7 @@ class VertexBaseModel(BaseModel):
 
         Args:
             fields (list[str]): Fields to be modified.
+
             func (Callable): Function to apply to each field.
         """
         for field in fields:

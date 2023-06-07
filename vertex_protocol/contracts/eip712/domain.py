@@ -7,6 +7,7 @@ def get_vertex_eip712_domain(verifying_contract: str, chain_id: int) -> EIP712Do
 
     Args:
         verifying_contract (str): The address of the contract that will verify the EIP-712 signature.
+
         chain_id (int): The chain ID of the originating network.
 
     Returns:

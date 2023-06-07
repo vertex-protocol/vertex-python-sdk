@@ -31,6 +31,7 @@ class SubaccountQueryAPI(VertexBaseAPI):
 
         Args:
             subaccount (str): Unique identifier for the subaccount.
+
             txs (list[QuerySubaccountInfoTx], optional): Optional list of transactions for the subaccount.
 
         Returns:
