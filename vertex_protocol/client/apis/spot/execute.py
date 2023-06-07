@@ -9,6 +9,16 @@ from vertex_protocol.utils.exceptions import MissingSignerException
 
 
 class SpotExecuteAPI(BaseSpotAPI):
+    """
+    Class providing execution operations for the spot market in the Vertex Protocol.
+
+    This class provides functionality for executing transactions related to spot products,
+    such as depositing a specified amount into a spot product.
+
+    Inheritance:
+        BaseSpotAPI: Base class for Spot operations. Inherits connectivity context and base functionalities.
+    """
+
     def deposit(
         self, params: DepositCollateralParams, signer: LocalAccount = None
     ) -> str:

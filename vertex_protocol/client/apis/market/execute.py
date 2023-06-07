@@ -11,7 +11,15 @@ from vertex_protocol.client.apis.base import VertexBaseAPI
 
 class MarketExecuteAPI(VertexBaseAPI):
     """
-    Provides market execution APIs.
+    Provides functionality to interact with the Vertex's market execution APIs.
+    This class contains methods that allow clients to execute operations such as minting LP tokens, burning LP tokens,
+    placing and cancelling orders on the Vertex market.
+
+    Attributes:
+        context (VertexClientContext): The context that provides connectivity configuration for VertexClient.
+
+    Note:
+        This class should not be instantiated directly, it is designed to be used through a VertexClient instance.
     """
 
     def mint_lp(self, params: MintLpParams) -> ExecuteResponse:

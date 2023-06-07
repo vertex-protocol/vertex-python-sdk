@@ -4,6 +4,16 @@ from vertex_protocol.utils.math import from_pow_10
 
 
 class SpotQueryAPI(BaseSpotAPI):
+    """
+    Class providing querying operations for the spot market in the Vertex Protocol.
+
+    This class allows for retrieval of various kinds of information related to spot products,
+    such as getting wallet token balance of a given spot product.
+
+    Inheritance:
+        BaseSpotAPI: Base class for Spot operations. Inherits connectivity context and base functionalities.
+    """
+
     def get_max_withdrawable(
         self, product_id: int, sender: str, spot_leverage: bool = None
     ) -> MaxWithdrawableData:

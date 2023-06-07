@@ -37,13 +37,34 @@ class VertexClientMode(StrEnum):
 
 class VertexClient:
     """
-    Client for querying and executing against Vertex Clearinghouse.
-    Use `create_vertex_client` for initialization.
+    The primary client interface for interacting with Vertex Protocol.
+
+    This client consolidates the functionality of various aspects of Vertex such as spot, market,
+    subaccount, and perpetual (perp) operations.
+
+    To initialize an instance of this client, use the `create_vertex_client` utility.
+
+    Attributes:
+        - context (VertexClientContext): The client context containing configuration for interacting with Vertex.
+        - market (MarketAPI): Sub-client for executing and querying market operations.
+        - subaccount (SubaccountAPI): Sub-client for executing and querying subaccount operations.
+        - spot (SpotAPI): Sub-client for executing and querying spot operations.
+        - perp (PerpAPI): Sub-client for executing and querying perpetual operations.
     """
+
+    context: VertexClientContext
+    market: MarketAPI
+    subaccount: SubaccountAPI
+    spot: SpotAPI
+    perp: PerpAPI
 
     def __init__(self, context: VertexClientContext):
         """
         Initialize a new instance of the VertexClient.
+
+        This constructor should not be called directly. Instead, use the `create_vertex_client` utility to
+        create a new VertexClient. This is because the `create_vertex_client` utility includes important
+        additional setup steps that aren't included in this constructor.
 
         Args:
             context (VertexClientContext): The client context.
