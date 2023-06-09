@@ -11,10 +11,6 @@ from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiNa
 from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12, zero_address
 from vertex_protocol.utils.exceptions import InvalidProductId
 from vertex_protocol.contracts.types import *
-from vertex_protocol.contracts.eip712 import *
-from vertex_protocol.contracts.eip712.domain import *
-from vertex_protocol.contracts.eip712.sign import *
-from vertex_protocol.contracts.eip712.types import *
 
 
 class VertexContractsContext(BaseModel):
@@ -221,4 +217,7 @@ __all__ = [
     "VertexContracts",
     "DepositCollateralParams",
     "VertexExecuteType",
+    "VertexNetwork",
+    "VertexAbiName",
+    "VertexDeployment",
 ]
