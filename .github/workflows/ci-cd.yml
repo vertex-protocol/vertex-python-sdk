@@ -6,30 +6,30 @@ on:
     types: [created]
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        python-version: ["3.9", "3.10", "3.11"]
-##
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-python@v2
-#        with:
-#          python-version: ${{ matrix.python-version }}
-#      - name: Run image # install poetry
-#        uses: snok/install-poetry@v1
-#        with:
-#          version: 1.3.2
-#      - name: Install dependencies # install all dependencies
-#        run: poetry install
-#      - name: Pytest
-#        run: |
-#          poetry run coverage run -m --source=vertex_protocol pytest tests
-#          poetry run coverage report
-#      - name: Pycycle
-#        run: |
-#          poetry run pycycle vertex_protocol
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run image # install poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.3.2
+      - name: Install dependencies # install all dependencies
+        run: poetry install
+      - name: Pytest
+        run: |
+          poetry run coverage run -m --source=vertex_protocol pytest tests
+          poetry run coverage report
+      - name: Pycycle
+        run: |
+          poetry run pycycle --here
 
   publish:
     # Our publish job will only run on release creation events,
