@@ -35,6 +35,9 @@ jobs:
       - name: Pycycle
         run: |
           poetry run pycycle --here
+      - name: MyPy
+        run: |
+          poetry run mypy vertex_protocol
 
   publish:
     # Our publish job will only run on release creation events,

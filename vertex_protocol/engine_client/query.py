@@ -56,8 +56,8 @@ class EngineQueryClient:
         Args:
             opts (EngineClientOpts): Options for the client.
         """
-        self._opts = EngineClientOpts.parse_obj(opts)
-        self.url = self._opts.url
+        self._opts: EngineClientOpts = EngineClientOpts.parse_obj(opts)
+        self.url: str = self._opts.url
 
     def query(self, req: QueryRequest) -> QueryResponse:
         """
