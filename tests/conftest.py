@@ -98,7 +98,7 @@ def vertex_client(
         },
     }
     mock_get.return_value = mock_response
-    return create_vertex_client("devnet", private_keys[0])
+    return create_vertex_client("testing", private_keys[0])
 
 
 @pytest.fixture

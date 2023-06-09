@@ -12,6 +12,7 @@ class VertexNetwork(StrEnum):
     ARBITRUM_ONE = "arbitrumOne"
     ARBITRUM_GOERLI = "arbitrumGoerli"
     HARDHAT = "localhost"
+    TESTING = "test"
 
 
 class VertexAbiName(StrEnum):

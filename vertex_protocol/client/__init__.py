@@ -29,11 +29,14 @@ class VertexClientMode(StrEnum):
         TESTNET: For operating in Vertex's testnet environment.
 
         DEVNET: For local development.
+
+        TESTING: For running tests.
     """
 
     MAINNET = "mainnet"
     TESTNET = "testnet"
     DEVNET = "devnet"
+    TESTING = "testing"
 
 
 class VertexClient:
@@ -154,6 +157,11 @@ def client_mode_to_setup(
                 VertexBackendURL.DEVNET_ENGINE.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
                 VertexNetwork.HARDHAT.value,
+            ),
+            VertexClientMode.TESTING: (
+                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_INDEXER.value,
+                VertexNetwork.TESTING.value,
             ),
         }[client_mode]
     except KeyError:

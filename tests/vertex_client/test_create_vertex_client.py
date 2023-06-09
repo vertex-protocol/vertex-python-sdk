@@ -141,7 +141,7 @@ def test_create_vertex_client(
     assert testnet_vertex_client.context.indexer_client.url == VertexBackendURL.TESTNET
     assert testnet_vertex_client.context.engine_client.signer == signer
 
-    devnet_vertex_client = create_vertex_client(VertexClientMode.DEVNET, signer)
+    devnet_vertex_client = create_vertex_client(VertexClientMode.TESTING, signer)
 
     assert devnet_vertex_client.context.engine_client.chain_id == chain_id
     assert devnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
@@ -159,7 +159,7 @@ def test_create_vertex_client(
         create_vertex_client("custom", signer)
 
     custom_vertex_client = create_vertex_client(
-        VertexClientMode.DEVNET,
+        VertexClientMode.TESTING,
         signer,
         VertexClientContextOpts(
             engine_endpoint_url=url,
