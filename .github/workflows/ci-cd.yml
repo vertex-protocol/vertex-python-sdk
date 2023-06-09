@@ -46,14 +46,22 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
-          python-version: "3.8"
-      - name: Run image
-        uses: abatilo/actions-poetry@v2.0.0
+          python-version: 3.11
+      - name: Set up cache
+        uses: actions/cache@v1
         with:
-          poetry-version: 1.0.10
+          path: .venv
+          key: cache-python-packages
+      - name: Set up poetry
+        run: |
+          pip install poetry safety
+          poetry config virtualenvs.in-project true
+      - name: Install dependencies # install all dependencies
+        run: poetry install
       - name: Build and publish
         env:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
