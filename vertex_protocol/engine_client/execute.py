@@ -57,8 +57,8 @@ class EngineExecuteClient:
             querier (EngineQueryClient, optional): An EngineQueryClient instance. If not provided, a new one is created.
         """
         self._querier = querier or EngineQueryClient(opts)
-        self._opts = EngineClientOpts.parse_obj(opts)
-        self.url = self._opts.url
+        self._opts: EngineClientOpts = EngineClientOpts.parse_obj(opts)
+        self.url: str = self._opts.url
 
     def _inject_owner_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
         """
@@ -129,7 +129,7 @@ class EngineExecuteClient:
         return params
 
     @singledispatchmethod
-    def execute(self, params: ExecuteParams) -> ExecuteResponse:
+    def execute(self, params: ExecuteParams | ExecuteRequest) -> ExecuteResponse:
         """
         Executes the operation defined by the provided parameters.
 
@@ -139,15 +139,18 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: The response from the executed operation.
         """
-        return self._execute(to_execute_request(params))
+        req: ExecuteRequest = (
+            params if isinstance(params, ExecuteRequest) else to_execute_request(params)  # type: ignore
+        )
+        return self._execute(req)
 
     @execute.register
-    def _(self, req: dict | ExecuteRequest) -> ExecuteResponse:
+    def _(self, req: dict) -> ExecuteResponse:
         """
         Overloaded method to execute the operation defined by the provided request.
 
         Args:
-            req (dict | ExecuteRequest): The request data for the operation to execute. Can be a dictionary or an instance of ExecuteRequest.
+            req (dict): The request data for the operation to execute. Can be a dictionary or an instance of ExecuteRequest.
 
         Returns:
             ExecuteResponse: The response from the executed operation.

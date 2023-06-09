@@ -1,10 +1,10 @@
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
-from typing import Optional
+from typing import Optional, Union
 from pydantic import BaseModel, AnyUrl, validator, root_validator
 
 PrivateKey = str
-Signer = LocalAccount | PrivateKey
+Signer = Union[LocalAccount, PrivateKey]
 
 
 class EngineClientOpts(BaseModel):
@@ -26,7 +26,7 @@ class EngineClientOpts(BaseModel):
     """
 
     url: AnyUrl
-    signer: Optional[Signer] = None
+    signer: Optional[Union[LocalAccount, PrivateKey]] = None
     linked_signer: Optional[Signer] = None
     chain_id: Optional[int] = None
     endpoint_addr: Optional[str] = None

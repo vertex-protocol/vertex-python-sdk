@@ -1,4 +1,4 @@
-from enum import StrEnum
+from vertex_protocol.utils.enum import StrEnum
 
 
 class VertexBackendURL(StrEnum):

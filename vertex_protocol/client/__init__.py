@@ -1,4 +1,3 @@
-from enum import StrEnum
 import logging
 from vertex_protocol.client.apis.market import MarketAPI
 from vertex_protocol.client.apis.perp import PerpAPI
@@ -14,7 +13,7 @@ from vertex_protocol.contracts.loader import load_deployment
 from vertex_protocol.contracts.types import VertexNetwork
 from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.utils.backend import VertexBackendURL
-
+from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.client.context import *
 
 from pydantic import parse_obj_as

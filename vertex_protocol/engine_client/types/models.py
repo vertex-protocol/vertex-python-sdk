@@ -1,5 +1,5 @@
 from typing import Annotated
-from enum import StrEnum
+from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
 from pydantic import conlist
 

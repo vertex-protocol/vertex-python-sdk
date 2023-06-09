@@ -1,4 +1,6 @@
-from enum import IntEnum, StrEnum
+from enum import IntEnum
+from vertex_protocol.utils.enum import StrEnum
+
 from typing import Any, Optional
 from vertex_protocol.engine_client.types.models import (
     PerpProduct,

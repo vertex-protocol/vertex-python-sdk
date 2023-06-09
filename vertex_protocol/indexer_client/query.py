@@ -1,5 +1,4 @@
 import requests
-
 from functools import singledispatchmethod
 from vertex_protocol.indexer_client.types import IndexerClientOpts
 from vertex_protocol.indexer_client.types.query import (
@@ -58,7 +57,7 @@ class IndexerQueryClient:
         self.url = self._opts.url
 
     @singledispatchmethod
-    def query(self, params: IndexerParams) -> IndexerResponse:
+    def query(self, params: IndexerParams | IndexerRequest) -> IndexerResponse:
         """
         Sends a query request to the indexer service and returns the response.
 
@@ -72,10 +71,13 @@ class IndexerQueryClient:
         Returns:
             IndexerResponse: The response from the indexer service.
         """
-        return self._query(to_indexer_request(params))
+        req: IndexerRequest = (
+            params if isinstance(params, IndexerRequest) else to_indexer_request(params)  # type: ignore
+        )
+        return self._query(req)
 
     @query.register
-    def _(self, req: dict | IndexerRequest) -> IndexerResponse:
+    def _(self, req: dict) -> IndexerResponse:
         return self._query(VertexBaseModel.parse_obj(req))  # type: ignore
 
     def _query(self, req: IndexerRequest) -> IndexerResponse:
