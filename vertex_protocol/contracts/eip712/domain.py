@@ -1,4 +1,4 @@
-from vertex_protocol.contracts.eip712 import EIP712Domain
+from vertex_protocol.contracts.eip712.types import EIP712Domain
 
 
 def get_vertex_eip712_domain(verifying_contract: str, chain_id: int) -> EIP712Domain:

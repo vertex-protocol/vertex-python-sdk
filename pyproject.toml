@@ -1,8 +1,14 @@
 [tool.poetry]
 name = "vertex-protocol"
-version = "0.1.1"
+version = "0.1.2"
 description = "Vertex Protocol SDK"
 authors = ["Jeury Mejia <jeury@vertexprotocol.com>"]
+homepage = "https://vertexprotocol.com/"
+maintainers = [
+  "Frank Jia <frank@vertexprotocol.com>",
+  "Clark Oh-Willeke <clark@vertexprotocol.com>"
+]
+documentation = "https://vertex-protocol.github.io/vertex-python-sdk/"
 readme = "README.md"
 packages = [{include = "vertex_protocol"}]
 include = ["vertex_protocol/*.json"]

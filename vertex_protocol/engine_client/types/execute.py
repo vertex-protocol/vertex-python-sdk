@@ -76,10 +76,13 @@ class OrderParams(BaseParams):
 
     Attributes:
         priceX18 (int): The price of the order with a precision of 18 decimal places.
+
         amount (int): The amount of the asset to be bought or sold in the order.
+
         expiration (int): The unix timestamp at which the order will expire.
+
         nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-            see `gen_order_nonce` for more info.
+        see `gen_order_nonce` for more info.
     """
 
     priceX18: int
@@ -94,8 +97,11 @@ class PlaceOrderParams(SignatureParams):
 
     Attributes:
         product_id (int): The id of the product for which the order is being placed.
+
         order (OrderParams): The parameters of the order.
+
         digest (Optional[str]): An optional hash of the order data.
+
         spot_leverage (Optional[bool]): An optional flag indicating whether leverage should be used for the order. By default, leverage is assumed.
     """
 
@@ -154,9 +160,11 @@ class WithdrawCollateralParams(BaseParamsSigned):
 
     Attributes:
         productId (int): The ID of the product to withdraw collateral from.
+
         amount (int): The amount of collateral to be withdrawn.
+
         spot_leverage (Optional[bool]): Indicates whether leverage is to be used. Defaults to True.
-            If set to False, the transaction fails if it causes a borrow on the subaccount.
+        If set to False, the transaction fails if it causes a borrow on the subaccount.
     """
 
     productId: int
@@ -170,8 +178,11 @@ class LiquidateSubaccountParams(BaseParamsSigned):
 
     Attributes:
         liquidatee (Subaccount): The subaccount that is to be liquidated.
+
         mode (int): The mode of liquidation.
+
         healthGroup (int): The ID of the health group associated with the product being traded.
+
         amount (int): The amount to be liquidated.
 
     Methods:
@@ -194,11 +205,15 @@ class MintLpParams(BaseParamsSigned):
 
     Attributes:
         productId (int): The ID of the product.
+
         amountBase (int): The amount of base to be consumed by minting LPs multiplied by 1e18.
+
         quoteAmountLow (int): The minimum amount of quote to be consumed by minting LPs multiplied by 1e18.
+
         quoteAmountHigh (int): The maximum amount of quote to be consumed by minting LPs multiplied by 1e18.
+
         spot_leverage (Optional[bool]): Indicates whether leverage is to be used. Defaults to True.
-            If set to False, the transaction fails if it causes a borrow on the subaccount.
+        If set to False, the transaction fails if it causes a borrow on the subaccount.
     """
 
     productId: int
@@ -215,6 +230,7 @@ class BurnLpParams(BaseParamsSigned):
 
     Attributes:
         productId (int): The ID of the product.
+
         amount (int): Combined amount of base + quote to burn multiplied by 1e18.
     """
 
@@ -283,9 +299,12 @@ class TxRequest(VertexBaseModel):
 
     Attributes:
         tx (dict): The transaction details.
+
         signature (str): The signature for the transaction.
+
         spot_leverage (Optional[bool]): Indicates whether leverage should be used. If set to false,
-            it denotes no borrowing. Defaults to true.
+        it denotes no borrowing. Defaults to true.
+
         digest (Optional[str]): The digest of the transaction.
 
     Methods:
@@ -352,6 +371,7 @@ class CancelOrdersRequest(VertexBaseModel):
 
     Methods:
         serialize: Serializes 'digests' in 'cancel_orders' into their hexadecimal representation.
+
         to_tx_request: Validates and converts 'cancel_orders' into a transaction request.
     """
 
@@ -399,6 +419,7 @@ class WithdrawCollateralRequest(VertexBaseModel):
 
     Methods:
         serialize: Validates and converts the 'amount' attribute of 'withdraw_collateral' to string.
+
         to_tx_request: Validates and converts 'withdraw_collateral' into a transaction request.
     """
 
@@ -421,7 +442,8 @@ class LiquidateSubaccountRequest(VertexBaseModel):
 
     Methods:
         serialize: Validates and converts the 'amount' attribute and the 'liquidatee' attribute
-                   of 'liquidate_subaccount' to their proper serialized forms.
+        of 'liquidate_subaccount' to their proper serialized forms.
+
         to_tx_request: Validates and converts 'liquidate_subaccount' into a transaction request.
     """
 
@@ -445,7 +467,8 @@ class MintLpRequest(VertexBaseModel):
 
     Methods:
         serialize: Validates and converts the 'amountBase', 'quoteAmountLow', and 'quoteAmountHigh'
-                   attributes of 'mint_lp' to their proper serialized forms.
+        attributes of 'mint_lp' to their proper serialized forms.
+
         to_tx_request: Validates and converts 'mint_lp' into a transaction request.
     """
 
@@ -468,6 +491,7 @@ class BurnLpRequest(VertexBaseModel):
 
     Methods:
         serialize: Validates and converts the 'amount' attribute of 'burn_lp' to its proper serialized form.
+
         to_tx_request: Validates and converts 'burn_lp' into a transaction request.
     """
 
@@ -490,6 +514,7 @@ class LinkSignerRequest(VertexBaseModel):
 
     Methods:
         serialize: Validates and converts the 'signer' attribute of 'link_signer' into its hexadecimal representation.
+
         to_tx_request: Validates and converts 'link_signer' into a transaction request.
     """
 
@@ -521,9 +546,13 @@ class ExecuteResponse(VertexBaseModel):
 
     Attributes:
         status (ResponseStatus): The status of the response.
+
         signature (Optional[str]): The signature of the response. Only present if the request was successfully executed.
+
         error_code (Optional[int]): The error code, if any error occurred during the execution of the request.
+
         error (Optional[str]): The error message, if any error occurred during the execution of the request.
+
         req (Optional[dict]): The original request that was executed.
     """
 

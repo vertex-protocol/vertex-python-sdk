@@ -1,10 +1,13 @@
 from eth_account.signers.local import LocalAccount
-from vertex_protocol.contracts.eip712 import EIP712TypedData, EIP712Types
 from vertex_protocol.contracts.eip712.domain import (
     get_eip712_domain_type,
     get_vertex_eip712_domain,
 )
-from vertex_protocol.contracts.eip712.types import get_vertex_eip712_type
+from vertex_protocol.contracts.eip712.types import (
+    EIP712TypedData,
+    EIP712Types,
+    get_vertex_eip712_type,
+)
 from eth_account.messages import encode_structured_data, _hash_eip191_message
 
 from vertex_protocol.contracts.types import VertexExecuteType

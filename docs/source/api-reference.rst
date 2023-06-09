@@ -28,6 +28,15 @@ vertex-protocol.engine_client
     :show-inheritance:
 
 
+vertex-protocol.engine_client.types
+-----------------------------------
+.. automodule:: vertex_protocol.engine_client.types
+    :members:
+    :undoc-members:
+    :special-members: __init__
+    :show-inheritance:
+
+
 vertex-protocol.indexer_client
 ------------------------------
 .. automodule:: vertex_protocol.indexer_client
@@ -37,9 +46,27 @@ vertex-protocol.indexer_client
     :show-inheritance:
 
 
+vertex-protocol.indexer_client.types
+------------------------------------
+.. automodule:: vertex_protocol.indexer_client.types
+    :members:
+    :undoc-members:
+    :special-members: __init__
+    :show-inheritance:
+
+
 vertex-protocol.contracts
 -------------------------
 .. automodule:: vertex_protocol.contracts
+    :members:
+    :undoc-members:
+    :special-members: __init__
+    :show-inheritance:
+
+
+vertex-protocol.contracts.eip712
+--------------------------------
+.. automodule:: vertex_protocol.contracts.eip712
     :members:
     :undoc-members:
     :special-members: __init__
