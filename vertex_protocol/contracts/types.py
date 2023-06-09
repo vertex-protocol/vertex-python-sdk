@@ -1,5 +1,5 @@
 from pydantic import AnyUrl, Field
-from enum import StrEnum
+from vertex_protocol.utils.enum import StrEnum
 
 from vertex_protocol.utils.model import VertexBaseModel
 
@@ -12,6 +12,7 @@ class VertexNetwork(StrEnum):
     ARBITRUM_ONE = "arbitrumOne"
     ARBITRUM_GOERLI = "arbitrumGoerli"
     HARDHAT = "localhost"
+    TESTING = "test"
 
 
 class VertexAbiName(StrEnum):

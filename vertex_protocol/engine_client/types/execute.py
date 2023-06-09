@@ -568,4 +568,4 @@ def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]
-    return RequestClass(**{field_name: params})
+    return RequestClass(**{field_name: params})  # type: ignore

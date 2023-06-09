@@ -1,4 +1,3 @@
-from enum import StrEnum
 import logging
 from vertex_protocol.client.apis.market import MarketAPI
 from vertex_protocol.client.apis.perp import PerpAPI
@@ -14,7 +13,7 @@ from vertex_protocol.contracts.loader import load_deployment
 from vertex_protocol.contracts.types import VertexNetwork
 from vertex_protocol.engine_client.types import Signer
 from vertex_protocol.utils.backend import VertexBackendURL
-
+from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.client.context import *
 
 from pydantic import parse_obj_as
@@ -30,11 +29,14 @@ class VertexClientMode(StrEnum):
         TESTNET: For operating in Vertex's testnet environment.
 
         DEVNET: For local development.
+
+        TESTING: For running tests.
     """
 
     MAINNET = "mainnet"
     TESTNET = "testnet"
     DEVNET = "devnet"
+    TESTING = "testing"
 
 
 class VertexClient:
@@ -155,6 +157,11 @@ def client_mode_to_setup(
                 VertexBackendURL.DEVNET_ENGINE.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
                 VertexNetwork.HARDHAT.value,
+            ),
+            VertexClientMode.TESTING: (
+                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_INDEXER.value,
+                VertexNetwork.TESTING.value,
             ),
         }[client_mode]
     except KeyError:
