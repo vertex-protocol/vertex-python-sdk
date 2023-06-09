@@ -50,7 +50,6 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -63,3 +62,5 @@ html_theme = "sphinx_rtd_theme"
 autodoc_member_order = "bysource"
 
 autosummary_generate = True
+
+html_favicon = "vertex.ico"
