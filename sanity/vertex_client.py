@@ -2,6 +2,7 @@ import time
 from sanity import CLIENT_MODE, SIGNER_PRIVATE_KEY
 
 from vertex_protocol.client import create_vertex_client
+from vertex_protocol.contracts.types import DepositCollateralParams
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
     MintLpParams,
@@ -35,7 +36,9 @@ def run():
 
     print("depositing collateral...")
     deposit_tx_hash = client.spot.deposit(
-        {"subaccount_name": "default", "product_id": 0, "amount": to_pow_10(100000, 6)}
+        DepositCollateralParams(
+            subaccount_name="default", product_id=0, amount=to_pow_10(100000, 6)
+        )
     )
     print("deposit collateral tx hash:", deposit_tx_hash)
 

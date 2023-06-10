@@ -65,6 +65,7 @@ vertex-protocol.contracts
     :special-members: __init__
     :show-inheritance:
 
+.. _eip-712:
 
 vertex-protocol.contracts.eip712
 --------------------------------

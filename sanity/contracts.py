@@ -1,7 +1,6 @@
 from sanity import NETWORK
 from vertex_protocol.contracts import VertexContracts, VertexContractsContext
 from vertex_protocol.contracts.loader import load_deployment
-from vertex_protocol.contracts.types import DepositCollateralParams
 
 
 def run():
@@ -17,3 +16,4 @@ def run():
     print("clearinghouse:", vertex_contracts.clearinghouse.address)
     print("spot_engine:", vertex_contracts.spot_engine.address)
     print("perp_engine:", vertex_contracts.perp_engine.address)
+    print("n-submissions", vertex_contracts.endpoint.functions.nSubmissions().call())

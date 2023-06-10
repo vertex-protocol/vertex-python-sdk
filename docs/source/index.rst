@@ -5,17 +5,24 @@ This is the Python SDK for the `Vertex Protocol API <https://vertex-protocol.git
 
 The latest version of the SDK can be found on `PyPI <https://pypi.org/project/vertex-protocol/>`_, and the source code is on `GitHub <https://github.com/vertex-protocol/vertex-python-sdk>`_.
 
+.. NOTE::
+
+   👋 Brand new to Vertex?
+
+   0. Join the Vertex community via `Discord <https://discord.gg/vertexprotocol>`_, `Twitter <https://twitter.com/vertex_protocol>`_.
+   1. Read our `docs <https://vertex-protocol.gitbook.io/docs/getting-started/overview>`_ to learn the basic concepts.
+   2. Visit us at `Vertex Protocol <https://vertexprotocol.com/>`_.
+   3. The :ref:`getting-started` section will give you a quick idea of the core things you can do via the SDK!
+
 Requirements
 ------------
 
 - Python 3.10 or above
-- Installation of the `vertex_protocol` package via pip
-- The necessary `vertex_protocol` libraries and functions imported into your Python environment
 
 Installation
 ------------
 
-You can install the Vertex Protocol Python SDK from PyPI using pip:
+You can install the SDK via pip:
 
 .. code-block:: bash
 
