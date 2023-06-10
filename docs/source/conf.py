@@ -39,6 +39,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx_autodoc_typehints",
     "sphinx.ext.coverage",
+    "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
 ]
 
@@ -64,3 +65,5 @@ autodoc_member_order = "bysource"
 autosummary_generate = True
 
 html_favicon = "vertex.ico"
+
+pygments_style = "sphinx"

@@ -1,6 +1,8 @@
 API Reference
 =============
 
+Detailed API Reference for Vertex Protocol SDK.
+
 vertex_protocol.client
 ----------------------
 .. automodule:: vertex_protocol.client

@@ -1,6 +1,7 @@
 from sanity import NETWORK
 from vertex_protocol.contracts import VertexContracts, VertexContractsContext
 from vertex_protocol.contracts.loader import load_deployment
+from vertex_protocol.contracts.types import DepositCollateralParams
 
 
 def run():
