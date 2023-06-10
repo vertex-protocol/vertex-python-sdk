@@ -45,8 +45,8 @@ client = create_vertex_client(ClientMode.MAINNET, private_key)
 ```python
 # Depositing collaterals
 print("approving allowance...")
-    approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(100000, 6))
-    print("approve allowance tx hash:", approve_allowance_tx_hash)
+approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(100000, 6))
+print("approve allowance tx hash:", approve_allowance_tx_hash)
 
 print("querying my allowance...")
 token_allowance = client.spot.get_token_allowance(0, client.context.signer.address)
