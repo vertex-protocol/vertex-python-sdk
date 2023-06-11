@@ -1,0 +1,536 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "digest",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "subaccount",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "priceX18",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "amount",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "expiration",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "nonce",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isTaker",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "feeAmount",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "baseDelta",
+        "type": "int128"
+      },
+      {
+        "indexed": false,
+        "internalType": "int128",
+        "name": "quoteDelta",
+        "type": "int128"
+      }
+    ],
+    "name": "FillOrder",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "claimSequencerFee",
+    "outputs": [
+      {
+        "internalType": "int128",
+        "name": "",
+        "type": "int128"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "dumpFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sender",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "int128",
+            "name": "priceX18",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "amount",
+            "type": "int128"
+          },
+          {
+            "internalType": "uint64",
+            "name": "expiration",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          }
+        ],
+        "internalType": "struct IEndpoint.Order",
+        "name": "order",
+        "type": "tuple"
+      }
+    ],
+    "name": "getDigest",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMarket",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "productId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "int128",
+            "name": "sizeIncrement",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "priceIncrementX18",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "lpSpreadX18",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "collectedFees",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "sequencerFees",
+            "type": "int128"
+          }
+        ],
+        "internalType": "struct IOffchainBook.Market",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMinSize",
+    "outputs": [
+      {
+        "internalType": "int128",
+        "name": "",
+        "type": "int128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVersion",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IClearinghouse",
+        "name": "_clearinghouse",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IProductEngine",
+        "name": "_engine",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_endpoint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_admin",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IFeeCalculator",
+        "name": "_fees",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_productId",
+        "type": "uint32"
+      },
+      {
+        "internalType": "int128",
+        "name": "_sizeIncrement",
+        "type": "int128"
+      },
+      {
+        "internalType": "int128",
+        "name": "_priceIncrementX18",
+        "type": "int128"
+      },
+      {
+        "internalType": "int128",
+        "name": "_minSize",
+        "type": "int128"
+      },
+      {
+        "internalType": "int128",
+        "name": "_lpSpreadX18",
+        "type": "int128"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "productId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "int128",
+            "name": "baseDelta",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "quoteDelta",
+            "type": "int128"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes32",
+                    "name": "sender",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "int128",
+                    "name": "priceX18",
+                    "type": "int128"
+                  },
+                  {
+                    "internalType": "int128",
+                    "name": "amount",
+                    "type": "int128"
+                  },
+                  {
+                    "internalType": "uint64",
+                    "name": "expiration",
+                    "type": "uint64"
+                  },
+                  {
+                    "internalType": "uint64",
+                    "name": "nonce",
+                    "type": "uint64"
+                  }
+                ],
+                "internalType": "struct IEndpoint.Order",
+                "name": "order",
+                "type": "tuple"
+              },
+              {
+                "internalType": "bytes",
+                "name": "signature",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct IEndpoint.SignedOrder",
+            "name": "taker",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IEndpoint.MatchOrderAMM",
+        "name": "tx",
+        "type": "tuple"
+      },
+      {
+        "internalType": "address",
+        "name": "takerLinkedSigner",
+        "type": "address"
+      }
+    ],
+    "name": "matchOrderAMM",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "uint32",
+                "name": "productId",
+                "type": "uint32"
+              },
+              {
+                "internalType": "bool",
+                "name": "amm",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "bytes32",
+                        "name": "sender",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "int128",
+                        "name": "priceX18",
+                        "type": "int128"
+                      },
+                      {
+                        "internalType": "int128",
+                        "name": "amount",
+                        "type": "int128"
+                      },
+                      {
+                        "internalType": "uint64",
+                        "name": "expiration",
+                        "type": "uint64"
+                      },
+                      {
+                        "internalType": "uint64",
+                        "name": "nonce",
+                        "type": "uint64"
+                      }
+                    ],
+                    "internalType": "struct IEndpoint.Order",
+                    "name": "order",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "signature",
+                    "type": "bytes"
+                  }
+                ],
+                "internalType": "struct IEndpoint.SignedOrder",
+                "name": "taker",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "components": [
+                      {
+                        "internalType": "bytes32",
+                        "name": "sender",
+                        "type": "bytes32"
+                      },
+                      {
+                        "internalType": "int128",
+                        "name": "priceX18",
+                        "type": "int128"
+                      },
+                      {
+                        "internalType": "int128",
+                        "name": "amount",
+                        "type": "int128"
+                      },
+                      {
+                        "internalType": "uint64",
+                        "name": "expiration",
+                        "type": "uint64"
+                      },
+                      {
+                        "internalType": "uint64",
+                        "name": "nonce",
+                        "type": "uint64"
+                      }
+                    ],
+                    "internalType": "struct IEndpoint.Order",
+                    "name": "order",
+                    "type": "tuple"
+                  },
+                  {
+                    "internalType": "bytes",
+                    "name": "signature",
+                    "type": "bytes"
+                  }
+                ],
+                "internalType": "struct IEndpoint.SignedOrder",
+                "name": "maker",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct IEndpoint.MatchOrders",
+            "name": "matchOrders",
+            "type": "tuple"
+          },
+          {
+            "internalType": "address",
+            "name": "takerLinkedSigner",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "makerLinkedSigner",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IEndpoint.MatchOrdersWithSigner",
+        "name": "tx",
+        "type": "tuple"
+      }
+    ],
+    "name": "matchOrders",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int128",
+        "name": "_sizeIncrement",
+        "type": "int128"
+      },
+      {
+        "internalType": "int128",
+        "name": "_priceIncrementX18",
+        "type": "int128"
+      },
+      {
+        "internalType": "int128",
+        "name": "_minSize",
+        "type": "int128"
+      },
+      {
+        "internalType": "int128",
+        "name": "_lpSpreadX18",
+        "type": "int128"
+      }
+    ],
+    "name": "modifyConfig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sender",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint32",
+            "name": "productId",
+            "type": "uint32"
+          },
+          {
+            "internalType": "int128",
+            "name": "amount",
+            "type": "int128"
+          },
+          {
+            "internalType": "int128",
+            "name": "priceX18",
+            "type": "int128"
+          }
+        ],
+        "internalType": "struct IEndpoint.SwapAMM",
+        "name": "tx",
+        "type": "tuple"
+      }
+    ],
+    "name": "swapAMM",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

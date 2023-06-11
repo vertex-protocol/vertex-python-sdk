@@ -1,0 +1,54 @@
+name: Publish docs to GH pages
+
+on:
+  release:
+    types: [created]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      - name: Set up cache
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: cache-python-packages
+      - name: Set up poetry
+        run: |
+          pip install poetry safety
+          poetry config virtualenvs.in-project true
+      - name: Install dependencies # install all dependencies
+        run: poetry install
+      - name: Build docs
+        run : |
+          poetry run sphinx-build docs/source docs/build
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: './docs/build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main

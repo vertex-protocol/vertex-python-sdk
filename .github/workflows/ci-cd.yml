@@ -1,0 +1,69 @@
+name: CI/CD 
+
+on:
+  push:
+  release:
+    types: [created]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up cache
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: cache-python-packages
+      - name: Set up poetry
+        run: |
+          pip install poetry safety
+          poetry config virtualenvs.in-project true
+      - name: Install dependencies # install all dependencies
+        run: poetry install
+      - name: Pytest
+        run: |
+          poetry run coverage run -m --source=vertex_protocol pytest tests
+          poetry run coverage report
+      - name: Pycycle
+        run: |
+          poetry run pycycle --here
+      - name: MyPy
+        run: |
+          poetry run mypy vertex_protocol
+
+  publish:
+    # Our publish job will only run on release creation events,
+    # and only if the test job has passed
+    if: github.event_name == 'release' && github.event.action == 'created'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      - name: Set up cache
+        uses: actions/cache@v1
+        with:
+          path: .venv
+          key: cache-python-packages
+      - name: Set up poetry
+        run: |
+          pip install poetry safety
+          poetry config virtualenvs.in-project true
+      - name: Install dependencies # install all dependencies
+        run: poetry install
+      - name: Build and publish
+        env:
+          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: poetry publish -u $PYPI_USERNAME -p $PYPI_PASSWORD --build
