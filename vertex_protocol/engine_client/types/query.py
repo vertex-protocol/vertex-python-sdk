@@ -349,6 +349,7 @@ class MaxLpMintableData(VertexBaseModel):
     """
 
     max_base_amount: str
+    max_quote_amount: str
 
 
 class FeeRatesData(VertexBaseModel):

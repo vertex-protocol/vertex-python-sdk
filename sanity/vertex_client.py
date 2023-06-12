@@ -139,10 +139,23 @@ def run():
     latest_market_price = client.market.get_latest_market_price(1)
     print("latest market price:", latest_market_price.json(indent=2))
 
+    print("querying oracle prices...")
+    oracle_prices = client.context.indexer_client.get_oracle_prices([1, 2, 3, 4])
+    print("oracle prices:", oracle_prices.json(indent=2))
+
+    oracle_price = [
+        oracle_price.oracle_price_x18
+        for oracle_price in oracle_prices.prices
+        if oracle_price.product_id == product_id
+    ][0]
+
     print("querying max order size...")
     max_order_size = client.market.get_max_order_size(
         QueryMaxOrderSizeParams(
-            sender=sender, product_id=product_id, price_x18=30000, direction="short"
+            sender=sender,
+            product_id=product_id,
+            price_x18=oracle_price,
+            direction="short",
         )
     )
     print("max order size:", max_order_size.json(indent=2))
