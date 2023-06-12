@@ -150,7 +150,7 @@ class PerpProductState(VertexBaseModel):
     open_interest: str
 
 
-class PerpProductLpState(VertexBaseModel):
+class PerpProductLpState(BaseProductLpState):
     last_cumulative_funding_x18: str
     cumulative_funding_per_lp_x18: str
     base: str

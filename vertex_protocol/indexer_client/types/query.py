@@ -435,6 +435,7 @@ class IndexerLinkedSignerRateLimitData(VertexBaseModel):
     """
 
     remaining_tx: str
+    total_tx_limit: str
     wait_time: int
     signer: str
 

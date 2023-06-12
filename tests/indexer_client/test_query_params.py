@@ -98,6 +98,7 @@ def test_indexer_obj_query_params(
 
     mock_response.json.return_value = {
         "remaining_tx": "0",
+        "total_tx_limit": "0",
         "wait_time": 0,
         "signer": "xxx",
     }
