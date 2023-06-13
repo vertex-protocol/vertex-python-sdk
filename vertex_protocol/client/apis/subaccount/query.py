@@ -1,3 +1,4 @@
+from typing import Optional
 from vertex_protocol.client.apis.base import VertexBaseAPI
 from vertex_protocol.engine_client.types.query import (
     FeeRatesData,
@@ -22,7 +23,7 @@ class SubaccountQueryAPI(VertexBaseAPI):
     """
 
     def get_engine_subaccount_summary(
-        self, subaccount: str, txs: list[QuerySubaccountInfoTx] | None = None
+        self, subaccount: str, txs: Optional[list[QuerySubaccountInfoTx]] = None
     ) -> SubaccountInfoData:
         """
         Retrieve a comprehensive summary of the specified subaccount's state as per the off-chain engine.

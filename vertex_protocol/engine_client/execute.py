@@ -2,7 +2,7 @@ from copy import deepcopy
 import requests
 from functools import singledispatchmethod
 
-from typing import Type
+from typing import Optional, Type, Union
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.eip712.sign import (
     get_eip712_typed_data_digest,
@@ -35,7 +35,7 @@ from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
     ExecuteFailedException,
 )
-from vertex_protocol.utils.model import VertexBaseModel
+from vertex_protocol.utils.model import VertexBaseModel, is_instance_of_union
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
 
@@ -46,7 +46,7 @@ class EngineExecuteClient:
     """
 
     def __init__(
-        self, opts: EngineClientOpts, querier: EngineQueryClient | None = None
+        self, opts: EngineClientOpts, querier: Optional[EngineQueryClient] = None
     ):
         """
         Initialize the EngineExecuteClient with provided options.
@@ -101,7 +101,7 @@ class EngineExecuteClient:
         """
         return int(self._querier.get_nonces(self.signer.address).tx_nonce)
 
-    def order_nonce(self, recv_time_ms: int | None = None) -> int:
+    def order_nonce(self, recv_time_ms: Optional[int] = None) -> int:
         """
         Generate the order nonce. Used for oder placements and cancellations.
 
@@ -129,7 +129,7 @@ class EngineExecuteClient:
         return params
 
     @singledispatchmethod
-    def execute(self, params: ExecuteParams | ExecuteRequest) -> ExecuteResponse:
+    def execute(self, params: Union[ExecuteParams, ExecuteRequest]) -> ExecuteResponse:
         """
         Executes the operation defined by the provided parameters.
 
@@ -140,7 +140,7 @@ class EngineExecuteClient:
             ExecuteResponse: The response from the executed operation.
         """
         req: ExecuteRequest = (
-            params if isinstance(params, ExecuteRequest) else to_execute_request(params)  # type: ignore
+            params if is_instance_of_union(params, ExecuteRequest) else to_execute_request(params)  # type: ignore
         )
         return self._execute(req)
 
@@ -210,7 +210,7 @@ class EngineExecuteClient:
         return self._opts.chain_id
 
     @chain_id.setter
-    def chain_id(self, chain_id: int | str) -> None:
+    def chain_id(self, chain_id: Union[int, str]) -> None:
         self._opts.chain_id = int(chain_id)
 
     @property
@@ -281,7 +281,7 @@ class EngineExecuteClient:
         )
 
     def _sign(
-        self, execute: VertexExecuteType, msg: dict, product_id: int | None = None
+        self, execute: VertexExecuteType, msg: dict, product_id: Optional[int] = None
     ) -> str:
         """
         Internal method to create an EIP-712 signature for the given operation type and message.

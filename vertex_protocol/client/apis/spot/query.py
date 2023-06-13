@@ -1,3 +1,4 @@
+from typing import Optional
 from vertex_protocol.client.apis.spot.base import BaseSpotAPI
 from vertex_protocol.engine_client.types.query import MaxWithdrawableData
 from vertex_protocol.utils.math import from_pow_10
@@ -15,7 +16,7 @@ class SpotQueryAPI(BaseSpotAPI):
     """
 
     def get_max_withdrawable(
-        self, product_id: int, sender: str, spot_leverage: bool | None = None
+        self, product_id: int, sender: str, spot_leverage: Optional[bool] = None
     ) -> MaxWithdrawableData:
         """
         Retrieves the estimated maximum withdrawable amount for a provided spot product.

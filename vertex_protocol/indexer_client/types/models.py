@@ -1,7 +1,7 @@
 from enum import IntEnum
 from vertex_protocol.utils.enum import StrEnum
 
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from vertex_protocol.engine_client.types.models import (
     PerpProduct,
     PerpProductBalance,
@@ -45,8 +45,8 @@ class IndexerBaseOrder(VertexBaseModel):
     sender: str
     priceX18: str
     amount: str
-    expiration: str | int
-    nonce: str | int
+    expiration: Union[str, int]
+    nonce: Union[str, int]
 
 
 class IndexerOrderFill(IndexerBaseModel):
@@ -136,17 +136,17 @@ class IndexerBurnLpTx(VertexBaseModel):
     burn_lp: IndexerBurnLpTxData
 
 
-IndexerTxData = (
-    IndexerMatchOrdersTx
-    | IndexerWithdrawCollateralTx
-    | IndexerLiquidateSubaccountTx
-    | IndexerMintLpTx
-    | IndexerBurnLpTx
-)
+IndexerTxData = Union[
+    IndexerMatchOrdersTx,
+    IndexerWithdrawCollateralTx,
+    IndexerLiquidateSubaccountTx,
+    IndexerMintLpTx,
+    IndexerBurnLpTx,
+]
 
 
 class IndexerTx(IndexerBaseModel):
-    tx: IndexerTxData | Any
+    tx: Union[IndexerTxData, Any]
 
 
 class IndexerSpotProductBalanceData(VertexBaseModel):
@@ -157,9 +157,9 @@ class IndexerPerpProductBalanceData(VertexBaseModel):
     perp: PerpProductBalance
 
 
-IndexerProductBalanceData = (
-    IndexerSpotProductBalanceData | IndexerPerpProductBalanceData
-)
+IndexerProductBalanceData = Union[
+    IndexerSpotProductBalanceData, IndexerPerpProductBalanceData
+]
 
 
 class IndexerSpotProductData(VertexBaseModel):
@@ -170,7 +170,7 @@ class IndexerPerpProductData(VertexBaseModel):
     perp: PerpProduct
 
 
-IndexerProductData = IndexerSpotProductData | IndexerPerpProductData
+IndexerProductData = Union[IndexerSpotProductData, IndexerPerpProductData]
 
 
 class IndexerEventTrackedData(VertexBaseModel):

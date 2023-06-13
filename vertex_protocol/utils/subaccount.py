@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from vertex_protocol.utils.model import VertexBaseModel
 
 
@@ -15,4 +15,4 @@ class SubaccountParams(VertexBaseModel):
     subaccount_name: str
 
 
-Subaccount = str | bytes | SubaccountParams
+Subaccount = Union[str, bytes, SubaccountParams]

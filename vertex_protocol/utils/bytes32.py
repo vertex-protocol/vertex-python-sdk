@@ -1,8 +1,9 @@
 import binascii
+from typing import Optional, Union
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
 
-def hex_to_bytes32(input: str | bytes) -> bytes:
+def hex_to_bytes32(input: Union[str, bytes]) -> bytes:
     """Converts a hexadecimal string or bytes to a bytes object of length 32.
 
     Args:
@@ -14,7 +15,7 @@ def hex_to_bytes32(input: str | bytes) -> bytes:
     return hex_to_bytes(input, 32)
 
 
-def hex_to_bytes12(input: str | bytes) -> bytes:
+def hex_to_bytes12(input: Union[str, bytes]) -> bytes:
     """Converts a hexadecimal string or bytes to a bytes object of length 12.
 
     Args:
@@ -26,7 +27,7 @@ def hex_to_bytes12(input: str | bytes) -> bytes:
     return hex_to_bytes(input, 12)
 
 
-def hex_to_bytes(input: str | bytes, size: int) -> bytes:
+def hex_to_bytes(input: Union[str, bytes], size: int) -> bytes:
     """Converts a hexadecimal string or bytes to a bytes object of specified size.
 
     Args:
@@ -61,7 +62,7 @@ def str_to_hex(input: str) -> str:
 
 
 def subaccount_to_bytes32(
-    subaccount: Subaccount, name: str | bytes | None = None
+    subaccount: Subaccount, name: Optional[Union[str, bytes]] = None
 ) -> bytes:
     """Converts a subaccount representation to a bytes object of length 32.
 
@@ -97,7 +98,9 @@ def subaccount_to_bytes32(
         return subaccount
 
 
-def subaccount_to_hex(subaccount: Subaccount, name: str | None = None) -> str:
+def subaccount_to_hex(
+    subaccount: Subaccount, name: Optional[Union[str, bytes]] = None
+) -> str:
     """Converts a subaccount representation to its hexadecimal representation.
 
     Args:

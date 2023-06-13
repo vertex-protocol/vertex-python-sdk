@@ -1,3 +1,4 @@
+from typing import Optional, Union
 import requests
 from functools import singledispatchmethod
 from vertex_protocol.indexer_client.types import IndexerClientOpts
@@ -34,7 +35,11 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerTokenRewardsParams,
     to_indexer_request,
 )
-from vertex_protocol.utils.model import VertexBaseModel, ensure_data_type
+from vertex_protocol.utils.model import (
+    VertexBaseModel,
+    ensure_data_type,
+    is_instance_of_union,
+)
 
 
 class IndexerQueryClient:
@@ -57,7 +62,7 @@ class IndexerQueryClient:
         self.url = self._opts.url
 
     @singledispatchmethod
-    def query(self, params: IndexerParams | IndexerRequest) -> IndexerResponse:
+    def query(self, params: Union[IndexerParams, IndexerRequest]) -> IndexerResponse:
         """
         Sends a query request to the indexer service and returns the response.
 
@@ -72,7 +77,7 @@ class IndexerQueryClient:
             IndexerResponse: The response from the indexer service.
         """
         req: IndexerRequest = (
-            params if isinstance(params, IndexerRequest) else to_indexer_request(params)  # type: ignore
+            params if is_instance_of_union(params, IndexerRequest) else to_indexer_request(params)  # type: ignore
         )
         return self._query(req)
 
@@ -149,7 +154,7 @@ class IndexerQueryClient:
         )
 
     def get_subaccount_summary(
-        self, subaccount: str, timestamp: int | None = None
+        self, subaccount: str, timestamp: Optional[int] = None
     ) -> IndexerSubaccountSummaryData:
         """
         Retrieves a summary of a specified subaccount at a certain timestamp.

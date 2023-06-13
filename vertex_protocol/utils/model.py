@@ -1,6 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel
-from typing import Callable, Type, TypeVar
+from typing import Any, Callable, Type, TypeVar, Union
 
 
 class VertexBaseModel(BaseModel):
@@ -48,7 +48,7 @@ class VertexBaseModel(BaseModel):
             self.__dict__[field] = func(self.__dict__[field])
 
 
-def parse_enum_value(value: str | Enum) -> str:
+def parse_enum_value(value: Union[str, Enum]) -> str:
     """
     Utility function to parse an enum value.
 
@@ -72,3 +72,8 @@ def ensure_data_type(data, expected_type: Type[T]) -> T:
         data, expected_type
     ), f"Expected {expected_type.__name__}, but got {type(data).__name__}"
     return data
+
+
+def is_instance_of_union(obj: Any, union) -> bool:
+    """Check if `obj` is an instance of any type in the `union`."""
+    return any(isinstance(obj, cls) for cls in union.__args__)
