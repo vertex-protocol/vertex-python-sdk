@@ -553,6 +553,8 @@ class ExecuteResponse(VertexBaseModel):
 
         error (Optional[str]): The error message, if any error occurred during the execution of the request.
 
+        request_type (Optional[str]): Type of the request.
+
         req (Optional[dict]): The original request that was executed.
     """
 
