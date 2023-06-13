@@ -407,7 +407,9 @@ class QueryResponse(VertexBaseModel):
     Attributes:
         status (ResponseStatus): The status of the query response.
         data (QueryResponseData | str): The data returned from the query, or an error message if the query failed.
+        request_type (Optional[str]): Type of the request.
     """
 
     status: ResponseStatus
     data: QueryResponseData | str
+    request_type: Optional[str]
