@@ -27,7 +27,7 @@ from vertex_protocol.engine_client.types.execute import (
     OrderParams,
     PlaceOrderParams,
     WithdrawCollateralParams,
-    to_execute_request, CancelProductOrdersResponse,
+    to_execute_request, CancelOrdersResponse,
 )
 from vertex_protocol.contracts.types import VertexExecuteType
 
@@ -394,7 +394,7 @@ class EngineExecuteClient:
         )
         return self.execute(params)
 
-    def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
+    def cancel_orders(self, params: CancelOrdersParams) -> CancelOrdersResponse:
         """
         Execute a cancel orders operation.
 
@@ -409,11 +409,16 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_ORDERS, params.dict()
         )
-        return self.execute(params)
+        return ensure_data_type(
+            self.execute(
+                params
+            ).data,
+            CancelOrdersResponse,
+        )
 
     def cancel_product_orders(
             self, params: CancelProductOrdersParams
-    ) -> CancelProductOrdersResponse:
+    ) -> CancelOrdersResponse:
         """
         Execute a cancel product orders operation.
 
@@ -422,7 +427,7 @@ class EngineExecuteClient:
             The parameters include a list of product ids to bulk cancel orders for.
 
         Returns:
-            CancelProductOrdersResponse: A data class object containing information about the canceled product orders.
+            CancelOrdersResponse: A data class object containing information about the canceled product orders.
         """
         params = self.prepare_execute_params(
             CancelProductOrdersParams.parse_obj(params)  # type: ignore
@@ -434,7 +439,7 @@ class EngineExecuteClient:
             self.execute(
                 params
             ).data,
-            CancelProductOrdersResponse,
+            CancelOrdersResponse,
         )
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:

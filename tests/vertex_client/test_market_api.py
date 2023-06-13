@@ -118,9 +118,10 @@ def test_place_order(
 def test_cancel_orders(
     vertex_client: VertexClient,
     senders: list[str],
-    mock_execute_response: MagicMock,
+    mock_cancel_orders_response: MagicMock,
     mock_nonces: MagicMock,
 ):
+    mock_cancel_orders_response()
     params = CancelOrdersParams(
         sender=senders[0],
         productIds=[1],
@@ -136,28 +137,19 @@ def test_cancel_orders(
         vertex_client.context.engine_client.chain_id,
         vertex_client.context.engine_client.signer,
     )
-    assert res.req == {
-        "cancel_orders": {
-            "tx": {
-                "productIds": [1],
-                "digests": [
-                    "0x51ba8762bc5f77957a4e896dba34e17b553b872c618ffb83dba54878796f2821"
-                ],
-                "sender": senders[0].lower(),
-                "nonce": str(2),
-            },
-            "signature": signature,
-        }
-    }
+    cancelled_order = res.cancelled_orders.pop()
+    assert cancelled_order.product_id == 1
+    assert cancelled_order.amount == str(-10000000000000000)
+    assert cancelled_order.nonce == str(1)
 
 
 def test_cancel_product_orders(
     vertex_client: VertexClient,
     senders: list[str],
-    mock_cancel_products_response: MagicMock,
+    mock_cancel_orders_response: MagicMock,
     mock_nonces: MagicMock,
 ):
-    mock_cancel_products_response()
+    mock_cancel_orders_response()
     params = CancelProductOrdersParams(
         sender=senders[0],
         productIds=[1],

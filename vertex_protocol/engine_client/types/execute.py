@@ -541,16 +541,16 @@ ExecuteRequest = Union[
 ]
 
 
-class CancelProductOrdersResponse(VertexBaseModel):
+class CancelOrdersResponse(VertexBaseModel):
     """
-    Data model for the signer linked to a subaccount.
+    Data model for cancelled orders response.
     """
 
     cancelled_orders: list[OrderData]
 
 
 ExecuteResponseData = (
-    CancelProductOrdersResponse
+    CancelOrdersResponse
 )
 
 
