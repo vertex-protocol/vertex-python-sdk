@@ -6,7 +6,7 @@ See [SDK docs](https://vertex-protocol.github.io/vertex-python-sdk/index.html) t
 
 ## Requirements
 
-- Python 3.10 or above
+- Python 3.9 or above
 
 ## Installation
 

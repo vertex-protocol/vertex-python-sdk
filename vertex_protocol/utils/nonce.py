@@ -1,9 +1,10 @@
+from typing import Optional
 import datetime
 import random
 
 
 def gen_order_nonce(
-    recv_time_ms: int | None = None, random_int: int | None = None
+    recv_time_ms: Optional[int] = None, random_int: Optional[int] = None
 ) -> int:
     """
     Generates an order nonce based on a received timestamp and a random integer.

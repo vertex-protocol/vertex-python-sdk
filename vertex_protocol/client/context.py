@@ -32,7 +32,7 @@ class VertexClientContextOpts(BaseModel):
 
 
 def create_vertex_client_context(
-    opts: VertexClientContextOpts, signer: Signer | None = None
+    opts: VertexClientContextOpts, signer: Optional[Signer] = None
 ) -> VertexClientContext:
     """
     Initializes a VertexClientContext instance with the provided signer and options.
