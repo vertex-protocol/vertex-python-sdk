@@ -422,7 +422,7 @@ class EngineExecuteClient:
             The parameters include a list of product ids to bulk cancel orders for.
 
         Returns:
-            ExecuteResponse: Response of the execution, including status and potential error message.
+            CancelProductOrdersResponse: A data class object containing information about the canceled product orders.
         """
         params = self.prepare_execute_params(
             CancelProductOrdersParams.parse_obj(params)  # type: ignore
