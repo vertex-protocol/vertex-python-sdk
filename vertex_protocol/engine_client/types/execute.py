@@ -560,6 +560,7 @@ class ExecuteResponse(VertexBaseModel):
     signature: Optional[str]
     error_code: Optional[int]
     error: Optional[str]
+    request_type: Optional[str]
     req: Optional[dict]
 
 

@@ -411,3 +411,4 @@ class QueryResponse(VertexBaseModel):
 
     status: ResponseStatus
     data: QueryResponseData | str
+    request_type: Optional[str]
