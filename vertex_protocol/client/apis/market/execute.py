@@ -4,7 +4,7 @@ from vertex_protocol.engine_client.types.execute import (
     CancelProductOrdersParams,
     ExecuteResponse,
     MintLpParams,
-    PlaceOrderParams,
+    PlaceOrderParams, CancelProductOrdersResponse,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
 
@@ -83,8 +83,8 @@ class MarketExecuteAPI(VertexBaseAPI):
         return self.context.engine_client.cancel_orders(params)
 
     def cancel_product_orders(
-        self, params: CancelProductOrdersParams
-    ) -> ExecuteResponse:
+            self, params: CancelProductOrdersParams
+    ) -> CancelProductOrdersResponse:
         """
         Cancels all orders for provided products through the engine.
 

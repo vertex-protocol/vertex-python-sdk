@@ -27,7 +27,7 @@ from vertex_protocol.engine_client.types.execute import (
     OrderParams,
     PlaceOrderParams,
     WithdrawCollateralParams,
-    to_execute_request,
+    to_execute_request, CancelProductOrdersResponse,
 )
 from vertex_protocol.contracts.types import VertexExecuteType
 
@@ -35,7 +35,7 @@ from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
     ExecuteFailedException,
 )
-from vertex_protocol.utils.model import VertexBaseModel, is_instance_of_union
+from vertex_protocol.utils.model import VertexBaseModel, is_instance_of_union, ensure_data_type
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
 
@@ -412,8 +412,8 @@ class EngineExecuteClient:
         return self.execute(params)
 
     def cancel_product_orders(
-        self, params: CancelProductOrdersParams
-    ) -> ExecuteResponse:
+            self, params: CancelProductOrdersParams
+    ) -> CancelProductOrdersResponse:
         """
         Execute a cancel product orders operation.
 
@@ -430,7 +430,12 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
         )
-        return self.execute(params)
+        return ensure_data_type(
+            self.execute(
+                params
+            ).data,
+            CancelProductOrdersResponse,
+        )
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         """
