@@ -154,9 +154,10 @@ def test_cancel_orders(
 def test_cancel_product_orders(
     vertex_client: VertexClient,
     senders: list[str],
-    mock_execute_response: MagicMock,
+    mock_cancel_products_response: MagicMock,
     mock_nonces: MagicMock,
 ):
+    mock_cancel_products_response()
     params = CancelProductOrdersParams(
         sender=senders[0],
         productIds=[1],
