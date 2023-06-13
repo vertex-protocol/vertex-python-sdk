@@ -92,7 +92,7 @@ class MarketExecuteAPI(VertexBaseAPI):
             params (CancelProductOrdersParams): Parameters required to cancel product orders.
 
         Returns:
-            ExecuteResponse: The response from the engine execution.
+            CancelProductOrdersResponse: A data class object containing information about the canceled product orders.
 
         Raises:
             Exception: If there is an error during the execution or the response status is not "success".

@@ -162,6 +162,7 @@ def test_cancel_product_orders(
         productIds=[1],
         nonce=2,
     )
+
     res = vertex_client.market.cancel_product_orders(params)
     params.sender = subaccount_to_bytes32(senders[0])
     signature = vertex_client.context.engine_client.sign(
@@ -171,13 +172,7 @@ def test_cancel_product_orders(
         vertex_client.context.engine_client.chain_id,
         vertex_client.context.engine_client.signer,
     )
-    assert res.req == {
-        "cancel_product_orders": {
-            "tx": {
-                "sender": senders[0].lower(),
-                "productIds": [1],
-                "nonce": str(2),
-            },
-            "signature": signature,
-        }
-    }
+    cancelled_order = res.cancelled_orders.pop()
+    assert cancelled_order.product_id == 1
+    assert cancelled_order.amount == str(-10000000000000000)
+    assert cancelled_order.nonce == str(1)

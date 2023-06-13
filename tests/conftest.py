@@ -225,6 +225,33 @@ def mock_execute_response(mock_post: MagicMock) -> MagicMock:
 
 
 @pytest.fixture
+def mock_cancel_products_response(mock_post: MagicMock) -> MagicMock:
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "status": "success",
+        "error": None,
+        "data": {
+            "cancelled_orders": [
+                {
+                    "product_id": 1,
+                    "sender": 1,
+                    "price_x18": 2.8898e+22,
+                    "amount": -10000000000000000,
+                    "expiration": 4611687701117784000,
+                    "nonce": 1,
+                    "unfilled_amount": -10000000000000000,
+                    "digest": "0x8efa3736d834718f755b57cee9ba75db315f66c66844150bd15efd641e62e9e6",
+                    "placed_at": "1686629287"
+                }
+            ]
+        }
+    }
+    mock_post.return_value = mock_response
+    return mock_post
+
+
+@pytest.fixture
 def mock_nonces(mock_get: MagicMock) -> MagicMock:
     mock_response = MagicMock()
     mock_response.status_code = 200
