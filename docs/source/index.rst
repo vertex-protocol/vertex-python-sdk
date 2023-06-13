@@ -35,5 +35,6 @@ You might want to use a virtual environment to isolate your packages.
    :caption: Contents:
 
    getting-started
-   user-guide
+   user-reference
+   user-guides
    api-reference
