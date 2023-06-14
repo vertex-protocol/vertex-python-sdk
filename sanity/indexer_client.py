@@ -28,7 +28,7 @@ def run():
     )
     print("subaccount:", subaccount)
 
-    print("querying subaccount historical orders...")
+    print("querying subaccount historical orders....")
     subaccount_historical_orders = client.get_subaccount_historical_orders(
         IndexerSubaccountHistoricalOrdersParams(subaccount=subaccount, limit=3)
     )
