@@ -1,3 +1,4 @@
+import json
 from unittest.mock import MagicMock
 
 from eth_account import Account
@@ -205,13 +206,15 @@ def test_place_order_execute_success(
     assert res.error is None
 
     mock_response.status_code = 200
-    mock_response.json.return_value = {
+    json_response = {
         "status": "failure",
+        "error_code": 1000,
         "error": "Too Many Requests!",
     }
-    mock_post.return_value = mock_response
+    mock_response.json.return_value = json_response
+    mock_post.return_value.text = json.dumps(json_response)
 
-    with pytest.raises(ExecuteFailedException, match="Too Many Requests!"):
+    with pytest.raises(ExecuteFailedException, match=json.dumps(json_response)):
         engine_client.place_order(place_order_params)
 
     # deactivate linked signer
