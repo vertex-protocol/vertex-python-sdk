@@ -77,7 +77,10 @@ class EngineQueryClient:
         res = requests.get(f"{self.url}/query?{urlencode(req.dict())}")
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
-        query_res = QueryResponse(**res.json())
+        try:
+            query_res = QueryResponse(**res.json())
+        except Exception:
+            raise QueryFailedException(res.text)
         if query_res.status != "success":
             raise QueryFailedException(res.text)
         return query_res

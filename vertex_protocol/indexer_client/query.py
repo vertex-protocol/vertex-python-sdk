@@ -89,7 +89,11 @@ class IndexerQueryClient:
         res = requests.post(f"{self.url}/indexer", json=req.dict())
         if res.status_code != 200:
             raise Exception(res.text)
-        return IndexerResponse(data=res.json())
+        try:
+            indexer_res = IndexerResponse(data=res.json())
+        except Exception:
+            raise Exception(res.text)
+        return indexer_res
 
     def get_subaccount_historical_orders(
         self, params: IndexerSubaccountHistoricalOrdersParams
