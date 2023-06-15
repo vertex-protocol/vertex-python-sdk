@@ -1,3 +1,4 @@
+from typing import Optional
 from vertex_protocol.contracts.types import DepositCollateralParams
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.client.apis.spot.base import BaseSpotAPI
@@ -20,7 +21,7 @@ class SpotExecuteAPI(BaseSpotAPI):
     """
 
     def deposit(
-        self, params: DepositCollateralParams, signer: LocalAccount | None = None
+        self, params: DepositCollateralParams, signer: Optional[LocalAccount] = None
     ) -> str:
         """
         Executes the operation of depositing a specified amount into a spot product.
@@ -59,7 +60,7 @@ class SpotExecuteAPI(BaseSpotAPI):
         return self.context.engine_client.withdraw_collateral(params)
 
     def approve_allowance(
-        self, product_id: int, amount: int, signer: LocalAccount | None = None
+        self, product_id: int, amount: int, signer: Optional[LocalAccount] = None
     ) -> str:
         """
         Approves an allowance for a certain amount of tokens for a spot product.
@@ -87,7 +88,7 @@ class SpotExecuteAPI(BaseSpotAPI):
         return self.context.contracts.approve_allowance(token, amount, signer)
 
     def _mint_mock_erc20(
-        self, product_id: int, amount: int, signer: LocalAccount | None = None
+        self, product_id: int, amount: int, signer: Optional[LocalAccount] = None
     ):
         """
         Mints a specified amount of mock ERC20 tokens for testing purposes.

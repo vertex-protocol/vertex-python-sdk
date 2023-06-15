@@ -1,5 +1,5 @@
 from vertex_protocol.utils.enum import StrEnum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import Field
 from vertex_protocol.indexer_client.types.models import (
@@ -91,7 +91,7 @@ class IndexerEventsTxsLimit(VertexBaseModel):
     txs: int
 
 
-IndexerEventsLimit = IndexerEventsRawLimit | IndexerEventsTxsLimit
+IndexerEventsLimit = Union[IndexerEventsRawLimit, IndexerEventsTxsLimit]
 
 
 class IndexerEventsParams(IndexerBaseParams):
@@ -192,22 +192,22 @@ class IndexerLinkedSignerRateLimitParams(VertexBaseModel):
     subaccount: str
 
 
-IndexerParams = (
-    IndexerSubaccountHistoricalOrdersParams
-    | IndexerHistoricalOrdersByDigestParams
-    | IndexerMatchesParams
-    | IndexerEventsParams
-    | IndexerSubaccountSummaryParams
-    | IndexerProductSnapshotsParams
-    | IndexerCandlesticksParams
-    | IndexerFundingRateParams
-    | IndexerPerpPricesParams
-    | IndexerOraclePricesParams
-    | IndexerTokenRewardsParams
-    | IndexerMakerStatisticsParams
-    | IndexerLiquidationFeedParams
-    | IndexerLinkedSignerRateLimitParams
-)
+IndexerParams = Union[
+    IndexerSubaccountHistoricalOrdersParams,
+    IndexerHistoricalOrdersByDigestParams,
+    IndexerMatchesParams,
+    IndexerEventsParams,
+    IndexerSubaccountSummaryParams,
+    IndexerProductSnapshotsParams,
+    IndexerCandlesticksParams,
+    IndexerFundingRateParams,
+    IndexerPerpPricesParams,
+    IndexerOraclePricesParams,
+    IndexerTokenRewardsParams,
+    IndexerMakerStatisticsParams,
+    IndexerLiquidationFeedParams,
+    IndexerLinkedSignerRateLimitParams,
+]
 
 
 class IndexerHistoricalOrdersRequest(VertexBaseModel):
@@ -215,7 +215,9 @@ class IndexerHistoricalOrdersRequest(VertexBaseModel):
     Request object for querying historical orders.
     """
 
-    orders: IndexerSubaccountHistoricalOrdersParams | IndexerHistoricalOrdersByDigestParams
+    orders: Union[
+        IndexerSubaccountHistoricalOrdersParams, IndexerHistoricalOrdersByDigestParams
+    ]
 
 
 class IndexerMatchesRequest(VertexBaseModel):
@@ -314,21 +316,21 @@ class IndexerLinkedSignerRateLimitRequest(VertexBaseModel):
     linked_signer_rate_limit: IndexerLinkedSignerRateLimitParams
 
 
-IndexerRequest = (
-    IndexerHistoricalOrdersRequest
-    | IndexerMatchesRequest
-    | IndexerEventsRequest
-    | IndexerSubaccountSummaryRequest
-    | IndexerProductSnapshotsRequest
-    | IndexerCandlesticksRequest
-    | IndexerFundingRateRequest
-    | IndexerPerpPricesRequest
-    | IndexerOraclePricesRequest
-    | IndexerTokenRewardsRequest
-    | IndexerMakerStatisticsRequest
-    | IndexerLiquidationFeedRequest
-    | IndexerLinkedSignerRateLimitRequest
-)
+IndexerRequest = Union[
+    IndexerHistoricalOrdersRequest,
+    IndexerMatchesRequest,
+    IndexerEventsRequest,
+    IndexerSubaccountSummaryRequest,
+    IndexerProductSnapshotsRequest,
+    IndexerCandlesticksRequest,
+    IndexerFundingRateRequest,
+    IndexerPerpPricesRequest,
+    IndexerOraclePricesRequest,
+    IndexerTokenRewardsRequest,
+    IndexerMakerStatisticsRequest,
+    IndexerLiquidationFeedRequest,
+    IndexerLinkedSignerRateLimitRequest,
+]
 
 
 class IndexerHistoricalOrdersData(VertexBaseModel):
@@ -435,6 +437,7 @@ class IndexerLinkedSignerRateLimitData(VertexBaseModel):
     """
 
     remaining_tx: str
+    total_tx_limit: str
     wait_time: int
     signer: str
 
@@ -442,21 +445,21 @@ class IndexerLinkedSignerRateLimitData(VertexBaseModel):
 IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
 
 
-IndexerResponseData = (
-    IndexerHistoricalOrdersData
-    | IndexerMatchesData
-    | IndexerEventsData
-    | IndexerSubaccountSummaryData
-    | IndexerProductSnapshotsData
-    | IndexerCandlesticksData
-    | IndexerFundingRateData
-    | IndexerPerpPricesData
-    | IndexerOraclePricesData
-    | IndexerTokenRewardsData
-    | IndexerMakerStatisticsData
-    | IndexerLinkedSignerRateLimitData
-    | IndexerLiquidationFeedData
-)
+IndexerResponseData = Union[
+    IndexerHistoricalOrdersData,
+    IndexerMatchesData,
+    IndexerEventsData,
+    IndexerSubaccountSummaryData,
+    IndexerProductSnapshotsData,
+    IndexerCandlesticksData,
+    IndexerFundingRateData,
+    IndexerPerpPricesData,
+    IndexerOraclePricesData,
+    IndexerTokenRewardsData,
+    IndexerMakerStatisticsData,
+    IndexerLinkedSignerRateLimitData,
+    IndexerLiquidationFeedData,
+]
 
 
 class IndexerResponse(VertexBaseModel):

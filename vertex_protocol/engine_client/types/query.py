@@ -1,5 +1,5 @@
 from vertex_protocol.utils.enum import StrEnum
-from typing import Optional
+from typing import Optional, Union
 from pydantic import validator
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.engine_client.types.models import (
@@ -75,7 +75,7 @@ class QueryOrderParams(VertexBaseModel):
     digest: str
 
 
-QuerySubaccountInfoTx = MintLpTx | BurnLpTx | ApplyDeltaTx
+QuerySubaccountInfoTx = Union[MintLpTx, BurnLpTx, ApplyDeltaTx]
 
 
 class QuerySubaccountInfoParams(VertexBaseModel):
@@ -190,23 +190,23 @@ class QueryLinkedSignerParams(VertexBaseModel):
     subaccount: str
 
 
-QueryRequest = (
-    QueryStatusParams
-    | QueryContractsParams
-    | QueryNoncesParams
-    | QueryOrderParams
-    | QuerySubaccountInfoParams
-    | QuerySubaccountOpenOrdersParams
-    | QueryMarketLiquidityParams
-    | QueryAllProductsParams
-    | QueryMarketPriceParams
-    | QueryMaxOrderSizeParams
-    | QueryMaxWithdrawableParams
-    | QueryMaxLpMintableParams
-    | QueryFeeRatesParams
-    | QueryHealthGroupsParams
-    | QueryLinkedSignerParams
-)
+QueryRequest = Union[
+    QueryStatusParams,
+    QueryContractsParams,
+    QueryNoncesParams,
+    QueryOrderParams,
+    QuerySubaccountInfoParams,
+    QuerySubaccountOpenOrdersParams,
+    QueryMarketLiquidityParams,
+    QueryAllProductsParams,
+    QueryMarketPriceParams,
+    QueryMaxOrderSizeParams,
+    QueryMaxWithdrawableParams,
+    QueryMaxLpMintableParams,
+    QueryFeeRatesParams,
+    QueryHealthGroupsParams,
+    QueryLinkedSignerParams,
+]
 
 StatusData = EngineStatus
 
@@ -264,7 +264,7 @@ class SubaccountInfoData(VertexBaseModel):
 
     def parse_subaccount_balance(
         self, product_id: int
-    ) -> SpotProductBalance | PerpProductBalance:
+    ) -> Union[SpotProductBalance, PerpProductBalance]:
         """
         Parses the balance of a subaccount for a given product.
 
@@ -349,6 +349,7 @@ class MaxLpMintableData(VertexBaseModel):
     """
 
     max_base_amount: str
+    max_quote_amount: str
 
 
 class FeeRatesData(VertexBaseModel):
@@ -380,23 +381,23 @@ class LinkedSignerData(VertexBaseModel):
     linked_signer: str
 
 
-QueryResponseData = (
-    StatusData
-    | ContractsData
-    | NoncesData
-    | OrderData
-    | SubaccountInfoData
-    | SubaccountOpenOrdersData
-    | MarketLiquidityData
-    | AllProductsData
-    | MarketPriceData
-    | MaxOrderSizeData
-    | MaxWithdrawableData
-    | MaxLpMintableData
-    | FeeRatesData
-    | HealthGroupsData
-    | LinkedSignerData
-)
+QueryResponseData = Union[
+    StatusData,
+    ContractsData,
+    NoncesData,
+    OrderData,
+    SubaccountInfoData,
+    SubaccountOpenOrdersData,
+    MarketLiquidityData,
+    AllProductsData,
+    MarketPriceData,
+    MaxOrderSizeData,
+    MaxWithdrawableData,
+    MaxLpMintableData,
+    FeeRatesData,
+    HealthGroupsData,
+    LinkedSignerData,
+]
 
 
 class QueryResponse(VertexBaseModel):
@@ -406,7 +407,9 @@ class QueryResponse(VertexBaseModel):
     Attributes:
         status (ResponseStatus): The status of the query response.
         data (QueryResponseData | str): The data returned from the query, or an error message if the query failed.
+        request_type (Optional[str]): Type of the request.
     """
 
     status: ResponseStatus
-    data: QueryResponseData | str
+    request_type: Optional[str]
+    data: Union[QueryResponseData, str]

@@ -1,3 +1,4 @@
+from typing import Optional
 import requests
 from urllib.parse import urlencode
 
@@ -76,7 +77,10 @@ class EngineQueryClient:
         res = requests.get(f"{self.url}/query?{urlencode(req.dict())}")
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
-        query_res = QueryResponse(**res.json())
+        try:
+            query_res = QueryResponse(**res.json())
+        except Exception:
+            raise QueryFailedException(res.text)
         if query_res.status != "success":
             raise QueryFailedException(res.text)
         return query_res
@@ -133,7 +137,7 @@ class EngineQueryClient:
         )
 
     def get_subaccount_info(
-        self, subaccount: str, txs: list[QuerySubaccountInfoTx] | None = None
+        self, subaccount: str, txs: Optional[list[QuerySubaccountInfoTx]] = None
     ) -> SubaccountInfoData:
         """
         Query the engine for the state of a subaccount, including balances.
@@ -238,7 +242,7 @@ class EngineQueryClient:
         )
 
     def get_max_withdrawable(
-        self, product_id: int, sender: str, spot_leverage: bool | None = None
+        self, product_id: int, sender: str, spot_leverage: Optional[bool] = None
     ) -> MaxWithdrawableData:
         """
         Retrieves the maximum withdrawable amount for a given spot product for a subaccount.
@@ -263,7 +267,7 @@ class EngineQueryClient:
         )
 
     def get_max_lp_mintable(
-        self, product_id: int, sender: str, spot_leverage: bool | None = None
+        self, product_id: int, sender: str, spot_leverage: Optional[bool] = None
     ) -> MaxLpMintableData:
         """
         Retrieves the maximum LP token amount mintable for a given product for a subaccount.

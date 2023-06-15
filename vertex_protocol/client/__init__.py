@@ -85,8 +85,8 @@ class VertexClient:
 
 def create_vertex_client(
     mode: VertexClientMode,
-    signer: Signer | None = None,
-    context_opts: VertexClientContextOpts | None = None,
+    signer: Optional[Signer] = None,
+    context_opts: Optional[VertexClientContextOpts] = None,
 ) -> VertexClient:
     """
     Create a new VertexClient based on the given mode and signer.

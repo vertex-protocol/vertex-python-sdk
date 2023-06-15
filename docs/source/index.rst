@@ -17,7 +17,7 @@ The latest version of the SDK can be found on `PyPI <https://pypi.org/project/ve
 Requirements
 ------------
 
-- Python 3.10 or above
+- Python 3.9 or above
 
 Installation
 ------------
@@ -35,5 +35,6 @@ You might want to use a virtual environment to isolate your packages.
    :caption: Contents:
 
    getting-started
-   user-guide
+   user-reference
+   user-guides
    api-reference

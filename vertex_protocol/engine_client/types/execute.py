@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, Union
 from pydantic import validator
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
@@ -12,7 +12,7 @@ from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
 
-Digest = str | bytes
+Digest = Union[str, bytes]
 
 
 class BaseParams(VertexBaseModel):
@@ -34,7 +34,7 @@ class BaseParams(VertexBaseModel):
         validate_assignment = True
 
     @validator("sender")
-    def serialize_sender(cls, v: Subaccount) -> bytes | Subaccount:
+    def serialize_sender(cls, v: Subaccount) -> Union[bytes, Subaccount]:
         """
         Validates and serializes the sender to bytes32 format.
 
@@ -256,16 +256,16 @@ class LinkSignerParams(BaseParamsSigned):
         return subaccount_to_bytes32(v)
 
 
-ExecuteParams = (
-    PlaceOrderParams
-    | CancelOrdersParams
-    | CancelProductOrdersParams
-    | WithdrawCollateralParams
-    | LiquidateSubaccountParams
-    | MintLpParams
-    | BurnLpParams
-    | LinkSignerParams
-)
+ExecuteParams = Union[
+    PlaceOrderParams,
+    CancelOrdersParams,
+    CancelProductOrdersParams,
+    WithdrawCollateralParams,
+    LiquidateSubaccountParams,
+    MintLpParams,
+    BurnLpParams,
+    LinkSignerParams,
+]
 
 
 class PlaceOrderRequest(VertexBaseModel):
@@ -528,16 +528,16 @@ class LinkSignerRequest(VertexBaseModel):
     _validator = validator("link_signer", allow_reuse=True)(to_tx_request)
 
 
-ExecuteRequest = (
-    PlaceOrderRequest
-    | CancelOrdersRequest
-    | CancelProductOrdersRequest
-    | WithdrawCollateralRequest
-    | LiquidateSubaccountRequest
-    | MintLpRequest
-    | BurnLpRequest
-    | LinkSignerRequest
-)
+ExecuteRequest = Union[
+    PlaceOrderRequest,
+    CancelOrdersRequest,
+    CancelProductOrdersRequest,
+    WithdrawCollateralRequest,
+    LiquidateSubaccountRequest,
+    MintLpRequest,
+    BurnLpRequest,
+    LinkSignerRequest,
+]
 
 
 class ExecuteResponse(VertexBaseModel):
@@ -553,6 +553,8 @@ class ExecuteResponse(VertexBaseModel):
 
         error (Optional[str]): The error message, if any error occurred during the execution of the request.
 
+        request_type (Optional[str]): Type of the request.
+
         req (Optional[dict]): The original request that was executed.
     """
 
@@ -560,6 +562,7 @@ class ExecuteResponse(VertexBaseModel):
     signature: Optional[str]
     error_code: Optional[int]
     error: Optional[str]
+    request_type: Optional[str]
     req: Optional[dict]
 
 
