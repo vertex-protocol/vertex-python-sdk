@@ -180,7 +180,7 @@ class EngineExecuteClient:
         except Exception:
             raise ExecuteFailedException(res.text)
         if execute_res.status != "success":
-            raise ExecuteFailedException(execute_res.error)
+            raise ExecuteFailedException(res.text)
         return execute_res
 
     @property
