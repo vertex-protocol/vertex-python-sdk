@@ -263,7 +263,7 @@ class SubaccountInfoData(VertexBaseModel):
     perp_products: list[PerpProduct]
 
     def parse_subaccount_balance(
-        self, product_id: int
+            self, product_id: int
     ) -> Union[SpotProductBalance, PerpProductBalance]:
         """
         Parses the balance of a subaccount for a given product.
@@ -406,10 +406,18 @@ class QueryResponse(VertexBaseModel):
 
     Attributes:
         status (ResponseStatus): The status of the query response.
-        data (QueryResponseData | str): The data returned from the query, or an error message if the query failed.
+
+        data (Optional[QueryResponseData]): The data returned from the query, or an error message if the query failed.
+
+        error (Optional[str]): The error message, if any error occurred during the query.
+
+        error_code (Optional[int]): The error code, if any error occurred during the query.
+
         request_type (Optional[str]): Type of the request.
     """
 
     status: ResponseStatus
+    data: Optional[QueryResponseData]
+    error: Optional[str]
+    error_code: Optional[int]
     request_type: Optional[str]
-    data: Union[QueryResponseData, str]
