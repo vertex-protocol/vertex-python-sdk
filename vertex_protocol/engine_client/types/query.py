@@ -263,7 +263,7 @@ class SubaccountInfoData(VertexBaseModel):
     perp_products: list[PerpProduct]
 
     def parse_subaccount_balance(
-            self, product_id: int
+        self, product_id: int
     ) -> Union[SpotProductBalance, PerpProductBalance]:
         """
         Parses the balance of a subaccount for a given product.
