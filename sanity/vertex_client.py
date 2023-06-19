@@ -1,7 +1,7 @@
 import time
 from sanity import CLIENT_MODE, SIGNER_PRIVATE_KEY
 
-from vertex_protocol.client import create_vertex_client
+from vertex_protocol.client import VertexClient, create_vertex_client
 from vertex_protocol.contracts.types import DepositCollateralParams
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
@@ -20,7 +20,7 @@ from vertex_protocol.utils.subaccount import SubaccountParams
 
 def run():
     print("setting up vertex client...")
-    client = create_vertex_client(CLIENT_MODE, SIGNER_PRIVATE_KEY)
+    client: VertexClient = create_vertex_client(CLIENT_MODE, SIGNER_PRIVATE_KEY)
 
     print("minting test tokens...")
     mint_tx_hash = client.spot._mint_mock_erc20(0, to_pow_10(100000, 6))
@@ -161,8 +161,11 @@ def run():
     print("max order size:", max_order_size.json(indent=2))
 
     print("querying max lp mintable...")
-    max_lp_mintable = client.market.get_max_lp_mintable(1, sender)
-    print("max lp mintable:", max_lp_mintable.json(indent=2))
+    try:
+        max_lp_mintable = client.market.get_max_lp_mintable(1, sender)
+        print("max lp mintable:", max_lp_mintable.json(indent=2))
+    except Exception as e:
+        print("querying lp mintable failed with error:", e)
 
     print("querying candlesticks...")
     candlesticks = client.market.get_candlesticks(
