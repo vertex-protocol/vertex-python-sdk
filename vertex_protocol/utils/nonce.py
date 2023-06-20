@@ -1,5 +1,5 @@
 from typing import Optional
-import time
+from datetime import timezone, datetime, timedelta
 import random
 
 
@@ -18,7 +18,9 @@ def gen_order_nonce(
         int: The generated order nonce.
     """
     if recv_time_ms is None:
-        recv_time_ms = (int(time.time()) + 90) * 1000
+        recv_time_ms = int(
+            (datetime.now(tz=timezone.utc) + timedelta(seconds=90)).timestamp() * 1000
+        )
     if random_int is None:
         random_int = random.randint(0, 999)
 
