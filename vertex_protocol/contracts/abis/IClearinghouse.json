@@ -157,6 +157,31 @@
         "components": [
           {
             "internalType": "bytes32",
+            "name": "subaccount",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct IEndpoint.ClaimSequencerFees",
+        "name": "tx",
+        "type": "tuple"
+      },
+      {
+        "internalType": "int128[]",
+        "name": "fees",
+        "type": "int128[]"
+      }
+    ],
+    "name": "claimSequencerFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
             "name": "sender",
             "type": "bytes32"
           },
@@ -278,24 +303,12 @@
   },
   {
     "inputs": [],
-    "name": "getHealthGroups",
+    "name": "getInsurance",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "uint32",
-            "name": "spotId",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint32",
-            "name": "perpId",
-            "type": "uint32"
-          }
-        ],
-        "internalType": "struct IClearinghouseState.HealthGroup[]",
+        "internalType": "int128",
         "name": "",
-        "type": "tuple[]"
+        "type": "int128"
       }
     ],
     "stateMutability": "view",
@@ -303,12 +316,12 @@
   },
   {
     "inputs": [],
-    "name": "getInsurance",
+    "name": "getMaxHealthGroup",
     "outputs": [
       {
-        "internalType": "int128",
+        "internalType": "uint32",
         "name": "",
-        "type": "int128"
+        "type": "uint32"
       }
     ],
     "stateMutability": "view",
