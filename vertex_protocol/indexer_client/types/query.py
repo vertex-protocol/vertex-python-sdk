@@ -37,6 +37,7 @@ class IndexerQueryType(StrEnum):
     MAKER_STATISTICS = "maker_statistics"
     LIQUIDATION_FEED = "liquidation_feed"
     LINKED_SIGNER_RATE_LIMIT = "linked_signer_rate_limit"
+    REFERRAL_CODE = "referral_code"
 
 
 class IndexerBaseParams(VertexBaseModel):
@@ -192,6 +193,14 @@ class IndexerLinkedSignerRateLimitParams(VertexBaseModel):
     subaccount: str
 
 
+class IndexerReferralCodeParams(VertexBaseModel):
+    """
+    Parameters for querying a referral code.
+    """
+
+    address: str
+
+
 IndexerParams = Union[
     IndexerSubaccountHistoricalOrdersParams,
     IndexerHistoricalOrdersByDigestParams,
@@ -207,6 +216,7 @@ IndexerParams = Union[
     IndexerMakerStatisticsParams,
     IndexerLiquidationFeedParams,
     IndexerLinkedSignerRateLimitParams,
+    IndexerReferralCodeParams,
 ]
 
 
@@ -316,6 +326,14 @@ class IndexerLinkedSignerRateLimitRequest(VertexBaseModel):
     linked_signer_rate_limit: IndexerLinkedSignerRateLimitParams
 
 
+class IndexerReferralCodeRequest(VertexBaseModel):
+    """
+    Request object for querying a referral code.
+    """
+
+    referral_code: IndexerReferralCodeParams
+
+
 IndexerRequest = Union[
     IndexerHistoricalOrdersRequest,
     IndexerMatchesRequest,
@@ -330,6 +348,7 @@ IndexerRequest = Union[
     IndexerMakerStatisticsRequest,
     IndexerLiquidationFeedRequest,
     IndexerLinkedSignerRateLimitRequest,
+    IndexerReferralCodeRequest,
 ]
 
 
@@ -420,6 +439,7 @@ class IndexerTokenRewardsData(VertexBaseModel):
 
     rewards: list[IndexerTokenReward]
     update_time: str
+    total_referrals: str
 
 
 class IndexerMakerStatisticsData(VertexBaseModel):
@@ -442,6 +462,15 @@ class IndexerLinkedSignerRateLimitData(VertexBaseModel):
     signer: str
 
 
+class IndexerReferralCodeData(VertexBaseModel):
+    """
+    Data object for referral codes.
+    """
+
+    referrer: str
+    referral_code: str
+
+
 IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
 
 
@@ -458,6 +487,7 @@ IndexerResponseData = Union[
     IndexerTokenRewardsData,
     IndexerMakerStatisticsData,
     IndexerLinkedSignerRateLimitData,
+    IndexerReferralCodeData,
     IndexerLiquidationFeedData,
 ]
 
@@ -533,6 +563,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerLinkedSignerRateLimitParams: (
             IndexerLinkedSignerRateLimitRequest,
             IndexerQueryType.LINKED_SIGNER_RATE_LIMIT.value,
+        ),
+        IndexerReferralCodeParams: (
+            IndexerReferralCodeRequest,
+            IndexerQueryType.REFERRAL_CODE.value,
         ),
     }
 

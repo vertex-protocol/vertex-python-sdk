@@ -11,6 +11,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerFundingRateData,
     IndexerHistoricalOrdersByDigestParams,
     IndexerHistoricalOrdersData,
+    IndexerReferralCodeData,
+    IndexerReferralCodeParams,
     IndexerSubaccountHistoricalOrdersParams,
     IndexerLinkedSignerRateLimitData,
     IndexerLinkedSignerRateLimitParams,
@@ -315,4 +317,19 @@ class IndexerQueryClient:
         return ensure_data_type(
             self.query(IndexerLinkedSignerRateLimitParams(subaccount=subaccount)).data,
             IndexerLinkedSignerRateLimitData,
+        )
+
+    def get_referral_code(self, address: str) -> IndexerReferralCodeData:
+        """
+        Retrieves the referral code for a given address.
+
+        Args:
+            address (str): The address for which to retrieve referral code.
+
+        Returns:
+            IndexerReferralCodeData: The referral code for the specific address.
+        """
+        return ensure_data_type(
+            self.query(IndexerReferralCodeParams(address=address)).data,
+            IndexerReferralCodeData,
         )

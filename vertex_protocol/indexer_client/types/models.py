@@ -225,6 +225,7 @@ class IndexerAddressReward(VertexBaseModel):
     taker_fee: str
     maker_tokens: str
     taker_tokens: str
+    taker_referral_tokens: str
     rebates: str
 
 

@@ -104,10 +104,13 @@ def run():
     print("token rewards:", token_rewards.json(indent=2))
 
     print("querying maker stats...")
-    maker_stats = client.get_maker_statistics(
-        {"product_id": 1, "epoch": 2, "interval": 10000}
-    )
-    print("maker stats:", maker_stats.json(indent=2))
+    try:
+        maker_stats = client.get_maker_statistics(
+            {"product_id": 1, "epoch": 2, "interval": 10000}
+        )
+        print("maker stats:", maker_stats.json(indent=2))
+    except Exception as e:
+        print("failed to retrieve maker stats with error:", e)
 
     print("querying liquidation feed...")
     liquidation_feed = client.get_liquidation_feed()
@@ -119,3 +122,7 @@ def run():
     print("querying linked signer rate limit...")
     linked_signer_rate_limit = client.get_linked_signer_rate_limits(subaccount)
     print("linked signer rate limit:", linked_signer_rate_limit.json(indent=2))
+
+    print("querying referral code...")
+    referral_code = client.get_referral_code(owner)
+    print("referral code:", referral_code.json(indent=2))

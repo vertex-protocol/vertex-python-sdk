@@ -7,6 +7,7 @@ from vertex_protocol.engine_client.types.query import (
 )
 from vertex_protocol.indexer_client.types.query import (
     IndexerLinkedSignerRateLimitData,
+    IndexerReferralCodeData,
     IndexerTokenRewardsData,
 )
 
@@ -77,3 +78,15 @@ class SubaccountQueryAPI(VertexBaseAPI):
             IndexerLinkedSignerRateLimitData: A data class object containing information about the current linked signer and their rate limits for the queried subaccount.
         """
         return self.context.indexer_client.get_linked_signer_rate_limits(subaccount)
+
+    def get_referral_code(self, address: str) -> IndexerReferralCodeData:
+        """
+        Query the referral code for the specified wallet from the indexer.
+
+        Args:
+            address (str): Wallet address to be queried.
+
+        Returns:
+            IndexerReferralCodeData: A data class object containing the wallet's referral code.
+        """
+        return self.context.indexer_client.get_referral_code(address)
