@@ -324,7 +324,7 @@ class IndexerQueryClient:
         Retrieves the referral code for a given address.
 
         Args:
-            address (str): The address for which to retrieve referral code.
+            subaccount (str): Unique identifier for the subaccount.
 
         Returns:
             IndexerReferralCodeData: The referral code for the specific address.
