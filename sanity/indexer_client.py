@@ -110,6 +110,7 @@ def run():
         )
         print("maker stats:", maker_stats.json(indent=2))
     except Exception as e:
+        # this endpoint fails locally when there's no epoch data.
         print("failed to retrieve maker stats with error:", e)
 
     print("querying liquidation feed...")
