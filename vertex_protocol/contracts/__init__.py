@@ -113,13 +113,13 @@ class VertexContracts:
             str: The transaction hash of the deposit operation.
         """
         params = DepositCollateralParams.parse_obj(params)
-        if params.referral_code:
+        if params.referral_code is not None and params.referral_code.strip():
             return self.execute(
                 self.endpoint.functions.depositCollateralWithReferral(
                     subaccount_name_to_bytes12(params.subaccount_name),
                     params.product_id,
                     params.amount,
-                    hex_to_bytes32(str_to_hex(params.referral_code)),
+                    params.referral_code,
                 ),
                 signer,
             )

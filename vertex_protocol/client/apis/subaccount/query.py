@@ -79,14 +79,14 @@ class SubaccountQueryAPI(VertexBaseAPI):
         """
         return self.context.indexer_client.get_linked_signer_rate_limits(subaccount)
 
-    def get_referral_code(self, address: str) -> IndexerReferralCodeData:
+    def get_referral_code(self, subaccount: str) -> IndexerReferralCodeData:
         """
         Query the referral code for the specified wallet from the indexer.
 
         Args:
-            address (str): Wallet address to be queried.
+            subaccount (str): Unique identifier for the subaccount.
 
         Returns:
             IndexerReferralCodeData: A data class object containing the wallet's referral code.
         """
-        return self.context.indexer_client.get_referral_code(address)
+        return self.context.indexer_client.get_referral_code(subaccount)

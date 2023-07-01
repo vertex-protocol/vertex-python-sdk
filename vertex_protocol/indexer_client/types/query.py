@@ -198,7 +198,7 @@ class IndexerReferralCodeParams(VertexBaseModel):
     Parameters for querying a referral code.
     """
 
-    address: str
+    subaccount: str
 
 
 IndexerParams = Union[
@@ -467,7 +467,6 @@ class IndexerReferralCodeData(VertexBaseModel):
     Data object for referral codes.
     """
 
-    referrer: str
     referral_code: str
 
 

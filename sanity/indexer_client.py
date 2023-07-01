@@ -124,5 +124,5 @@ def run():
     print("linked signer rate limit:", linked_signer_rate_limit.json(indent=2))
 
     print("querying referral code...")
-    referral_code = client.get_referral_code(owner)
+    referral_code = client.get_referral_code(subaccount=subaccount)
     print("referral code:", referral_code.json(indent=2))

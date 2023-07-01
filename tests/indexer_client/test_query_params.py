@@ -111,7 +111,7 @@ def test_indexer_obj_query_params(
     mock_post.return_value = mock_response
     indexer_client.get_linked_signer_rate_limits("xxx")
 
-    mock_response.json.return_value = {"referrer": "xxx", "referral_code": "vertex"}
+    mock_response.json.return_value = {"referral_code": "vertex"}
     mock_post.return_value = mock_response
     indexer_client.get_referral_code("xxx")
 
@@ -212,5 +212,7 @@ def test_indexer_request_params(
         )
     )
 
-    indexer_client.query({"referral_code": {"address": "xxx"}})
-    indexer_client.query(IndexerReferralCodeRequest(referral_code={"address": "xxx"}))
+    indexer_client.query({"referral_code": {"subaccount": "xxx"}})
+    indexer_client.query(
+        IndexerReferralCodeRequest(referral_code={"subaccount": "xxx"})
+    )

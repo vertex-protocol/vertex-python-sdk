@@ -319,7 +319,7 @@ class IndexerQueryClient:
             IndexerLinkedSignerRateLimitData,
         )
 
-    def get_referral_code(self, address: str) -> IndexerReferralCodeData:
+    def get_referral_code(self, subaccount: str) -> IndexerReferralCodeData:
         """
         Retrieves the referral code for a given address.
 
@@ -330,6 +330,6 @@ class IndexerQueryClient:
             IndexerReferralCodeData: The referral code for the specific address.
         """
         return ensure_data_type(
-            self.query(IndexerReferralCodeParams(address=address)).data,
+            self.query(IndexerReferralCodeParams(subaccount=subaccount)).data,
             IndexerReferralCodeData,
         )
