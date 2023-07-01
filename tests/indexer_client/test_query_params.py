@@ -20,6 +20,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerSubaccountHistoricalOrdersParams,
     IndexerSubaccountSummaryRequest,
     IndexerTokenRewardsRequest,
+    IndexerReferralCodeParams,
+    IndexerReferralCodeRequest,
 )
 
 
@@ -82,7 +84,11 @@ def test_indexer_obj_query_params(
     mock_post.return_value = mock_response
     indexer_client.get_oracle_prices([])
 
-    mock_response.json.return_value = {"rewards": [], "update_time": "0"}
+    mock_response.json.return_value = {
+        "rewards": [],
+        "update_time": "0",
+        "total_referrals": "0",
+    }
     mock_post.return_value = mock_response
     indexer_client.get_token_rewards("xxx")
 
@@ -104,6 +110,10 @@ def test_indexer_obj_query_params(
     }
     mock_post.return_value = mock_response
     indexer_client.get_linked_signer_rate_limits("xxx")
+
+    mock_response.json.return_value = {"referral_code": "vertex"}
+    mock_post.return_value = mock_response
+    indexer_client.get_referral_code("xxx")
 
 
 def test_indexer_raw_query_params(
@@ -200,4 +210,9 @@ def test_indexer_request_params(
         IndexerLinkedSignerRateLimitRequest(
             linked_signer_rate_limit={"subaccount": "xxx"}
         )
+    )
+
+    indexer_client.query({"referral_code": {"subaccount": "xxx"}})
+    indexer_client.query(
+        IndexerReferralCodeRequest(referral_code={"subaccount": "xxx"})
     )
