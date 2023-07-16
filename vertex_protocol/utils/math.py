@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+
 def to_pow_10(x: int, pow: int) -> int:
     """
     Converts integer to power of 10 format.
@@ -13,17 +16,17 @@ def to_pow_10(x: int, pow: int) -> int:
     return x * 10**pow
 
 
-def to_x18(x: int) -> int:
+def to_x18(x: float) -> int:
     """
-    Converts integer to power of 10^18 format.
+    Converts a float to a fixed point of 1e18.
 
     Args:
-        x (int): Integer value.
+        x (float): Float value to convert.
 
     Returns:
-        int: Converted value.
+        int: Fixed point value represented as an integer.
     """
-    return to_pow_10(x, 18)
+    return int(Decimal(str(x)) * Decimal(10**18))
 
 
 def from_pow_10(x: int, pow: int) -> float:
