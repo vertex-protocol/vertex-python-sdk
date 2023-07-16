@@ -63,6 +63,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "invitee",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "referralCode",
+        "type": "bytes32"
+      }
+    ],
+    "name": "UserReferral",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "clearinghouse",
     "outputs": [
@@ -94,6 +113,34 @@
       }
     ],
     "name": "depositCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes12",
+        "name": "subaccountName",
+        "type": "bytes12"
+      },
+      {
+        "internalType": "uint32",
+        "name": "productId",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint128",
+        "name": "amount",
+        "type": "uint128"
+      },
+      {
+        "internalType": "string",
+        "name": "referralCode",
+        "type": "string"
+      }
+    ],
+    "name": "depositCollateralWithReferral",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -391,6 +438,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "referralCodes",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -491,6 +557,19 @@
         "internalType": "uint64",
         "name": "txUpTo",
         "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "slowModeFees",
+    "outputs": [
+      {
+        "internalType": "int128",
+        "name": "",
+        "type": "int128"
       }
     ],
     "stateMutability": "view",

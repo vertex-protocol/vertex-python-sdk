@@ -8,7 +8,12 @@ from web3.contract.contract import ContractFunction
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.contracts.loader import load_abi
 from vertex_protocol.contracts.types import DepositCollateralParams, VertexAbiName
-from vertex_protocol.utils.bytes32 import subaccount_name_to_bytes12, zero_address
+from vertex_protocol.utils.bytes32 import (
+    hex_to_bytes32,
+    str_to_hex,
+    subaccount_name_to_bytes12,
+    zero_address,
+)
 from vertex_protocol.utils.exceptions import InvalidProductId
 from vertex_protocol.contracts.types import *
 
@@ -108,14 +113,25 @@ class VertexContracts:
             str: The transaction hash of the deposit operation.
         """
         params = DepositCollateralParams.parse_obj(params)
-        return self.execute(
-            self.endpoint.functions.depositCollateral(
-                subaccount_name_to_bytes12(params.subaccount_name),
-                params.product_id,
-                params.amount,
-            ),
-            signer,
-        )
+        if params.referral_code is not None and params.referral_code.strip():
+            return self.execute(
+                self.endpoint.functions.depositCollateralWithReferral(
+                    subaccount_name_to_bytes12(params.subaccount_name),
+                    params.product_id,
+                    params.amount,
+                    params.referral_code,
+                ),
+                signer,
+            )
+        else:
+            return self.execute(
+                self.endpoint.functions.depositCollateral(
+                    subaccount_name_to_bytes12(params.subaccount_name),
+                    params.product_id,
+                    params.amount,
+                ),
+                signer,
+            )
 
     def approve_allowance(self, erc20: Contract, amount: int, signer: LocalAccount):
         """

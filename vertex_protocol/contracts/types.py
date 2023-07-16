@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import AnyUrl, Field
 from vertex_protocol.utils.enum import StrEnum
 
@@ -36,12 +37,19 @@ class VertexDeployment(VertexBaseModel):
 
     Attributes:
         node_url (AnyUrl): The URL of the node.
+
         quote_addr (str): The address of the quote contract.
+
         querier_addr (str): The address of the querier contract.
+
         fee_calculator_addr (str): The address of the fee calculator contract.
+
         clearinghouse_addr (str): The address of the clearinghouse contract.
+
         endpoint_addr (str): The address of the endpoint contract.
+
         spot_engine_addr (str): The address of the spot engine contract.
+
         perp_engine_addr (str): The address of the perpetual engine contract.
     """
 
@@ -65,11 +73,14 @@ class DepositCollateralParams(VertexBaseModel):
         product_id (int): The ID of the spot product to deposit collateral for.
 
         amount (int): The amount of collateral to be deposited.
+
+        referral_code (Optional[str]): Use this to indicate you were referred by existing member.
     """
 
     subaccount_name: str
     product_id: int
     amount: int
+    referral_code: Optional[str]
 
 
 class VertexExecuteType(StrEnum):
