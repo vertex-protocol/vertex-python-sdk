@@ -27,7 +27,8 @@ from vertex_protocol.engine_client.types.execute import (
     OrderParams,
     PlaceOrderParams,
     WithdrawCollateralParams,
-    to_execute_request, CancelOrdersResponse,
+    to_execute_request,
+    CancelOrdersResponse,
 )
 from vertex_protocol.contracts.types import VertexExecuteType
 
@@ -35,7 +36,11 @@ from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
     ExecuteFailedException,
 )
-from vertex_protocol.utils.model import VertexBaseModel, is_instance_of_union, ensure_data_type
+from vertex_protocol.utils.model import (
+    VertexBaseModel,
+    is_instance_of_union,
+    ensure_data_type,
+)
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
 
@@ -77,7 +82,9 @@ class EngineExecuteClient:
             params.sender = params.serialize_sender(params.sender)
         return params
 
-    def _inject_nonce_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
+    def _inject_nonce_if_needed(
+        self, params: Type[BaseParams], use_order_nonce: bool
+    ) -> Type[BaseParams]:
         """
         Inject the nonce if needed.
 
@@ -89,7 +96,7 @@ class EngineExecuteClient:
         """
         if params.nonce is not None:
             return params
-        params.nonce = self.tx_nonce()
+        params.nonce = self.order_nonce() if use_order_nonce else self.tx_nonce()
         return params
 
     def tx_nonce(self) -> int:
@@ -113,7 +120,7 @@ class EngineExecuteClient:
         """
         return gen_order_nonce(recv_time_ms)
 
-    def prepare_execute_params(self, params: Type[BaseParams]) -> Type[BaseParams]:  # type: ignore
+    def prepare_execute_params(self, params: Type[BaseParams], use_order_nonce: bool) -> Type[BaseParams]:  # type: ignore
         """
         Prepares the parameters for execution by ensuring that both owner and nonce are correctly set.
 
@@ -125,7 +132,7 @@ class EngineExecuteClient:
         """
         params = deepcopy(params)
         params = self._inject_owner_if_needed(params)
-        params = self._inject_nonce_if_needed(params)
+        params = self._inject_nonce_if_needed(params, use_order_nonce)
         return params
 
     @singledispatchmethod
@@ -388,7 +395,7 @@ class EngineExecuteClient:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         params = PlaceOrderParams.parse_obj(params)
-        params.order = self.prepare_execute_params(params.order)  # type: ignore
+        params.order = self.prepare_execute_params(params.order, True)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
         )
@@ -405,19 +412,17 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params))  # type: ignore
+        params = self.prepare_execute_params(CancelOrdersParams.parse_obj(params), True)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_ORDERS, params.dict()
         )
         return ensure_data_type(
-            self.execute(
-                params
-            ).data,
+            self.execute(params).data,
             CancelOrdersResponse,
         )
 
     def cancel_product_orders(
-            self, params: CancelProductOrdersParams
+        self, params: CancelProductOrdersParams
     ) -> CancelOrdersResponse:
         """
         Execute a cancel product orders operation.
@@ -430,15 +435,13 @@ class EngineExecuteClient:
             CancelOrdersResponse: A data class object containing information about the canceled product orders.
         """
         params = self.prepare_execute_params(
-            CancelProductOrdersParams.parse_obj(params)  # type: ignore
+            CancelProductOrdersParams.parse_obj(params), True  # type: ignore
         )
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
         )
         return ensure_data_type(
-            self.execute(
-                params
-            ).data,
+            self.execute(params).data,
             CancelOrdersResponse,
         )
 
@@ -453,7 +456,7 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params))  # type: ignore
+        params = self.prepare_execute_params(WithdrawCollateralParams.parse_obj(params), False)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.WITHDRAW_COLLATERAL, params.dict()
         )
@@ -473,7 +476,7 @@ class EngineExecuteClient:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         params = self.prepare_execute_params(
-            LiquidateSubaccountParams.parse_obj(params)  # type: ignore
+            LiquidateSubaccountParams.parse_obj(params), False  # type: ignore
         )
         params.signature = params.signature or self._sign(
             VertexExecuteType.LIQUIDATE_SUBACCOUNT,
@@ -492,7 +495,7 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(MintLpParams.parse_obj(params))  # type: ignore
+        params = self.prepare_execute_params(MintLpParams.parse_obj(params), False)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.MINT_LP,
             params.dict(),
@@ -510,7 +513,7 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(BurnLpParams.parse_obj(params))  # type: ignore
+        params = self.prepare_execute_params(BurnLpParams.parse_obj(params), False)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.BURN_LP,
             params.dict(),
@@ -528,7 +531,7 @@ class EngineExecuteClient:
         Returns:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
-        params = self.prepare_execute_params(LinkSignerParams.parse_obj(params))  # type: ignore
+        params = self.prepare_execute_params(LinkSignerParams.parse_obj(params), False)  # type: ignore
         params.signature = params.signature or self._sign(
             VertexExecuteType.LINK_SIGNER,
             params.dict(),

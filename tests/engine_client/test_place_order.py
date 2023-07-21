@@ -89,6 +89,7 @@ def test_place_order_params(senders: list[str], owners: list[str], order_params:
     params_from_dict.signature = (
         "0x51ba8762bc5f77957a4e896dba34e17b553b872c618ffb83dba54878796f2821"
     )
+    params_from_dict.order.nonce = gen_order_nonce()
     place_order_req = PlaceOrderRequest(place_order=params_from_dict)
     assert place_order_req == to_execute_request(params_from_dict)
     assert place_order_req.dict() == {

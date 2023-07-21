@@ -82,14 +82,13 @@ class OrderParams(BaseParams):
 
         expiration (int): The unix timestamp at which the order will expire.
 
-        nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-        see `gen_order_nonce` for more info.
+        nonce (Optional[int]): A unique number used to prevent replay attacks.
     """
 
     priceX18: int
     amount: int
     expiration: int
-    nonce: int = gen_order_nonce()
+    nonce: Optional[int]
 
 
 class PlaceOrderParams(SignatureParams):
@@ -121,8 +120,7 @@ class CancelOrdersParams(BaseParamsSigned):
 
         digests (list[Digest]): List of digests of the orders to be canceled.
 
-        nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-        see `gen_order_nonce` for more info.
+        nonce (Optional[int]): A unique number used to prevent replay attacks.
 
     Methods:
         serialize_digests: Validates and converts a list of hex digests to bytes32.
@@ -130,7 +128,7 @@ class CancelOrdersParams(BaseParamsSigned):
 
     productIds: list[int]
     digests: list[Digest]
-    nonce: int = gen_order_nonce()
+    nonce: Optional[int]
 
     @validator("digests")
     def serialize_digests(cls, v: list[Digest]) -> list[bytes]:
@@ -146,13 +144,12 @@ class CancelProductOrdersParams(BaseParamsSigned):
 
         digest (str, optional): Optional EIP-712 digest of the CancelProductOrder request.
 
-        nonce (int): A unique number used to prevent replay attacks. By default, a new nonce is generated.
-        see `gen_order_nonce` for more info.
+        nonce (Optional[int]): A unique number used to prevent replay attacks.
     """
 
     productIds: list[int]
     digest: Optional[str]
-    nonce: int = gen_order_nonce()
+    nonce: Optional[int]
 
 
 class WithdrawCollateralParams(BaseParamsSigned):
@@ -549,9 +546,7 @@ class CancelOrdersResponse(VertexBaseModel):
     cancelled_orders: list[OrderData]
 
 
-ExecuteResponseData = (
-    CancelOrdersResponse
-)
+ExecuteResponseData = CancelOrdersResponse
 
 
 class ExecuteResponse(VertexBaseModel):
