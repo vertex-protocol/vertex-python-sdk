@@ -4,7 +4,7 @@ from vertex_protocol.engine_client.types.execute import (
     CancelProductOrdersParams,
     ExecuteResponse,
     MintLpParams,
-    PlaceOrderParams,
+    PlaceOrderParams, CancelOrdersResponse,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
 
@@ -67,7 +67,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.place_order(params)
 
-    def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
+    def cancel_orders(self, params: CancelOrdersParams) -> CancelOrdersResponse:
         """
         Cancels orders through the engine.
 
@@ -75,7 +75,7 @@ class MarketExecuteAPI(VertexBaseAPI):
             params (CancelOrdersParams): Parameters required to cancel orders.
 
         Returns:
-            ExecuteResponse: The response from the engine execution.
+            CancelOrdersResponse: A data class object containing information about the canceled product orders.
 
         Raises:
             Exception: If there is an error during the execution or the response status is not "success".
@@ -83,8 +83,8 @@ class MarketExecuteAPI(VertexBaseAPI):
         return self.context.engine_client.cancel_orders(params)
 
     def cancel_product_orders(
-        self, params: CancelProductOrdersParams
-    ) -> ExecuteResponse:
+            self, params: CancelProductOrdersParams
+    ) -> CancelOrdersResponse:
         """
         Cancels all orders for provided products through the engine.
 
@@ -92,7 +92,7 @@ class MarketExecuteAPI(VertexBaseAPI):
             params (CancelProductOrdersParams): Parameters required to cancel product orders.
 
         Returns:
-            ExecuteResponse: The response from the engine execution.
+            CancelOrdersResponse: A data class object containing information about the canceled product orders.
 
         Raises:
             Exception: If there is an error during the execution or the response status is not "success".

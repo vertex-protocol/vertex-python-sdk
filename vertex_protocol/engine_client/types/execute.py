@@ -10,6 +10,7 @@ from vertex_protocol.utils.bytes32 import (
 )
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
+from vertex_protocol.engine_client.types.query import OrderData
 
 
 Digest = Union[str, bytes]
@@ -540,6 +541,19 @@ ExecuteRequest = Union[
 ]
 
 
+class CancelOrdersResponse(VertexBaseModel):
+    """
+    Data model for cancelled orders response.
+    """
+
+    cancelled_orders: list[OrderData]
+
+
+ExecuteResponseData = (
+    CancelOrdersResponse
+)
+
+
 class ExecuteResponse(VertexBaseModel):
     """
     Represents the response returned from executing a request.
@@ -548,6 +562,8 @@ class ExecuteResponse(VertexBaseModel):
         status (ResponseStatus): The status of the response.
 
         signature (Optional[str]): The signature of the response. Only present if the request was successfully executed.
+
+        data (Optional[ExecuteResponseData]): Data returned from execute, not all executes currently return data.
 
         error_code (Optional[int]): The error code, if any error occurred during the execution of the request.
 
@@ -560,6 +576,7 @@ class ExecuteResponse(VertexBaseModel):
 
     status: ResponseStatus
     signature: Optional[str]
+    data: Optional[ExecuteResponseData]
     error_code: Optional[int]
     error: Optional[str]
     request_type: Optional[str]
