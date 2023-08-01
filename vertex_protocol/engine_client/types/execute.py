@@ -537,7 +537,12 @@ ExecuteRequest = Union[
     LinkSignerRequest,
 ]
 
+class PlaceOrderResponse(VertexBaseModel):
+    """
+    Data model for place order response.
+    """
 
+    digest: str
 class CancelOrdersResponse(VertexBaseModel):
     """
     Data model for cancelled orders response.
@@ -546,7 +551,10 @@ class CancelOrdersResponse(VertexBaseModel):
     cancelled_orders: list[OrderData]
 
 
-ExecuteResponseData = CancelOrdersResponse
+ExecuteResponseData = Union[
+    PlaceOrderResponse,
+    CancelOrdersResponse
+]
 
 
 class ExecuteResponse(VertexBaseModel):
