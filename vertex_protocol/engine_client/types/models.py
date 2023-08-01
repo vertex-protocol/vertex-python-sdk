@@ -167,5 +167,10 @@ class MaxOrderSizeDirection(StrEnum):
     SHORT = "short"
 
 
+class ProductSymbol(VertexBaseModel):
+    product_id: int
+    symbol: str
+
+
 # (price, amount)
 Liquidity = Annotated[list, conlist(str, min_items=2, max_items=2)]

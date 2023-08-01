@@ -9,6 +9,7 @@ from vertex_protocol.engine_client.types.models import (
     Liquidity,
     MaxOrderSizeDirection,
     MintLpTx,
+    ProductSymbol,
     ResponseStatus,
     SpotProduct,
     SubaccountHealth,
@@ -381,6 +382,9 @@ class LinkedSignerData(VertexBaseModel):
     linked_signer: str
 
 
+ProductSymbolsData = list[ProductSymbol]
+
+
 QueryResponseData = Union[
     StatusData,
     ContractsData,
@@ -397,6 +401,7 @@ QueryResponseData = Union[
     FeeRatesData,
     HealthGroupsData,
     LinkedSignerData,
+    ProductSymbolsData,
 ]
 
 

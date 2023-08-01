@@ -3,6 +3,7 @@ import requests
 from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
+from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.engine_client.types.query import (
     AllProductsData,
     ContractsData,
@@ -15,6 +16,7 @@ from vertex_protocol.engine_client.types.query import (
     MaxOrderSizeData,
     MaxWithdrawableData,
     NoncesData,
+    ProductSymbolsData,
     SubaccountOpenOrdersData,
     OrderData,
     QueryAllProductsParams,
@@ -84,6 +86,28 @@ class EngineQueryClient:
         if query_res.status != "success":
             raise QueryFailedException(res.text)
         return query_res
+
+    def get_product_symbols(self) -> ProductSymbolsData:
+        """
+        Retrieves symbols for all available products.
+
+        Returns:
+            ProductSymbolsData: Symbols for all available products.
+        """
+        res = requests.get(f"{self.url}/symbols?")
+        if res.status_code != 200:
+            raise BadStatusCodeException(res.text)
+        try:
+            query_res = QueryResponse(
+                status=ResponseStatus.SUCCESS,
+                data=res.json(),
+                error=None,
+                error_code=None,
+                request_type=None,
+            )
+        except Exception:
+            raise QueryFailedException(res.text)
+        return ensure_data_type(query_res.data, list)
 
     def get_status(self) -> StatusData:
         """
