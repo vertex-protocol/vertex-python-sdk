@@ -3,6 +3,7 @@ import requests
 from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
+from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.engine_client.types.query import (
     AllProductsData,
     ContractsData,
@@ -97,7 +98,7 @@ class EngineQueryClient:
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         try:
-            query_res = QueryResponse(status="success", data=res.json())
+            query_res = QueryResponse(status=ResponseStatus.SUCCESS, data=res.json())
         except Exception:
             raise QueryFailedException(res.text)
         return ensure_data_type(query_res.data, list)
