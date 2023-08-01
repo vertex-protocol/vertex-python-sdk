@@ -6,6 +6,7 @@ from vertex_protocol.engine_client.types.query import (
     MarketPriceData,
     MaxLpMintableData,
     MaxOrderSizeData,
+    ProductSymbolsData,
     SubaccountOpenOrdersData,
     QueryMaxOrderSizeParams,
 )
@@ -42,6 +43,15 @@ class MarketQueryAPI(VertexBaseAPI):
             AllProductsData: A data class object containing information about all products in the engine.
         """
         return self.context.engine_client.get_all_products()
+
+    def get_all_product_symbols(self) -> ProductSymbolsData:
+        """
+        Retrieves all product symbols from the off-chain engine
+
+        Returns:
+            ProductSymbolsData: A list of all products with corresponding symbol.
+        """
+        return self.context.engine_client.get_product_symbols()
 
     def get_market_liquidity(self, product_id: int, depth: int) -> MarketLiquidityData:
         """

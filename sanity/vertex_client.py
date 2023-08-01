@@ -131,6 +131,10 @@ def run():
     engine_markets = client.market.get_all_engine_markets()
     print("engine markets:", engine_markets.json(indent=2))
 
+    print("querying all product symbols...")
+    product_symbols = client.market.get_all_product_symbols()
+    print("product symbols:", product_symbols)
+
     print("querying market liquidity...")
     market_liquidity = client.market.get_market_liquidity(1, 2)
     print("market liquidity:", market_liquidity.json(indent=2))

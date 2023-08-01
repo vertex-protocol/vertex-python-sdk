@@ -15,6 +15,7 @@ from vertex_protocol.engine_client.types.query import (
     MaxOrderSizeData,
     MaxWithdrawableData,
     NoncesData,
+    ProductSymbolsData,
     SubaccountOpenOrdersData,
     OrderData,
     QueryAllProductsParams,
@@ -84,6 +85,22 @@ class EngineQueryClient:
         if query_res.status != "success":
             raise QueryFailedException(res.text)
         return query_res
+
+    def get_product_symbols(self) -> ProductSymbolsData:
+        """
+        Retrieves symbols for all available products.
+
+        Returns:
+            AllProductsData: Data about all products.
+        """
+        res = requests.get(f"{self.url}/symbols?")
+        if res.status_code != 200:
+            raise BadStatusCodeException(res.text)
+        try:
+            query_res = QueryResponse(status="success", data=res.json())
+        except Exception:
+            raise QueryFailedException(res.text)
+        return ensure_data_type(query_res.data, list)
 
     def get_status(self) -> StatusData:
         """

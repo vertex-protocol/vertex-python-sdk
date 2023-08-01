@@ -49,6 +49,10 @@ def run():
     client.chain_id = contracts_data.chain_id
     client.book_addrs = contracts_data.book_addrs
 
+    print("querying product symbols...")
+    product_symbols = client.get_product_symbols()
+    pprint(product_symbols)
+
     print("placing order...")
     product_id = 1
     order = OrderParams(
