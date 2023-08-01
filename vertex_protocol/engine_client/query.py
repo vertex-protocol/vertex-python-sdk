@@ -98,7 +98,13 @@ class EngineQueryClient:
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         try:
-            query_res = QueryResponse(status=ResponseStatus.SUCCESS, data=res.json())
+            query_res = QueryResponse(
+                status=ResponseStatus.SUCCESS,
+                data=res.json(),
+                error=None,
+                error_code=None,
+                request_type=None,
+            )
         except Exception:
             raise QueryFailedException(res.text)
         return ensure_data_type(query_res.data, list)
