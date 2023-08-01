@@ -92,7 +92,7 @@ class EngineQueryClient:
         Retrieves symbols for all available products.
 
         Returns:
-            AllProductsData: Data about all products.
+            ProductSymbolsData: Symbols for all available products.
         """
         res = requests.get(f"{self.url}/symbols?")
         if res.status_code != 200:
