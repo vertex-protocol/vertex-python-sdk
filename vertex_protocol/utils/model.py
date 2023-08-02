@@ -9,6 +9,9 @@ class VertexBaseModel(BaseModel):
     values by default when serializing via .dict() or .json()
     """
 
+    class Config:
+        extra = "allow"
+
     def dict(self, **kwargs):
         """
         Convert model to dictionary, excluding None fields by default.
