@@ -84,7 +84,7 @@ def test_burn_lp(
 def test_place_order(
     vertex_client: VertexClient,
     senders: list[str],
-    mock_execute_response: MagicMock,
+    mock_place_order_response: MagicMock,
     mock_nonces: MagicMock,
 ):
     order = OrderParams(
@@ -100,6 +100,7 @@ def test_place_order(
         vertex_client.context.engine_client.chain_id,
         vertex_client.context.engine_client.signer,
     )
+    assert res.data.digest == "0x123"
     assert res.req == {
         "place_order": {
             "product_id": 1,

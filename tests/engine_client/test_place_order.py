@@ -154,8 +154,9 @@ def test_place_order_execute_fails_incomplete_client(
 def test_place_order_execute_success(
     engine_client: EngineClient, mock_post: MagicMock, senders: list[str]
 ):
+    product_id = 1
     place_order_params = PlaceOrderParams(
-        product_id=1,
+        product_id=product_id,
         order=OrderParams(
             sender=SubaccountParams(subaccount_name="default"),
             priceX18=1000,
@@ -166,6 +167,7 @@ def test_place_order_execute_success(
     )
 
     order = place_order_params.order.copy(deep=True)
+    order_digest = "0x123"
     order.sender = hex_to_bytes32(senders[0])
 
     with pytest.raises(
@@ -195,6 +197,7 @@ def test_place_order_execute_success(
     mock_response.json.return_value = {
         "status": "success",
         "signature": expected_signature,
+        "data": {"digest": order_digest}
     }
     mock_post.return_value = mock_response
 
@@ -205,6 +208,7 @@ def test_place_order_execute_success(
     assert place_order_req.place_order.order.sender.lower() == senders[0].lower()
     assert res.status == "success"
     assert res.error is None
+    assert res.data.digest == order_digest
 
     mock_response.status_code = 200
     json_response = {
