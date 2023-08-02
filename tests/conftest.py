@@ -225,6 +225,19 @@ def mock_execute_response(mock_post: MagicMock) -> MagicMock:
 
 
 @pytest.fixture
+def mock_place_order_response(mock_post: MagicMock) -> MagicMock:
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "status": "success",
+        "error": None,
+        "data": {"digest": "0x123"}
+    }
+    mock_post.return_value = mock_response
+    return mock_post
+
+
+@pytest.fixture
 def mock_cancel_orders_response(mock_post: MagicMock) -> MagicMock:
     mock_response = MagicMock()
     mock_response.status_code = 200

@@ -120,7 +120,8 @@ class EngineExecuteClient:
         """
         return gen_order_nonce(recv_time_ms)
 
-    def prepare_execute_params(self, params: Type[BaseParams], use_order_nonce: bool) -> Type[BaseParams]:  # type: ignore
+    def prepare_execute_params(self, params: Type[BaseParams], use_order_nonce: bool) -> Type[
+        BaseParams]:  # type: ignore
         """
         Prepares the parameters for execution by ensuring that both owner and nonce are correctly set.
 
@@ -401,7 +402,7 @@ class EngineExecuteClient:
         )
         return self.execute(params)
 
-    def cancel_orders(self, params: CancelOrdersParams) -> CancelOrdersResponse:
+    def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         """
         Execute a cancel orders operation.
 
@@ -416,14 +417,11 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_ORDERS, params.dict()
         )
-        return ensure_data_type(
-            self.execute(params).data,
-            CancelOrdersResponse,
-        )
+        return self.execute(params)
 
     def cancel_product_orders(
         self, params: CancelProductOrdersParams
-    ) -> CancelOrdersResponse:
+    ) -> ExecuteResponse:
         """
         Execute a cancel product orders operation.
 
@@ -432,7 +430,7 @@ class EngineExecuteClient:
             The parameters include a list of product ids to bulk cancel orders for.
 
         Returns:
-            CancelOrdersResponse: A data class object containing information about the canceled product orders.
+            ExecuteResponse: Response of the execution, including status and potential error message.
         """
         params = self.prepare_execute_params(
             CancelProductOrdersParams.parse_obj(params), True  # type: ignore
@@ -440,10 +438,7 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
         )
-        return ensure_data_type(
-            self.execute(params).data,
-            CancelOrdersResponse,
-        )
+        return self.execute(params)
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         """
