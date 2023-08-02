@@ -67,7 +67,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.place_order(params)
 
-    def cancel_orders(self, params: CancelOrdersParams) -> CancelOrdersResponse:
+    def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         """
         Cancels orders through the engine.
 
@@ -84,7 +84,7 @@ class MarketExecuteAPI(VertexBaseAPI):
 
     def cancel_product_orders(
             self, params: CancelProductOrdersParams
-    ) -> CancelOrdersResponse:
+    ) -> ExecuteResponse:
         """
         Cancels all orders for provided products through the engine.
 

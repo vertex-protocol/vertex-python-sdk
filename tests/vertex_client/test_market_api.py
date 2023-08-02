@@ -138,7 +138,7 @@ def test_cancel_orders(
         vertex_client.context.engine_client.chain_id,
         vertex_client.context.engine_client.signer,
     )
-    cancelled_order = res.cancelled_orders.pop()
+    cancelled_order = res.data.cancelled_orders.pop()
     assert cancelled_order.product_id == 1
     assert cancelled_order.amount == str(-10000000000000000)
     assert cancelled_order.nonce == str(1)
@@ -166,7 +166,7 @@ def test_cancel_product_orders(
         vertex_client.context.engine_client.chain_id,
         vertex_client.context.engine_client.signer,
     )
-    cancelled_order = res.cancelled_orders.pop()
+    cancelled_order = res.data.cancelled_orders.pop()
     assert cancelled_order.product_id == 1
     assert cancelled_order.amount == str(-10000000000000000)
     assert cancelled_order.nonce == str(1)
