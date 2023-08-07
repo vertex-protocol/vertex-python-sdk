@@ -55,3 +55,7 @@ def from_x18(x: int) -> float:
         float: Original value.
     """
     return from_pow_10(x, 18)
+
+
+def round_x18(x: int, y: int) -> int:
+    return x - x % y
