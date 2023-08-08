@@ -13,7 +13,7 @@ from vertex_protocol.engine_client.types.models import SpotProductBalance
 from vertex_protocol.engine_client.types.query import QueryMaxOrderSizeParams
 from vertex_protocol.utils.bytes32 import subaccount_to_bytes32, subaccount_to_hex
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
-from vertex_protocol.utils.math import to_pow_10, to_x18
+from vertex_protocol.utils.math import round_x18, to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
 
@@ -89,7 +89,7 @@ def run():
     print("open orders:", open_orders.json(indent=2))
 
     print("querying subaccount summary...")
-    subaccount_summary = client.subaccount.get_engine_subaccount_summary(sender)
+    subaccount_summary = client.subaccount.get_engine_subaccount_summary(subaccount)
     print("subaccount summary:", subaccount_summary.json(indent=2))
 
     print("cancelling order...")
@@ -126,6 +126,46 @@ def run():
         {"subaccount": sender, "limit": 2}
     )
     print("subaccount historical orders:", historical_orders.json(indent=2))
+
+    print("opening perp position...")
+    eth_perp = [
+        product
+        for product in subaccount_summary.perp_products
+        if product.product_id == 4
+    ][0]
+    order = OrderParams(
+        sender=subaccount,
+        priceX18=round_x18(
+            eth_perp.oracle_price_x18, eth_perp.book_info.price_increment_x18
+        )
+        + to_x18(100),
+        amount=to_pow_10(1, 17),
+        expiration=get_expiration_timestamp(OrderType.IOC, int(time.time()) + 1000),
+        nonce=gen_order_nonce(),
+    )
+    res = client.market.place_order({"product_id": 4, "order": order})
+    print("order result:", res.json(indent=2))
+
+    eth_perp_balance = [
+        balance
+        for balance in client.subaccount.get_engine_subaccount_summary(
+            subaccount
+        ).perp_balances
+        if balance.product_id == 4
+    ][0]
+    print("perp balance:", eth_perp_balance.json(indent=2))
+
+    print("closing perp position...")
+    res = client.market.close_position(
+        subaccount=SubaccountParams(
+            subaccount_owner=client.context.signer.address, subaccount_name="default"
+        ),
+        product_id=4,
+    )
+    print("position close result:", res.json(indent=2))
+
+    subaccount_summary = client.subaccount.get_engine_subaccount_summary(subaccount)
+    print("subaccount summary post position close:", subaccount_summary.json(indent=2))
 
     print("querying all engine markets...")
     engine_markets = client.market.get_all_engine_markets()

@@ -39,7 +39,7 @@ from vertex_protocol.utils.exceptions import (
     ExecuteFailedException,
 )
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
-from vertex_protocol.utils.math import round_x18
+from vertex_protocol.utils.math import mul_x18, round_x18, to_x18
 from vertex_protocol.utils.model import (
     VertexBaseModel,
     is_instance_of_union,
@@ -545,7 +545,7 @@ class EngineExecuteClient:
         Execute a place order operation to close a position for the provided `product_id`.
 
         Attributes:
-            subaccount (Subaccount): The subaccount to be close position for.
+            subaccount (Subaccount): The subaccount to close position for.
             product_id (int): The ID of the product to close position for.
 
         Returns:
@@ -566,18 +566,24 @@ class EngineExecuteClient:
             ][0]
         except Exception as e:
             raise Exception(f"Invalid product id provided {product_id}. Error: {e}")
+        closing_spread_x18 = to_x18(0.005)
+        closing_price_x18 = (
+            mul_x18(product.oracle_price_x18, to_x18(1) - closing_spread_x18)
+            if int(balance.balance.amount) > 0
+            else mul_x18(product.oracle_price_x18, to_x18(1) + closing_spread_x18)
+        )
         return self.place_order(
-            PlaceOrderParams(
+            PlaceOrderParams(  # type: ignore
                 product_id=product_id,
-                order=OrderParams(
+                order=OrderParams(  # type: ignore
                     sender=subaccount,
                     amount=-round_x18(
-                        int(balance.balance.amount),
-                        int(product.book_info.size_increment),
+                        balance.balance.amount,
+                        product.book_info.size_increment,
                     ),
                     priceX18=round_x18(
-                        int(product.oracle_price_x18),
-                        int(product.book_info.price_increment_x18),
+                        closing_price_x18,
+                        product.book_info.price_increment_x18,
                     ),
                     expiration=get_expiration_timestamp(
                         OrderType.FOK,

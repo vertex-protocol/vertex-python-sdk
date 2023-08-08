@@ -46,7 +46,6 @@ name = "private"
 url = "https://github.com/vertex-protocol/vertex-python-sdk"
 priority = "primary"
 
-
 [[tool.poetry.source]]
 name = "PyPI"
 priority = "primary"

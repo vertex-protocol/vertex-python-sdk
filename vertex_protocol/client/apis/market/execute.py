@@ -108,7 +108,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         Places an order through the engine to close a position for the provided `product_id`.
 
         Attributes:
-            subaccount (Subaccount): The subaccount to be close position for.
+            subaccount (Subaccount): The subaccount to close position for.
             product_id (int): The ID of the product to close position for.
 
          Returns:
