@@ -59,7 +59,7 @@ def from_x18(x: int) -> float:
 
 
 def mul_x18(x: Union[float, str], y: Union[float, str]) -> int:
-    return int(Decimal(str(x)) * Decimal(str(y)) / Decimal(10**18))  # type: ignore
+    return int(Decimal(str(x)) * Decimal(str(y)) / Decimal(10**18))
 
 
 def round_x18(x: Union[int, str], y: Union[str, int]) -> int:
