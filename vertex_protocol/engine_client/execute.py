@@ -573,7 +573,7 @@ class EngineExecuteClient:
                     sender=subaccount,
                     amount=-round_x18(
                         int(balance.balance.amount),
-                        int(product.book_info.price_increment_x18),
+                        int(product.book_info.size_increment),
                     ),
                     priceX18=round_x18(
                         int(product.oracle_price_x18),
