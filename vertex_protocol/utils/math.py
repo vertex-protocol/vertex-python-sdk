@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import Union
 
 
 def to_pow_10(x: int, pow: int) -> int:
@@ -55,3 +56,12 @@ def from_x18(x: int) -> float:
         float: Original value.
     """
     return from_pow_10(x, 18)
+
+
+def mul_x18(x: Union[float, str], y: Union[float, str]) -> int:
+    return int(Decimal(str(x)) * Decimal(str(y)) / Decimal(10**18))
+
+
+def round_x18(x: Union[int, str], y: Union[str, int]) -> int:
+    x, y = int(x), int(y)
+    return x - x % y

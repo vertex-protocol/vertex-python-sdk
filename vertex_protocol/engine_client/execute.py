@@ -1,4 +1,5 @@
 from copy import deepcopy
+import time
 import requests
 from functools import singledispatchmethod
 
@@ -31,18 +32,21 @@ from vertex_protocol.engine_client.types.execute import (
     CancelOrdersResponse,
 )
 from vertex_protocol.contracts.types import VertexExecuteType
+from vertex_protocol.utils.bytes32 import subaccount_to_hex
 
 from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
     ExecuteFailedException,
 )
+from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
+from vertex_protocol.utils.math import mul_x18, round_x18, to_x18
 from vertex_protocol.utils.model import (
     VertexBaseModel,
     is_instance_of_union,
     ensure_data_type,
 )
 from vertex_protocol.utils.nonce import gen_order_nonce
-from vertex_protocol.utils.subaccount import SubaccountParams
+from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
 
 class EngineExecuteClient:
@@ -120,8 +124,9 @@ class EngineExecuteClient:
         """
         return gen_order_nonce(recv_time_ms)
 
-    def prepare_execute_params(self, params: Type[BaseParams], use_order_nonce: bool) -> Type[
-        BaseParams]:  # type: ignore
+    def prepare_execute_params(
+        self, params: Type[BaseParams], use_order_nonce: bool
+    ) -> Type[BaseParams]:  # type: ignore
         """
         Prepares the parameters for execution by ensuring that both owner and nonce are correctly set.
 
@@ -532,3 +537,58 @@ class EngineExecuteClient:
             params.dict(),
         )
         return self.execute(params)
+
+    def close_position(
+        self, subaccount: Subaccount, product_id: int
+    ) -> ExecuteResponse:
+        """
+        Execute a place order operation to close a position for the provided `product_id`.
+
+        Attributes:
+            subaccount (Subaccount): The subaccount to close position for.
+            product_id (int): The ID of the product to close position for.
+
+        Returns:
+            ExecuteResponse: Response of the execution, including status and potential error message.
+        """
+        subaccount = subaccount_to_hex(subaccount)
+        summary = self._querier.get_subaccount_info(subaccount)
+        try:
+            balance = [
+                balance
+                for balance in summary.spot_balances + summary.perp_balances
+                if balance.product_id == product_id
+            ][0]
+            product = [
+                product
+                for product in summary.spot_products + summary.perp_products
+                if product.product_id == product_id
+            ][0]
+        except Exception as e:
+            raise Exception(f"Invalid product id provided {product_id}. Error: {e}")
+        closing_spread_x18 = to_x18(0.005)
+        closing_price_x18 = (
+            mul_x18(product.oracle_price_x18, to_x18(1) - closing_spread_x18)
+            if int(balance.balance.amount) > 0
+            else mul_x18(product.oracle_price_x18, to_x18(1) + closing_spread_x18)
+        )
+        return self.place_order(
+            PlaceOrderParams(  # type: ignore
+                product_id=product_id,
+                order=OrderParams(  # type: ignore
+                    sender=subaccount,
+                    amount=-round_x18(
+                        balance.balance.amount,
+                        product.book_info.size_increment,
+                    ),
+                    priceX18=round_x18(
+                        closing_price_x18,
+                        product.book_info.price_increment_x18,
+                    ),
+                    expiration=get_expiration_timestamp(
+                        OrderType.FOK,
+                        int(time.time()) + 1000,
+                    ),
+                ),
+            )
+        )

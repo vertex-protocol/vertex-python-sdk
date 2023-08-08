@@ -4,9 +4,11 @@ from vertex_protocol.engine_client.types.execute import (
     CancelProductOrdersParams,
     ExecuteResponse,
     MintLpParams,
-    PlaceOrderParams, CancelOrdersResponse,
+    PlaceOrderParams,
+    CancelOrdersResponse,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
+from vertex_protocol.utils.subaccount import Subaccount
 
 
 class MarketExecuteAPI(VertexBaseAPI):
@@ -83,7 +85,7 @@ class MarketExecuteAPI(VertexBaseAPI):
         return self.context.engine_client.cancel_orders(params)
 
     def cancel_product_orders(
-            self, params: CancelProductOrdersParams
+        self, params: CancelProductOrdersParams
     ) -> ExecuteResponse:
         """
         Cancels all orders for provided products through the engine.
@@ -98,3 +100,21 @@ class MarketExecuteAPI(VertexBaseAPI):
             Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.cancel_product_orders(params)
+
+    def close_position(
+        self, subaccount: Subaccount, product_id: int
+    ) -> ExecuteResponse:
+        """
+        Places an order through the engine to close a position for the provided `product_id`.
+
+        Attributes:
+            subaccount (Subaccount): The subaccount to close position for.
+            product_id (int): The ID of the product to close position for.
+
+         Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
+        """
+        return self.context.engine_client.close_position(subaccount, product_id)
