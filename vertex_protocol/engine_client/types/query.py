@@ -199,6 +199,7 @@ QueryRequest = Union[
     QuerySubaccountInfoParams,
     QuerySubaccountOpenOrdersParams,
     QueryMarketLiquidityParams,
+    QuerySymbolsParams,
     QueryAllProductsParams,
     QueryMarketPriceParams,
     QueryMaxOrderSizeParams,
