@@ -5,6 +5,7 @@ from vertex_protocol.utils.expiration import *
 from vertex_protocol.utils.math import *
 from vertex_protocol.utils.nonce import *
 from vertex_protocol.utils.exceptions import *
+from vertex_protocol.utils.asserts import *
 
 __all__ = [
     "VertexBackendURL",

@@ -1,3 +1,4 @@
+from typing import Union
 from typing import Annotated
 from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
@@ -170,6 +171,11 @@ class MaxOrderSizeDirection(StrEnum):
 class ProductSymbol(VertexBaseModel):
     product_id: int
     symbol: str
+
+
+class SubaccountPosition(VertexBaseModel):
+    balance: Union[PerpProductBalance, SpotProductBalance]
+    product: Union[PerpProduct, SpotProduct]
 
 
 # (price, amount)

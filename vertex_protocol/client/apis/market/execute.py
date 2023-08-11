@@ -4,8 +4,8 @@ from vertex_protocol.engine_client.types.execute import (
     CancelProductOrdersParams,
     ExecuteResponse,
     MintLpParams,
+    PlaceMarketOrderParams,
     PlaceOrderParams,
-    CancelOrdersResponse,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
 from vertex_protocol.utils.subaccount import Subaccount
@@ -68,6 +68,21 @@ class MarketExecuteAPI(VertexBaseAPI):
             Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.place_order(params)
+
+    def place_market_order(self, params: PlaceMarketOrderParams) -> ExecuteResponse:
+        """
+        Places a market order through the engine.
+
+        Args:
+            params (PlaceMarketOrderParams): Parameters required to place a market order.
+
+        Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
+        """
+        return self.context.engine_client.place_market_order(params)
 
     def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         """

@@ -1,9 +1,16 @@
-from typing import Optional
+from typing import Optional, Tuple, Union
 import requests
 from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
-from vertex_protocol.engine_client.types.models import ResponseStatus
+from vertex_protocol.engine_client.types.models import (
+    PerpProduct,
+    PerpProductBalance,
+    ResponseStatus,
+    SpotProduct,
+    SpotProductBalance,
+    SubaccountPosition,
+)
 from vertex_protocol.engine_client.types.query import (
     AllProductsData,
     ContractsData,
@@ -357,3 +364,22 @@ class EngineQueryClient:
             self.query(QueryLinkedSignerParams(subaccount=subaccount)).data,
             LinkedSignerData,
         )
+
+    def _get_subaccount_product_position(
+        self, subaccount: str, product_id: int
+    ) -> SubaccountPosition:
+        summary = self.get_subaccount_info(subaccount)
+        try:
+            balance = [
+                balance
+                for balance in summary.spot_balances + summary.perp_balances
+                if balance.product_id == product_id
+            ][0]
+            product = [
+                product
+                for product in summary.spot_products + summary.perp_products
+                if product.product_id == product_id
+            ][0]
+        except Exception as e:
+            raise Exception(f"Invalid product id provided {product_id}. Error: {e}")
+        return SubaccountPosition(balance=balance, product=product)
