@@ -96,9 +96,9 @@ class OrderParams(MarketOrderParams):
 
         expiration (int): The unix timestamp at which the order will expire.
 
-        amount (int): The amount of the asset to be bought or sold in the order. (inherited)
+        amount (int): The amount of the asset to be bought or sold in the order.
 
-        nonce (Optional[int]): A unique number used to prevent replay attacks. (inherited)
+        nonce (Optional[int]): A unique number used to prevent replay attacks.
     """
 
     priceX18: int
@@ -134,9 +134,7 @@ class PlaceMarketOrderParams(SignatureParams):
 
         slippage (Optional[float]): Optional slippage allowed in market price. Defaults to 0.005 (0.5%)
 
-        order (MarketOrderParams): The parameters of the market order.
-
-        digest (Optional[str]): An optional hash of the order data.
+        market_order (MarketOrderParams): The parameters of the market order.
 
         spot_leverage (Optional[bool]): An optional flag indicating whether leverage should be used for the order. By default, leverage is assumed.
     """
@@ -144,7 +142,6 @@ class PlaceMarketOrderParams(SignatureParams):
     product_id: int
     market_order: MarketOrderParams
     slippage: Optional[float]
-    digest: Optional[str]
     spot_leverage: Optional[bool]
 
 
