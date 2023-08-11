@@ -71,13 +71,11 @@ class BaseParamsSigned(BaseParams, SignatureParams):
     pass
 
 
-class OrderParams(BaseParams):
+class MarketOrderParams(BaseParams):
     """
-    Class for defining the parameters of an order.
+    Class for defining the parameters of a market order.
 
     Attributes:
-        priceX18 (int): The price of the order with a precision of 18 decimal places.
-
         amount (int): The amount of the asset to be bought or sold in the order.
 
         expiration (int): The unix timestamp at which the order will expire.
@@ -85,10 +83,26 @@ class OrderParams(BaseParams):
         nonce (Optional[int]): A unique number used to prevent replay attacks.
     """
 
-    priceX18: int
     amount: int
-    expiration: int
     nonce: Optional[int]
+
+
+class OrderParams(MarketOrderParams):
+    """
+    Class for defining the parameters of an order.
+
+    Attributes:
+        priceX18 (int): The price of the order with a precision of 18 decimal places.
+
+        expiration (int): The unix timestamp at which the order will expire.
+
+        amount (int): The amount of the asset to be bought or sold in the order. (inherited)
+
+        nonce (Optional[int]): A unique number used to prevent replay attacks. (inherited)
+    """
+
+    priceX18: int
+    expiration: int
 
 
 class PlaceOrderParams(SignatureParams):
@@ -107,6 +121,29 @@ class PlaceOrderParams(SignatureParams):
 
     product_id: int
     order: OrderParams
+    digest: Optional[str]
+    spot_leverage: Optional[bool]
+
+
+class PlaceMarketOrderParams(SignatureParams):
+    """
+    Class for defining the parameters needed to place a market order.
+
+    Attributes:
+        product_id (int): The id of the product for which the order is being placed.
+
+        slippage (Optional[float]): Optional slippage allowed in market price. Defaults to 0.005 (0.5%)
+
+        order (MarketOrderParams): The parameters of the market order.
+
+        digest (Optional[str]): An optional hash of the order data.
+
+        spot_leverage (Optional[bool]): An optional flag indicating whether leverage should be used for the order. By default, leverage is assumed.
+    """
+
+    product_id: int
+    market_order: MarketOrderParams
+    slippage: Optional[float]
     digest: Optional[str]
     spot_leverage: Optional[bool]
 
@@ -537,12 +574,15 @@ ExecuteRequest = Union[
     LinkSignerRequest,
 ]
 
+
 class PlaceOrderResponse(VertexBaseModel):
     """
     Data model for place order response.
     """
 
     digest: str
+
+
 class CancelOrdersResponse(VertexBaseModel):
     """
     Data model for cancelled orders response.
@@ -551,10 +591,7 @@ class CancelOrdersResponse(VertexBaseModel):
     cancelled_orders: list[OrderData]
 
 
-ExecuteResponseData = Union[
-    PlaceOrderResponse,
-    CancelOrdersResponse
-]
+ExecuteResponseData = Union[PlaceOrderResponse, CancelOrdersResponse]
 
 
 class ExecuteResponse(VertexBaseModel):

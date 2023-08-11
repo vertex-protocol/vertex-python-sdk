@@ -26,6 +26,7 @@ from vertex_protocol.engine_client.types.execute import (
     LiquidateSubaccountParams,
     MintLpParams,
     OrderParams,
+    PlaceMarketOrderParams,
     PlaceOrderParams,
     WithdrawCollateralParams,
     to_execute_request,
@@ -406,6 +407,37 @@ class EngineExecuteClient:
             VertexExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
         )
         return self.execute(params)
+
+    def place_market_order(self, params: PlaceMarketOrderParams) -> ExecuteResponse:
+        """
+        Places an FOK order using top of the book price with provided slippage.
+
+        Args:
+            params (PlaceMarketOrderParams): Parameters required for placing a market order.
+
+        Returns:
+            ExecuteResponse: Response of the execution, including status and potential error message.
+        """
+        orderbook = self._querier.get_market_liquidity(params.product_id, 1)
+        slippage = to_x18(params.slippage or 0.005)  # defaults to 0.5%
+        market_price_x18 = (
+            mul_x18(orderbook.bids[0][0], to_x18(1) - slippage)
+            if int(params.market_order.amount) > 0
+            else mul_x18(orderbook.asks[0][0], to_x18(1) + slippage)
+        )
+        order = OrderParams(
+            sender=params.market_order.sender,
+            amount=params.market_order.amount,
+            nonce=params.market_order.nonce,
+            priceX18=market_price_x18,
+            expiration=get_expiration_timestamp(
+                OrderType.FOK,
+                int(time.time()) + 1000,
+            ),
+        )
+        return self.place_order(
+            PlaceOrderParams(product_id=params.product_id, order=order)
+        )
 
     def cancel_orders(self, params: CancelOrdersParams) -> ExecuteResponse:
         """
