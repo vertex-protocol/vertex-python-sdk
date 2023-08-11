@@ -441,11 +441,10 @@ class EngineExecuteClient:
             ),
         )
         return self.place_order(
-            PlaceOrderParams(
+            PlaceOrderParams(  # type: ignore
                 product_id=params.product_id,
                 order=order,
                 spot_leverage=params.spot_leverage,
-                digest=params.digest,
                 signature=params.signature,
             )
         )

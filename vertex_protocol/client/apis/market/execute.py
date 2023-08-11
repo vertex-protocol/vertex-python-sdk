@@ -6,7 +6,6 @@ from vertex_protocol.engine_client.types.execute import (
     MintLpParams,
     PlaceMarketOrderParams,
     PlaceOrderParams,
-    CancelOrdersResponse,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
 from vertex_protocol.utils.subaccount import Subaccount
