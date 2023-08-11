@@ -440,8 +440,6 @@ class EngineExecuteClient:
                 int(time.time()) + 1000,
             ),
         )
-        print("orderbook:", orderbook)
-        print("executing market order:", order.dict())
         return self.place_order(
             PlaceOrderParams(
                 product_id=params.product_id,
