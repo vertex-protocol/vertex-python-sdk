@@ -5,8 +5,10 @@ from vertex_protocol.client import VertexClient, create_vertex_client
 from vertex_protocol.contracts.types import DepositCollateralParams
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
+    MarketOrderParams,
     MintLpParams,
     OrderParams,
+    PlaceMarketOrderParams,
     WithdrawCollateralParams,
 )
 from vertex_protocol.engine_client.types.models import SpotProductBalance
@@ -78,6 +80,21 @@ def run():
     )
     res = client.market.place_order({"product_id": product_id, "order": order})
     print("order result:", res.json(indent=2))
+
+    print("placing market order...")
+    market_order = MarketOrderParams(
+        sender=SubaccountParams(
+            subaccount_owner=owner,
+            subaccount_name="default",
+        ),
+        amount=-to_pow_10(1, 17),
+    )
+    res = client.market.place_market_order(
+        PlaceMarketOrderParams(
+            product_id=1, market_order=market_order, slippage=0.001  # 0.1%
+        )
+    )
+    print("market order result:", res.json(indent=2))
 
     sender = subaccount_to_hex(order.sender)
     order.sender = subaccount_to_bytes32(order.sender)

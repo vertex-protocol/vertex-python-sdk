@@ -30,7 +30,6 @@ from vertex_protocol.engine_client.types.execute import (
     PlaceOrderParams,
     WithdrawCollateralParams,
     to_execute_request,
-    CancelOrdersResponse,
 )
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.utils.asserts import assert_book_not_empty
@@ -424,20 +423,25 @@ class EngineExecuteClient:
         assert_book_not_empty(orderbook.bids, orderbook.asks, is_bid)
         slippage = to_x18(params.slippage or 0.005)  # defaults to 0.5%
         market_price_x18 = (
-            mul_x18(orderbook.bids[0][0], to_x18(1) - slippage)
+            mul_x18(orderbook.bids[0][0], to_x18(1) + slippage)
             if is_bid
-            else mul_x18(orderbook.asks[0][0], to_x18(1) + slippage)
+            else mul_x18(orderbook.asks[0][0], to_x18(1) - slippage)
         )
+        price_increment_x18 = self._querier._get_subaccount_product_position(
+            subaccount_to_hex(params.market_order.sender), params.product_id
+        ).product.book_info.price_increment_x18
         order = OrderParams(
             sender=params.market_order.sender,
             amount=params.market_order.amount,
             nonce=params.market_order.nonce,
-            priceX18=market_price_x18,
+            priceX18=round_x18(market_price_x18, price_increment_x18),
             expiration=get_expiration_timestamp(
                 OrderType.FOK,
                 int(time.time()) + 1000,
             ),
         )
+        print("orderbook:", orderbook)
+        print("executing market order:", order.dict())
         return self.place_order(
             PlaceOrderParams(
                 product_id=params.product_id,
@@ -593,20 +597,10 @@ class EngineExecuteClient:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         subaccount = subaccount_to_hex(subaccount)
-        summary = self._querier.get_subaccount_info(subaccount)
-        try:
-            balance = [
-                balance
-                for balance in summary.spot_balances + summary.perp_balances
-                if balance.product_id == product_id
-            ][0]
-            product = [
-                product
-                for product in summary.spot_products + summary.perp_products
-                if product.product_id == product_id
-            ][0]
-        except Exception as e:
-            raise Exception(f"Invalid product id provided {product_id}. Error: {e}")
+        position = self._querier._get_subaccount_product_position(
+            subaccount, product_id
+        )
+        balance, product = position.balance, position.product
         closing_spread_x18 = to_x18(0.005)
         closing_price_x18 = (
             mul_x18(product.oracle_price_x18, to_x18(1) - closing_spread_x18)
