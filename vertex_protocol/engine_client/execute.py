@@ -420,7 +420,7 @@ class EngineExecuteClient:
         """
         orderbook = self._querier.get_market_liquidity(params.product_id, 1)
         is_bid = int(params.market_order.amount) > 0
-        assert_book_not_empty(orderbook.bids, orderbook.asks, is_bid)
+        assert_book_not_empty(orderbook.bids, orderbook.asks, is_bid)  # type: ignore
         slippage = to_x18(params.slippage or 0.005)  # defaults to 0.5%
         market_price_x18 = (
             mul_x18(orderbook.bids[0][0], to_x18(1) + slippage)
