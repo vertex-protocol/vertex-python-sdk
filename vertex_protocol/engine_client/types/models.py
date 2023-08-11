@@ -173,6 +173,23 @@ class ProductSymbol(VertexBaseModel):
     symbol: str
 
 
+class SymbolData(VertexBaseModel):
+    type: str
+    product_id: str
+    symbol: str
+    price_increment_x18: str
+    size_increment: str
+    min_size: str
+    min_depth_x18: str
+    max_spread_rate_x18: str
+    maker_fee_rate_x18: str
+    taker_fee_rate_x18: str
+    long_weight_initial_x18: str
+    long_weight_maintenance_x18: str
+    short_weight_initial_x18: str
+    short_weight_maintenance_x18: str
+
+
 class SubaccountPosition(VertexBaseModel):
     balance: Union[PerpProductBalance, SpotProductBalance]
     product: Union[PerpProduct, SpotProduct]
