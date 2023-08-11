@@ -383,6 +383,13 @@ class LinkedSignerData(VertexBaseModel):
     linked_signer: str
 
 
+class SymbolsData(VertexBaseModel):
+    """
+    Data model for the symbols product info
+    """
+    symbols: dict[str, SymbolData]
+
+
 ProductSymbolsData = list[ProductSymbol]
 
 
