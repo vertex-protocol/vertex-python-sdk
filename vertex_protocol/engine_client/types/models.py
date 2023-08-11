@@ -176,7 +176,3 @@ class ProductSymbol(VertexBaseModel):
 class SubaccountPosition(VertexBaseModel):
     balance: Union[PerpProductBalance, SpotProductBalance]
     product: Union[PerpProduct, SpotProduct]
-
-
-# (price, amount)
-Liquidity = Annotated[list, conlist(str, min_items=2, max_items=2)]

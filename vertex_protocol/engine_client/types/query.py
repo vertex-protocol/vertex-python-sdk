@@ -1,4 +1,5 @@
 from vertex_protocol.utils.enum import StrEnum
+from vertex_protocol.utils.types import Liquidity
 from typing import Optional, Union
 from pydantic import validator
 from vertex_protocol.utils.model import VertexBaseModel
@@ -6,7 +7,6 @@ from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,
     BurnLpTx,
     EngineStatus,
-    Liquidity,
     MaxOrderSizeDirection,
     MintLpTx,
     ProductSymbol,
