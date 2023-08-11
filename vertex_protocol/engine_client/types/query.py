@@ -1,5 +1,5 @@
 from vertex_protocol.utils.enum import StrEnum
-from vertex_protocol.utils.types import Liquidity
+from vertex_protocol.utils.types import MarketLiquidity
 from typing import Optional, Union
 from pydantic import validator
 from vertex_protocol.utils.model import VertexBaseModel
@@ -304,8 +304,8 @@ class MarketLiquidityData(VertexBaseModel):
     Data model for market liquidity details.
     """
 
-    bids: list[Liquidity]
-    asks: list[Liquidity]
+    bids: list[MarketLiquidity]
+    asks: list[MarketLiquidity]
     timestamp: str
 
 

@@ -35,5 +35,5 @@ __all__ = [
     "BadStatusCodeException",
     "MissingSignerException",
     "InvalidProductId",
-    "Liquidity",
+    "MarketLiquidity",
 ]
