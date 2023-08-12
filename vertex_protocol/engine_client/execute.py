@@ -32,7 +32,7 @@ from vertex_protocol.engine_client.types.execute import (
     to_execute_request,
 )
 from vertex_protocol.contracts.types import VertexExecuteType
-from vertex_protocol.utils.asserts import assert_book_not_empty
+from vertex_protocol.engine_client.types.models import MarketLiquidity
 from vertex_protocol.utils.bytes32 import subaccount_to_hex
 
 from vertex_protocol.utils.exceptions import (
@@ -354,6 +354,13 @@ class EngineExecuteClient:
             build_eip712_typed_data(execute, msg, verifying_contract, chain_id)
         )
 
+    def _assert_book_not_empty(
+        self, bids: list[MarketLiquidity], asks: list[MarketLiquidity], is_bid: bool
+    ):
+        book_is_empty = (is_bid and len(bids) == 0) or (not is_bid and len(asks) == 0)
+        if book_is_empty:
+            raise Exception("Orderbook is empty.")
+
     def sign(
         self,
         execute: VertexExecuteType,
@@ -416,7 +423,7 @@ class EngineExecuteClient:
         """
         orderbook = self._querier.get_market_liquidity(params.product_id, 1)
         is_bid = int(params.market_order.amount) > 0
-        assert_book_not_empty(orderbook.bids, orderbook.asks, is_bid)
+        self._assert_book_not_empty(orderbook.bids, orderbook.asks, is_bid)
         slippage = to_x18(params.slippage or 0.005)  # defaults to 0.5%
         market_price_x18 = (
             mul_x18(orderbook.bids[0][0], to_x18(1) + slippage)
