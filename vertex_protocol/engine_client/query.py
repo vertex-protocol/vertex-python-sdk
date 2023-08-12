@@ -1,14 +1,10 @@
-from typing import Optional, Tuple, Union
+from typing import Optional
 import requests
 from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.models import (
-    PerpProduct,
-    PerpProductBalance,
     ResponseStatus,
-    SpotProduct,
-    SpotProductBalance,
     SubaccountPosition,
 )
 from vertex_protocol.engine_client.types.query import (

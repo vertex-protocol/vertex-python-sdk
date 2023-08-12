@@ -191,4 +191,5 @@ __all__ = [
     "PerpProductLpState",
     "PerpProduct",
     "MaxOrderSizeDirection",
+    "MarketLiquidity",
 ]

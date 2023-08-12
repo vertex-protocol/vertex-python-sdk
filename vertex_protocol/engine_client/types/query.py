@@ -1,5 +1,4 @@
 from vertex_protocol.utils.enum import StrEnum
-from vertex_protocol.utils.types import MarketLiquidity
 from typing import Optional, Union
 from pydantic import validator
 from vertex_protocol.utils.model import VertexBaseModel
@@ -16,6 +15,7 @@ from vertex_protocol.engine_client.types.models import (
     SpotProductBalance,
     PerpProduct,
     PerpProductBalance,
+    MarketLiquidity,
 )
 
 
