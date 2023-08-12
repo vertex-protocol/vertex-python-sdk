@@ -14,6 +14,7 @@ from vertex_protocol.engine_client.types.models import (
     SubaccountHealth,
     SpotProductBalance,
     PerpProduct,
+    SymbolData,
     PerpProductBalance,
     MarketLiquidity,
 )
@@ -28,6 +29,7 @@ class EngineQueryType(StrEnum):
     CONTRACTS = "contracts"
     NONCES = "nonces"
     ORDER = "order"
+    SYMBOLS = "symbols"
     ALL_PRODUCTS = "all_products"
     FEE_RATES = "fee_rates"
     HEALTH_GROUPS = "health_groups"
@@ -107,6 +109,16 @@ class QueryMarketLiquidityParams(VertexBaseModel):
     type = EngineQueryType.MARKET_LIQUIDITY.value
     product_id: int
     depth: int
+
+
+class QuerySymbolsParams(VertexBaseModel):
+    """
+    Parameters for querying symbols and product info
+    """
+
+    type = EngineQueryType.SYMBOLS.value
+    product_type: Optional[str]
+    product_ids: Optional[list[int]]
 
 
 class QueryAllProductsParams(VertexBaseModel):
@@ -392,7 +404,6 @@ class SymbolsData(VertexBaseModel):
 
 ProductSymbolsData = list[ProductSymbol]
 
-
 QueryResponseData = Union[
     StatusData,
     ContractsData,
@@ -401,6 +412,7 @@ QueryResponseData = Union[
     SubaccountInfoData,
     SubaccountOpenOrdersData,
     MarketLiquidityData,
+    SymbolsData,
     AllProductsData,
     MarketPriceData,
     MaxOrderSizeData,
