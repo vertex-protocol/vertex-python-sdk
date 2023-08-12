@@ -41,11 +41,7 @@ from vertex_protocol.utils.exceptions import (
 )
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import mul_x18, round_x18, to_x18
-from vertex_protocol.utils.model import (
-    VertexBaseModel,
-    is_instance_of_union,
-    ensure_data_type,
-)
+from vertex_protocol.utils.model import VertexBaseModel, is_instance_of_union
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
 
