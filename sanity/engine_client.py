@@ -53,6 +53,10 @@ def run():
     product_symbols = client.get_product_symbols()
     pprint(product_symbols)
 
+    print("querying symbols...")
+    symbols = client.get_symbols(product_type="perp")
+    pprint(symbols)
+
     print("placing order...")
     product_id = 1
     order = OrderParams(

@@ -41,7 +41,7 @@ from vertex_protocol.engine_client.types.query import (
     QuerySubaccountInfoParams,
     QuerySubaccountInfoTx,
     StatusData,
-    SubaccountInfoData,
+    SubaccountInfoData, SymbolsData, QuerySymbolsParams,
 )
 from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
@@ -222,6 +222,20 @@ class EngineQueryClient:
                 QueryMarketLiquidityParams(product_id=product_id, depth=depth)
             ).data,
             MarketLiquidityData,
+        )
+
+    def get_symbols(self, product_type: Optional[str] = None, product_ids: Optional[list[int]] = None) -> SymbolsData:
+        """
+        Query engine for symbols and product info
+
+        Args:
+            product_type (Optional[str): "spot" or "perp" products
+
+            product_ids (Optional[list[int]]): product_ids to return info for
+
+        """
+        return ensure_data_type(
+            self.query(QuerySymbolsParams(product_type=product_type, product_ids=product_ids)).data, SymbolsData
         )
 
     def get_all_products(self) -> AllProductsData:
