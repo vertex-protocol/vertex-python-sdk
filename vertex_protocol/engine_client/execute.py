@@ -17,6 +17,7 @@ from vertex_protocol.engine_client.types import (
 from vertex_protocol.engine_client.types.execute import (
     BaseParams,
     BurnLpParams,
+    CancelAndPlaceParams,
     CancelOrdersParams,
     CancelProductOrdersParams,
     ExecuteParams,
@@ -488,6 +489,33 @@ class EngineExecuteClient:
         params.signature = params.signature or self._sign(
             VertexExecuteType.CANCEL_PRODUCT_ORDERS, params.dict()
         )
+        return self.execute(params)
+
+    def cancel_and_place(self, params: CancelAndPlaceParams) -> ExecuteResponse:
+        """
+        Execute a cancel and place operation.
+
+        Args:
+            params (CancelAndPlaceParams): Parameters required for cancel and place.
+
+        Returns:
+            ExecuteResponse: Response of the execution, including status and potential error message.
+        """
+        cancel_orders: CancelOrdersParams = self.prepare_execute_params(
+            CancelOrdersParams.parse_obj(params.cancel_orders), True
+        )  # type: ignore
+        cancel_orders.signature = cancel_orders.signature or self._sign(
+            VertexExecuteType.CANCEL_ORDERS, cancel_orders.dict()
+        )  # type: ignore
+        place_order: PlaceOrderParams = PlaceOrderParams.parse_obj(params.place_order)
+        place_order.order = self.prepare_execute_params(place_order.order, True)  # type: ignore
+        place_order.signature = place_order.signature or self._sign(
+            VertexExecuteType.PLACE_ORDER,
+            place_order.order.dict(),
+            place_order.product_id,
+        )
+        params.cancel_orders = cancel_orders
+        params.place_order = place_order
         return self.execute(params)
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:

@@ -5,6 +5,7 @@ from vertex_protocol.client import VertexClient, create_vertex_client
 from vertex_protocol.contracts.types import DepositCollateralParams
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
+    CancelAndPlaceParams,
     MarketOrderParams,
     MintLpParams,
     OrderParams,
@@ -114,6 +115,57 @@ def run():
         {"productIds": [product_id], "digests": [order_digest], "sender": sender}
     )
     print("cancel order result:", res.json(indent=2))
+
+    print("placing perp order...")
+    perp_product_id = 2
+    perp_order = OrderParams(
+        sender=SubaccountParams(
+            subaccount_owner=owner,
+            subaccount_name="default",
+        ),
+        priceX18=to_x18(20000),
+        amount=to_pow_10(1, 17),
+        expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
+        nonce=gen_order_nonce(),
+    )
+
+    perp_order.sender = subaccount_to_bytes32(perp_order.sender)
+    perp_order_digest = client.context.engine_client.get_order_digest(
+        perp_order, perp_product_id
+    )
+    print("order digest:", perp_order_digest)
+
+    res = client.market.place_order(
+        {"product_id": perp_product_id, "order": perp_order}
+    )
+    print("order result:", res.json(indent=2))
+
+    perp_order = OrderParams(
+        sender=SubaccountParams(
+            subaccount_owner=owner,
+            subaccount_name="default",
+        ),
+        priceX18=to_x18(20000),
+        amount=to_pow_10(1, 17),
+        expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 60),
+        nonce=gen_order_nonce(),
+    )
+
+    sender = subaccount_to_hex(perp_order.sender)
+
+    print("cancelling perp order and placing a new one on the same request...")
+    res = client.market.cancel_and_place(
+        CancelAndPlaceParams(
+            cancel_orders={
+                "productIds": [perp_product_id],
+                "digests": [perp_order_digest],
+                "sender": sender,
+            },
+            place_order={"product_id": perp_product_id, "order": perp_order},
+        )
+    )
+
+    print("cancel and place result:", res.json(indent=2))
 
     print("querying open orders after cancel...")
     open_orders = client.market.get_subaccount_open_orders(1, sender)

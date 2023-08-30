@@ -91,6 +91,7 @@ class VertexExecuteType(StrEnum):
     PLACE_ORDER = "place_order"
     CANCEL_ORDERS = "cancel_orders"
     CANCEL_PRODUCT_ORDERS = "cancel_product_orders"
+    CANCEL_AND_PLACE = "cancel_and_place"
     WITHDRAW_COLLATERAL = "withdraw_collateral"
     LIQUIDATE_SUBACCOUNT = "liquidate_subaccount"
     MINT_LP = "mint_lp"
