@@ -512,9 +512,9 @@ class EngineExecuteClient:
             place_order.order.dict(),
             place_order.product_id,
         )
-        params.cancel_orders = cancel_orders
-        params.place_order = place_order
-        return self.execute(params)
+        return self.execute(
+            CancelAndPlaceParams(cancel_orders=cancel_orders, place_order=place_order)
+        )
 
     def withdraw_collateral(self, params: WithdrawCollateralParams) -> ExecuteResponse:
         """
