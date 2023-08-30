@@ -106,6 +106,10 @@ def run():
     open_orders = client.market.get_subaccount_open_orders(1, sender)
     print("open orders:", open_orders.json(indent=2))
 
+    print("querying my subaccounts...")
+    my_subaccounts = client.subaccount.get_subaccounts(owner)
+    print("my subaccounts:", my_subaccounts)
+
     print("querying subaccount summary...")
     subaccount_summary = client.subaccount.get_engine_subaccount_summary(subaccount)
     print("subaccount summary:", subaccount_summary.json(indent=2))

@@ -13,6 +13,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerEventsRawLimit,
     IndexerMatchesParams,
     IndexerSubaccountHistoricalOrdersParams,
+    IndexerSubaccountsParams,
 )
 from vertex_protocol.utils.bytes32 import subaccount_to_hex
 from vertex_protocol.utils.subaccount import SubaccountParams
@@ -127,3 +128,9 @@ def run():
     print("querying referral code...")
     referral_code = client.get_referral_code(subaccount=subaccount)
     print("referral code:", referral_code.json(indent=2))
+
+    print("querying subaccounts...")
+    subaccounts = client.get_subaccounts(
+        IndexerSubaccountsParams(limit=2, start=0, address=owner)
+    )
+    print("subaccounts:", subaccounts.json(indent=2))

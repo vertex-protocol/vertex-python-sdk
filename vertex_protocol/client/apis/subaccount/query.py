@@ -8,6 +8,8 @@ from vertex_protocol.engine_client.types.query import (
 from vertex_protocol.indexer_client.types.query import (
     IndexerLinkedSignerRateLimitData,
     IndexerReferralCodeData,
+    IndexerSubaccountsData,
+    IndexerSubaccountsParams,
     IndexerTokenRewardsData,
 )
 
@@ -90,3 +92,24 @@ class SubaccountQueryAPI(VertexBaseAPI):
             IndexerReferralCodeData: A data class object containing the wallet's referral code.
         """
         return self.context.indexer_client.get_referral_code(subaccount)
+
+    def get_subaccounts(
+        self,
+        address: Optional[str] = None,
+        start_idx: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> IndexerSubaccountsData:
+        """
+        List vertex subaccounts via the indexer.
+
+        Args:
+            address (Optional[str]): An optional wallet address to find all subaccounts associated to it.
+            start_idx (Optional[int]): Optional subaccount id to start from. Used for pagination. Defaults to 0.
+            limit (Optional[int]): Maximum number of subaccounts to return. Defaults to 100. Max of 500.
+
+        Returns:
+            IndexerSubaccountsData: A data class object containing the list of subaccounts found.
+        """
+        return self.context.indexer_client.get_subaccounts(
+            IndexerSubaccountsParams(address=address, start=start_idx, limit=limit)
+        )
