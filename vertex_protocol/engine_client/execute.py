@@ -502,11 +502,11 @@ class EngineExecuteClient:
             ExecuteResponse: Response of the execution, including status and potential error message.
         """
         cancel_orders: CancelOrdersParams = self.prepare_execute_params(
-            CancelOrdersParams.parse_obj(params.cancel_orders), True
-        )  # type: ignore
+            CancelOrdersParams.parse_obj(params.cancel_orders), True  # type: ignore
+        )
         cancel_orders.signature = cancel_orders.signature or self._sign(
             VertexExecuteType.CANCEL_ORDERS, cancel_orders.dict()
-        )  # type: ignore
+        )
         place_order: PlaceOrderParams = PlaceOrderParams.parse_obj(params.place_order)
         place_order.order = self.prepare_execute_params(place_order.order, True)  # type: ignore
         place_order.signature = place_order.signature or self._sign(
