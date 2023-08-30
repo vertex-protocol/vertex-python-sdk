@@ -452,9 +452,11 @@ class CancelAndPlaceRequest(VertexBaseModel):
 
     @validator("cancel_and_place")
     def serialize(cls, v: CancelAndPlaceParams) -> dict:
-        cancel_tx = CancelOrdersRequest(cancel_orders=v.cancel_orders).cancel_orders
+        cancel_tx = TxRequest.parse_obj(
+            CancelOrdersRequest(cancel_orders=v.cancel_orders).cancel_orders
+        )
         return {
-            "cancel_tx": cancel_tx.tx,  # type: ignore
+            "cancel_tx": cancel_tx.tx,
             "place_order": PlaceOrderRequest(place_order=v.place_order).place_order,
             "cancel_signature": cancel_tx.signature,
         }
