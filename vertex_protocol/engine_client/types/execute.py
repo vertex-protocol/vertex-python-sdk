@@ -186,6 +186,19 @@ class CancelProductOrdersParams(BaseParamsSigned):
     nonce: Optional[int]
 
 
+class CancelAndPlaceParams(VertexBaseModel):
+    """
+    Parameters to perform an order cancellation + order placement in the same request.
+
+    Args:
+        cancel_orders (CancelOrdersParams): Order cancellation object.
+        place_order (PlaceOrderParams): Order placement object.
+    """
+
+    cancel_orders: CancelOrdersParams
+    place_order: PlaceOrderParams
+
+
 class WithdrawCollateralParams(BaseParamsSigned):
     """
     Parameters required to withdraw collateral from a specific product.
@@ -297,6 +310,7 @@ ExecuteParams = Union[
     MintLpParams,
     BurnLpParams,
     LinkSignerParams,
+    CancelAndPlaceParams,
 ]
 
 
@@ -424,6 +438,28 @@ class CancelOrdersRequest(VertexBaseModel):
         return v
 
     _validator = validator("cancel_orders", allow_reuse=True)(to_tx_request)
+
+
+class CancelAndPlaceRequest(VertexBaseModel):
+    """
+    Parameters for a cancel and place request.
+
+    Attributes:
+        cancel_and_place (CancelAndPlaceParams): Request parameters for engine cancel_and_place execution
+    """
+
+    cancel_and_place: CancelAndPlaceParams
+
+    @validator("cancel_and_place")
+    def serialize(cls, v: CancelAndPlaceParams) -> dict:
+        cancel_tx = TxRequest.parse_obj(
+            CancelOrdersRequest(cancel_orders=v.cancel_orders).cancel_orders
+        )
+        return {
+            "cancel_tx": cancel_tx.tx,
+            "place_order": PlaceOrderRequest(place_order=v.place_order).place_order,
+            "cancel_signature": cancel_tx.signature,
+        }
 
 
 class CancelProductOrdersRequest(VertexBaseModel):
@@ -564,6 +600,7 @@ ExecuteRequest = Union[
     PlaceOrderRequest,
     CancelOrdersRequest,
     CancelProductOrdersRequest,
+    CancelAndPlaceRequest,
     WithdrawCollateralRequest,
     LiquidateSubaccountRequest,
     MintLpRequest,
@@ -651,6 +688,10 @@ def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
         MintLpParams: (MintLpRequest, VertexExecuteType.MINT_LP.value),
         BurnLpParams: (BurnLpRequest, VertexExecuteType.BURN_LP.value),
         LinkSignerParams: (LinkSignerRequest, VertexExecuteType.LINK_SIGNER.value),
+        CancelAndPlaceParams: (
+            CancelAndPlaceRequest,
+            VertexExecuteType.CANCEL_AND_PLACE.value,
+        ),
     }
 
     RequestClass, field_name = execute_request_mapping[type(params)]

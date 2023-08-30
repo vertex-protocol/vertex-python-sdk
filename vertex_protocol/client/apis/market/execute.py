@@ -1,5 +1,6 @@
 from vertex_protocol.engine_client.types.execute import (
     BurnLpParams,
+    CancelAndPlaceParams,
     CancelOrdersParams,
     CancelProductOrdersParams,
     ExecuteResponse,
@@ -92,7 +93,7 @@ class MarketExecuteAPI(VertexBaseAPI):
             params (CancelOrdersParams): Parameters required to cancel orders.
 
         Returns:
-            CancelOrdersResponse: A data class object containing information about the canceled product orders.
+            ExecuteResponse: The response from the engine execution containing information about the canceled product orders.
 
         Raises:
             Exception: If there is an error during the execution or the response status is not "success".
@@ -109,12 +110,27 @@ class MarketExecuteAPI(VertexBaseAPI):
             params (CancelProductOrdersParams): Parameters required to cancel product orders.
 
         Returns:
-            CancelOrdersResponse: A data class object containing information about the canceled product orders.
+            ExecuteResponse: The response from the engine execution containing information about the canceled product orders.
 
         Raises:
             Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.cancel_product_orders(params)
+
+    def cancel_and_place(self, params: CancelAndPlaceParams) -> ExecuteResponse:
+        """
+        Cancels orders and places a new one through the engine on the same request.
+
+        Args:
+            params (CancelAndPlaceParams): Parameters required to cancel orders and place a new one.
+
+        Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
+        """
+        return self.context.engine_client.cancel_and_place(params)
 
     def close_position(
         self, subaccount: Subaccount, product_id: int
