@@ -445,7 +445,7 @@ class CancelAndPlaceRequest(VertexBaseModel):
     Parameters for a cancel and place request.
 
     Attributes:
-        cancel_tx (CancelAndPlaceParams):
+        cancel_and_place (CancelAndPlaceParams): Request parameters for engine cancel_and_place execution
     """
 
     cancel_and_place: CancelAndPlaceParams
