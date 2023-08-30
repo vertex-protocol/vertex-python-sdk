@@ -33,6 +33,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerResponse,
     IndexerSubaccountSummaryParams,
     IndexerSubaccountSummaryData,
+    IndexerSubaccountsData,
+    IndexerSubaccountsParams,
     IndexerTokenRewardsData,
     IndexerTokenRewardsParams,
     to_indexer_request,
@@ -332,4 +334,21 @@ class IndexerQueryClient:
         return ensure_data_type(
             self.query(IndexerReferralCodeParams(subaccount=subaccount)).data,
             IndexerReferralCodeData,
+        )
+
+    def get_subaccounts(
+        self, params: IndexerSubaccountsParams
+    ) -> IndexerSubaccountsData:
+        """
+        Retrieves subaccounts via the indexer.
+
+        Args:
+            params (IndexerSubaccountsParams): The filter parameters for retrieving subaccounts.
+
+        Returns:
+            IndexerSubaccountsData: List of subaccounts found.
+        """
+        return ensure_data_type(
+            self.query(params).data,
+            IndexerSubaccountsData,
         )

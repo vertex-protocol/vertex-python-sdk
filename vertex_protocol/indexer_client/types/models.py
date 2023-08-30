@@ -267,3 +267,8 @@ class IndexerMarketMaker(VertexBaseModel):
 class IndexerLiquidatableAccount(VertexBaseModel):
     subaccount: str
     update_time: int
+
+
+class IndexerSubaccount(VertexBaseModel):
+    id: str
+    subaccount: str

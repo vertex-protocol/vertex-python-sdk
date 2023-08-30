@@ -13,6 +13,7 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerMatch,
     IndexerOraclePrice,
     IndexerProduct,
+    IndexerSubaccount,
     IndexerTokenReward,
     IndexerTx,
 )
@@ -38,6 +39,7 @@ class IndexerQueryType(StrEnum):
     LIQUIDATION_FEED = "liquidation_feed"
     LINKED_SIGNER_RATE_LIMIT = "linked_signer_rate_limit"
     REFERRAL_CODE = "referral_code"
+    SUBACCOUNTS = "subaccounts"
 
 
 class IndexerBaseParams(VertexBaseModel):
@@ -201,6 +203,16 @@ class IndexerReferralCodeParams(VertexBaseModel):
     subaccount: str
 
 
+class IndexerSubaccountsParams(VertexBaseModel):
+    """
+    Parameters for querying subaccounts.
+    """
+
+    address: Optional[str]
+    limit: Optional[int]
+    start: Optional[int]
+
+
 IndexerParams = Union[
     IndexerSubaccountHistoricalOrdersParams,
     IndexerHistoricalOrdersByDigestParams,
@@ -217,6 +229,7 @@ IndexerParams = Union[
     IndexerLiquidationFeedParams,
     IndexerLinkedSignerRateLimitParams,
     IndexerReferralCodeParams,
+    IndexerSubaccountsParams,
 ]
 
 
@@ -334,6 +347,14 @@ class IndexerReferralCodeRequest(VertexBaseModel):
     referral_code: IndexerReferralCodeParams
 
 
+class IndexerSubaccountsRequest(VertexBaseModel):
+    """
+    Request object for querying subaccounts.
+    """
+
+    subaccounts: IndexerSubaccountsParams
+
+
 IndexerRequest = Union[
     IndexerHistoricalOrdersRequest,
     IndexerMatchesRequest,
@@ -349,6 +370,7 @@ IndexerRequest = Union[
     IndexerLiquidationFeedRequest,
     IndexerLinkedSignerRateLimitRequest,
     IndexerReferralCodeRequest,
+    IndexerSubaccountsRequest,
 ]
 
 
@@ -470,6 +492,14 @@ class IndexerReferralCodeData(VertexBaseModel):
     referral_code: str
 
 
+class IndexerSubaccountsData(VertexBaseModel):
+    """
+    Data object for subaccounts response from the indexer.
+    """
+
+    subaccounts: list[IndexerSubaccount]
+
+
 IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
 
 
@@ -487,6 +517,7 @@ IndexerResponseData = Union[
     IndexerMakerStatisticsData,
     IndexerLinkedSignerRateLimitData,
     IndexerReferralCodeData,
+    IndexerSubaccountsData,
     IndexerLiquidationFeedData,
 ]
 
@@ -566,6 +597,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerReferralCodeParams: (
             IndexerReferralCodeRequest,
             IndexerQueryType.REFERRAL_CODE.value,
+        ),
+        IndexerSubaccountsParams: (
+            IndexerSubaccountsRequest,
+            IndexerQueryType.SUBACCOUNTS.value,
         ),
     }
 
