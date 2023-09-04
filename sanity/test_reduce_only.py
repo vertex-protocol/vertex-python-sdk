@@ -4,21 +4,13 @@ from sanity import CLIENT_MODE, SIGNER_PRIVATE_KEY
 from vertex_protocol.client import VertexClient, create_vertex_client
 from vertex_protocol.contracts.types import DepositCollateralParams
 from vertex_protocol.engine_client.types.execute import (
-    BurnLpParams,
-    CancelAndPlaceParams,
-    MarketOrderParams,
-    MintLpParams,
     OrderParams,
-    PlaceMarketOrderParams,
     WithdrawCollateralParams,
 )
-from vertex_protocol.engine_client.types.models import SpotProductBalance
-from vertex_protocol.engine_client.types.query import QueryMaxOrderSizeParams
-from vertex_protocol.utils.bytes32 import subaccount_to_bytes32, subaccount_to_hex
+from vertex_protocol.utils.bytes32 import subaccount_to_hex
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
-from vertex_protocol.utils.math import round_x18, to_pow_10, to_x18
+from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
-from vertex_protocol.utils.subaccount import SubaccountParams
 
 btc_withdraw_fee = 40000000000000
 usdc_withdraw_fee = 1000000
@@ -132,7 +124,7 @@ def run():
 
     expiration_default = expiration_for_order_type(OrderType.DEFAULT)
     # expiration_ioc = expiration_for_order_type(OrderType.IOC)
-    # expiration_fok = expiration_for_order_type(OrderType.FOK)
+    expiration_fok = expiration_for_order_type(OrderType.FOK)
     expiration_post_only = expiration_for_order_type(OrderType.POST_ONLY)
 
     owner = client.context.engine_client.signer.address
@@ -166,33 +158,18 @@ def run():
                 print("panic panic!")
                 exit(-1)
             except Exception as e:
+                print(e)
                 assert "Only taker orders can be set as reduce only" in str(e)
 
-    # place_order(client, a1, 1, 25000, 11, expiration_default)
+    place_order(client, a1, 1, 25000, 11, expiration_default)
 
-    # # reduce amount > position; (spots)
-    # # should reduce position to 0.
-    # place_order(client, a2, 1, 25000, -11, to_reduce_only(expiration_fok))
+    # reduce amount > position; (spots)
+    # should reduce position to 0.
+    place_order(client, a2, 1, 25000, -11, to_reduce_only(expiration_fok))
 
     # assert_equal(
     #     pull_balances(client, [a1, a2, a3], [1, 2]),
     #     [[to_x18(10), 0], [0, 0], [to_x18(10), 0]],
     # )
 
-    # clean up
-    senders = [a1, a2, a3]
-    balances = pull_balances(client, [a1, a2, a3], [0, 1])
-    for i in range(len(senders)):
-        sender = senders[i]
-        balance = balances[i]
-
-        if balance[0] > 0:
-            to_withdraw = (balance[0] / 10**12) - usdc_withdraw_fee
-            print("withdrawing", to_withdraw)
-            withdraw_collateral(client, sender, 0, to_withdraw)
-        if balance[1] > 0:
-            to_withdraw = balance[1] - btc_withdraw_fee
-            print("withdrawing", to_withdraw)
-            withdraw_collateral(client, sender, 1, to_withdraw)
-
-    print("final balances:", pull_balances(client, [a1, a2, a3], [0, 1, 2]))
+    print("current balances", pull_balances(client, [a1, a2, a3], [0, 1]))
