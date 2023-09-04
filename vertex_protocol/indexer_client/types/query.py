@@ -51,6 +51,9 @@ class IndexerBaseParams(VertexBaseModel):
     max_time: Optional[int]
     limit: Optional[int]
 
+    class Config:
+        allow_population_by_field_name = True
+
 
 class IndexerSubaccountHistoricalOrdersParams(IndexerBaseParams):
     """
