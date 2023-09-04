@@ -19,9 +19,9 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerProductSnapshotsRequest,
     IndexerSubaccountHistoricalOrdersParams,
     IndexerSubaccountSummaryRequest,
-    IndexerTokenRewardsRequest,
-    IndexerReferralCodeParams,
     IndexerReferralCodeRequest,
+    IndexerBaseParams,
+    IndexerTokenRewardsRequest,
 )
 
 
@@ -216,3 +216,10 @@ def test_indexer_request_params(
     indexer_client.query(
         IndexerReferralCodeRequest(referral_code={"subaccount": "xxx"})
     )
+
+
+def test_indexer_base_params():
+    params_with_idx = IndexerBaseParams(idx=100)
+    params_with_submission_idx = IndexerBaseParams(submission_idx=100)
+
+    assert params_with_idx == params_with_submission_idx
