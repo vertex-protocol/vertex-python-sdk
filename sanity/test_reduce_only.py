@@ -123,8 +123,8 @@ def run():
     time.sleep(3)
 
     expiration_default = expiration_for_order_type(OrderType.DEFAULT)
-    # expiration_ioc = expiration_for_order_type(OrderType.IOC)
-    expiration_fok = expiration_for_order_type(OrderType.FOK)
+    expiration_ioc = expiration_for_order_type(OrderType.IOC)
+    # expiration_fok = expiration_for_order_type(OrderType.FOK)
     expiration_post_only = expiration_for_order_type(OrderType.POST_ONLY)
 
     owner = client.context.engine_client.signer.address
@@ -161,11 +161,13 @@ def run():
                 print(e)
                 assert "Only taker orders can be set as reduce only" in str(e)
 
-    place_order(client, a1, 1, 25000, 11, expiration_default)
+    place_order(client, a1, 1, 25000, 2, expiration_default)
+
+    place_order(client, a1, 1, 25000, 9, expiration_default)
 
     # reduce amount > position; (spots)
     # should reduce position to 0.
-    place_order(client, a2, 1, 25000, -11, to_reduce_only(expiration_fok))
+    place_order(client, a2, 1, 25000, -15, to_reduce_only(expiration_ioc))
 
     # assert_equal(
     #     pull_balances(client, [a1, a2, a3], [1, 2]),
