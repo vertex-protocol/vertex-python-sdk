@@ -14,6 +14,7 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerCandlesticksData,
     IndexerCandlesticksParams,
     IndexerFundingRateData,
+    IndexerFundingRatesData,
     IndexerHistoricalOrdersData,
     IndexerSubaccountHistoricalOrdersParams,
     IndexerProductSnapshotsData,
@@ -213,6 +214,18 @@ class MarketQueryAPI(VertexBaseAPI):
             IndexerFundingRateData: Contains the latest funding rate and related details for the given perp product.
         """
         return self.context.indexer_client.get_perp_funding_rate(product_id)
+
+    def get_perp_funding_rates(self, product_ids: list) -> IndexerFundingRatesData:
+        """
+        Fetches the latest funding rates for a list of perp products.
+
+        Args:
+            product_ids (list): List of identifiers for the perp products.
+
+        Returns:
+            dict: A dictionary mapping each product_id to its latest funding rate and related details.
+        """
+        return self.context.indexer_client.get_perp_funding_rates(product_ids)
 
     def get_product_snapshots(
         self, params: IndexerProductSnapshotsParams

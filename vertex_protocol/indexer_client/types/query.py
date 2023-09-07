@@ -32,6 +32,7 @@ class IndexerQueryType(StrEnum):
     PRODUCTS = "products"
     CANDLESTICKS = "candlesticks"
     FUNDING_RATE = "funding_rate"
+    FUNDING_RATES = "funding_rates"
     PERP_PRICES = "price"
     ORACLE_PRICES = "oracle_price"
     REWARDS = "rewards"
@@ -147,6 +148,12 @@ class IndexerFundingRateParams(VertexBaseModel):
 
     product_id: int
 
+
+class IndexerFundingRatesParams(VertexBaseModel):
+    """
+    Parameters for querying funding rates.
+    """
+    product_ids: list
 
 class IndexerPerpPricesParams(VertexBaseModel):
     """
@@ -293,6 +300,12 @@ class IndexerFundingRateRequest(VertexBaseModel):
 
     funding_rate: IndexerFundingRateParams
 
+class IndexerFundingRatesRequest(VertexBaseModel):
+    """
+    Request object for querying funding rates.
+    """
+
+    funding_rates: IndexerFundingRatesParams
 
 class IndexerPerpPricesRequest(VertexBaseModel):
     """
@@ -437,6 +450,8 @@ class IndexerFundingRateData(VertexBaseModel):
     funding_rate_x18: str
     update_time: str
 
+class IndexerFundingRatesData(dict[IndexerFundingRateData]):
+    pass
 
 class IndexerPerpPricesData(VertexBaseModel):
     """
@@ -514,6 +529,7 @@ IndexerResponseData = Union[
     IndexerProductSnapshotsData,
     IndexerCandlesticksData,
     IndexerFundingRateData,
+    IndexerFundingRatesData,
     IndexerPerpPricesData,
     IndexerOraclePricesData,
     IndexerTokenRewardsData,
@@ -572,6 +588,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerFundingRateParams: (
             IndexerFundingRateRequest,
             IndexerQueryType.FUNDING_RATE.value,
+        ),
+        IndexerFundingRatesParams: (
+            IndexerFundingRatesRequest,
+            IndexerQueryType.FUNDING_RATES.value,
         ),
         IndexerPerpPricesParams: (
             IndexerPerpPricesRequest,

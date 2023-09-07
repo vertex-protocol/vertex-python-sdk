@@ -9,6 +9,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerEventsData,
     IndexerFundingRateParams,
     IndexerFundingRateData,
+    IndexerFundingRatesParams,
+    IndexerFundingRatesData,
     IndexerHistoricalOrdersByDigestParams,
     IndexerHistoricalOrdersData,
     IndexerReferralCodeData,
@@ -231,6 +233,21 @@ class IndexerQueryClient:
         return ensure_data_type(
             self.query(IndexerFundingRateParams(product_id=product_id)).data,
             IndexerFundingRateData,
+        )
+
+    def get_perp_funding_rates(self, product_ids: list) -> dict[IndexerFundingRateData]:
+        """
+        Retrieves the funding rate data for a specific perp product.
+
+        Args:
+            product_ids (list): The identifier of the perp product.
+
+        Returns:
+            IndexerFundingRatesData: multi funding rates data for the specified perp product.
+        """
+        return ensure_data_type(
+            self.query(IndexerFundingRatesParams(product_ids=product_ids)).data,
+            dict,
         )
 
     def get_perp_prices(self, product_id: int) -> IndexerPerpPricesData:
