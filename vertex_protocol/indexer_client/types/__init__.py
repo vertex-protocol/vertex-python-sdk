@@ -45,6 +45,7 @@ __all__ = [
     "IndexerProductSnapshotsRequest",
     "IndexerCandlesticksRequest",
     "IndexerFundingRateRequest",
+    "IndexerFundingRatesRequest",
     "IndexerPerpPricesRequest",
     "IndexerOraclePricesRequest",
     "IndexerTokenRewardsRequest",
