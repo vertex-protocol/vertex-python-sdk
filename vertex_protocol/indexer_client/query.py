@@ -235,19 +235,18 @@ class IndexerQueryClient:
             IndexerFundingRateData,
         )
 
-    def get_perp_funding_rates(self, product_ids: list) -> dict[IndexerFundingRateData]:
+    def get_perp_funding_rates(self, product_ids: list) -> IndexerFundingRatesData:
         """
-        Retrieves the funding rate data for a specific perp product.
+        Fetches the latest funding rates for a list of perp products.
 
         Args:
-            product_ids (list): The identifier of the perp product.
+            product_ids (list): List of identifiers for the perp products.
 
         Returns:
-            IndexerFundingRatesData: multi funding rates data for the specified perp product.
+            dict: A dictionary mapping each product_id to its latest funding rate and related details.
         """
         return ensure_data_type(
-            self.query(IndexerFundingRatesParams(product_ids=product_ids)).data,
-            dict,
+            self.query(IndexerFundingRatesParams(product_ids=product_ids)).data, dict
         )
 
     def get_perp_prices(self, product_id: int) -> IndexerPerpPricesData:

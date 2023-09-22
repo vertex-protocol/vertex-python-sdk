@@ -92,6 +92,10 @@ def run():
     btc_perp_funding_rate = client.get_perp_funding_rate(2)
     print("btc-perp funding rate:", btc_perp_funding_rate.json(indent=2))
 
+    print("querying multi perps funding rates...")
+    multi_perps_funding_rates = client.get_perp_funding_rates([2, 4])
+    print("multi perps funding rates:", multi_perps_funding_rates)
+
     print("querying perp prices...")
     eth_perp_prices = client.get_perp_prices(4)
     print("eth-perp prices:", eth_perp_prices.json(indent=2))
