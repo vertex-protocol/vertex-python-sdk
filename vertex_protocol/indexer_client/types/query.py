@@ -1,5 +1,5 @@
 from vertex_protocol.utils.enum import StrEnum
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from pydantic import Field
 from vertex_protocol.indexer_client.types.models import (
@@ -153,7 +153,9 @@ class IndexerFundingRatesParams(VertexBaseModel):
     """
     Parameters for querying funding rates.
     """
+
     product_ids: list
+
 
 class IndexerPerpPricesParams(VertexBaseModel):
     """
@@ -300,12 +302,14 @@ class IndexerFundingRateRequest(VertexBaseModel):
 
     funding_rate: IndexerFundingRateParams
 
+
 class IndexerFundingRatesRequest(VertexBaseModel):
     """
     Request object for querying funding rates.
     """
 
     funding_rates: IndexerFundingRatesParams
+
 
 class IndexerPerpPricesRequest(VertexBaseModel):
     """
@@ -450,8 +454,9 @@ class IndexerFundingRateData(VertexBaseModel):
     funding_rate_x18: str
     update_time: str
 
-class IndexerFundingRatesData(dict[IndexerFundingRateData]):
-    pass
+
+IndexerFundingRatesData = Dict[str, IndexerFundingRateData]
+
 
 class IndexerPerpPricesData(VertexBaseModel):
     """
@@ -529,7 +534,6 @@ IndexerResponseData = Union[
     IndexerProductSnapshotsData,
     IndexerCandlesticksData,
     IndexerFundingRateData,
-    IndexerFundingRatesData,
     IndexerPerpPricesData,
     IndexerOraclePricesData,
     IndexerTokenRewardsData,
@@ -538,6 +542,7 @@ IndexerResponseData = Union[
     IndexerReferralCodeData,
     IndexerSubaccountsData,
     IndexerLiquidationFeedData,
+    IndexerFundingRatesData,
 ]
 
 
