@@ -4,6 +4,7 @@ from typing import Optional, Union
 from vertex_protocol.utils.model import VertexBaseModel
 
 
+# TODO: figure out why we can't import from vertex_protocol.utils.subaccount w/o running into cycles.
 class SubaccountParams(VertexBaseModel):
     """
     A class used to represent parameters for a Subaccount in the Vertex system.
