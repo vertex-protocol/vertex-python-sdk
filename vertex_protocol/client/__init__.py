@@ -111,30 +111,33 @@ def create_vertex_client(
     Returns:
         VertexClient: The created VertexClient instance.
     """
-    context: VertexClientContext
+    logging.warning(f"Initializing default {mode} context")
+    engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(mode)
+    deployment = load_deployment(VertexNetwork(network_name))
+    rpc_node_url = deployment.node_url
+    contracts_context = VertexContractsContext(
+        endpoint_addr=deployment.endpoint_addr,
+        querier_addr=deployment.querier_addr,
+        perp_engine_addr=deployment.perp_engine_addr,
+        spot_engine_addr=deployment.spot_engine_addr,
+        clearinghouse_addr=deployment.clearinghouse_addr,
+    )
+
     if context_opts:
-        context = create_vertex_client_context(context_opts, signer)
-    else:
-        logging.warning(f"Initializing default {mode} context")
-        engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(
-            mode
-        )
-        deployment = load_deployment(VertexNetwork(network_name))
-        context = create_vertex_client_context(
-            VertexClientContextOpts(
-                rpc_node_url=deployment.node_url,
-                engine_endpoint_url=parse_obj_as(AnyUrl, engine_endpoint_url),
-                indexer_endpoint_url=parse_obj_as(AnyUrl, indexer_endpoint_url),
-                contracts_context=VertexContractsContext(
-                    endpoint_addr=deployment.endpoint_addr,
-                    querier_addr=deployment.querier_addr,
-                    perp_engine_addr=deployment.perp_engine_addr,
-                    spot_engine_addr=deployment.spot_engine_addr,
-                    clearinghouse_addr=deployment.clearinghouse_addr,
-                ),
-            ),
-            signer,
-        )
+        engine_endpoint_url = context_opts.engine_endpoint_url or engine_endpoint_url
+        indexer_endpoint_url = context_opts.indexer_endpoint_url or indexer_endpoint_url
+        rpc_node_url = context_opts.rpc_node_url or rpc_node_url
+        contracts_context = context_opts.contracts_context or contracts_context
+
+    context = create_vertex_client_context(
+        VertexClientContextOpts(
+            rpc_node_url=rpc_node_url,
+            engine_endpoint_url=parse_obj_as(AnyUrl, engine_endpoint_url),
+            indexer_endpoint_url=parse_obj_as(AnyUrl, indexer_endpoint_url),
+            contracts_context=contracts_context,
+        ),
+        signer,
+    )
     return VertexClient(context)
 
 
