@@ -25,10 +25,10 @@ class VertexClientContext:
 
 
 class VertexClientContextOpts(BaseModel):
-    contracts_context: VertexContractsContext
-    rpc_node_url: AnyUrl
-    engine_endpoint_url: AnyUrl
-    indexer_endpoint_url: AnyUrl
+    contracts_context: Optional[VertexContractsContext]
+    rpc_node_url: Optional[AnyUrl]
+    engine_endpoint_url: Optional[AnyUrl]
+    indexer_endpoint_url: Optional[AnyUrl]
 
 
 def create_vertex_client_context(
@@ -49,6 +49,11 @@ def create_vertex_client_context(
         This helper attempts to fully set up the engine client, including the necessary verifying contracts
         to correctly sign executes. If this step fails, it is skipped and can be set up later, while logging the error.
     """
+    assert opts.contracts_context is not None, "Missing contracts context"
+    assert opts.rpc_node_url is not None, "Missing RPC node URL"
+    assert opts.engine_endpoint_url is not None, "Missing engine endpoint URL"
+    assert opts.indexer_endpoint_url is not None, "Missing indexer endpoint URL"
+
     engine_client = EngineClient(
         EngineClientOpts(url=opts.engine_endpoint_url, signer=signer)
     )
