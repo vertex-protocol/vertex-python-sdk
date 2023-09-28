@@ -1,6 +1,6 @@
 from vertex_protocol.utils.backend import *
-from vertex_protocol.utils.subaccount import *
 from vertex_protocol.utils.bytes32 import *
+from vertex_protocol.utils.subaccount import *
 from vertex_protocol.utils.expiration import *
 from vertex_protocol.utils.math import *
 from vertex_protocol.utils.nonce import *
