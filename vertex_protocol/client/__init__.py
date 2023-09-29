@@ -124,10 +124,17 @@ def create_vertex_client(
     )
 
     if context_opts:
-        engine_endpoint_url = context_opts.engine_endpoint_url or engine_endpoint_url
-        indexer_endpoint_url = context_opts.indexer_endpoint_url or indexer_endpoint_url
-        rpc_node_url = context_opts.rpc_node_url or rpc_node_url
-        contracts_context = context_opts.contracts_context or contracts_context
+        parsed_context_opts: VertexClientContextOpts = (
+            VertexClientContextOpts.parse_obj(context_opts)
+        )
+        engine_endpoint_url = (
+            parsed_context_opts.engine_endpoint_url or engine_endpoint_url
+        )
+        indexer_endpoint_url = (
+            parsed_context_opts.indexer_endpoint_url or indexer_endpoint_url
+        )
+        rpc_node_url = parsed_context_opts.rpc_node_url or rpc_node_url
+        contracts_context = parsed_context_opts.contracts_context or contracts_context
 
     context = create_vertex_client_context(
         VertexClientContextOpts(
