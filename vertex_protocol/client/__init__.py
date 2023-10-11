@@ -111,17 +111,27 @@ def create_vertex_client(
     Returns:
         VertexClient: The created VertexClient instance.
     """
-    logging.warning(f"Initializing default {mode} context")
+    logging.info(f"Initializing default {mode} context")
     engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(mode)
-    deployment = load_deployment(VertexNetwork(network_name))
-    rpc_node_url = deployment.node_url
-    contracts_context = VertexContractsContext(
-        endpoint_addr=deployment.endpoint_addr,
-        querier_addr=deployment.querier_addr,
-        perp_engine_addr=deployment.perp_engine_addr,
-        spot_engine_addr=deployment.spot_engine_addr,
-        clearinghouse_addr=deployment.clearinghouse_addr,
-    )
+    try:
+        deployment = load_deployment(VertexNetwork(network_name))
+        rpc_node_url = deployment.node_url
+        contracts_context = VertexContractsContext(
+            endpoint_addr=deployment.endpoint_addr,
+            querier_addr=deployment.querier_addr,
+            perp_engine_addr=deployment.perp_engine_addr,
+            spot_engine_addr=deployment.spot_engine_addr,
+            clearinghouse_addr=deployment.clearinghouse_addr,
+        )
+    except Exception as e:
+        logging.warning(
+            f"Failed to load contracts for mode {mode} with error: {e}, using provided defaults."
+        )
+        assert context_opts is not None and context_opts.rpc_node_url is not None
+        assert context_opts is not None and context_opts.contracts_context is not None
+
+        rpc_node_url = context_opts.rpc_node_url
+        contracts_context = context_opts.contracts_context
 
     if context_opts:
         parsed_context_opts: VertexClientContextOpts = (
