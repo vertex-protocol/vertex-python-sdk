@@ -57,7 +57,7 @@ def run():
     usdc_balance: SpotProductBalance = client.subaccount.get_engine_subaccount_summary(
         subaccount
     ).parse_subaccount_balance(0)
-    while int(usdc_balance.balance.amount) < to_pow_10(100000, 18):
+    while int(usdc_balance.balance.amount) == 0:
         print("waiting for deposit...")
         usdc_balance: SpotProductBalance = (
             client.subaccount.get_engine_subaccount_summary(
