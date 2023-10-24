@@ -77,6 +77,7 @@ class DepositCollateralParams(VertexBaseModel):
         referral_code (Optional[str]): Use this to indicate you were referred by existing member.
     """
 
+    on_behalf_of: Optional[str]
     subaccount_name: str
     product_id: int
     amount: int

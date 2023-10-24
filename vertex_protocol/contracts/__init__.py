@@ -12,6 +12,7 @@ from vertex_protocol.utils.bytes32 import (
     hex_to_bytes32,
     str_to_hex,
     subaccount_name_to_bytes12,
+    subaccount_to_bytes32,
     zero_address,
 )
 from vertex_protocol.utils.exceptions import InvalidProductId
@@ -114,15 +115,28 @@ class VertexContracts:
         """
         params = DepositCollateralParams.parse_obj(params)
         if params.referral_code is not None and params.referral_code.strip():
-            return self.execute(
-                self.endpoint.functions.depositCollateralWithReferral(
-                    subaccount_name_to_bytes12(params.subaccount_name),
-                    params.product_id,
-                    params.amount,
-                    params.referral_code,
-                ),
-                signer,
-            )
+            if params.on_behalf_of is not None:
+                return self.execute(
+                    self.endpoint.functions.depositCollateralWithReferral(
+                        subaccount_to_bytes32(
+                            params.on_behalf_of, params.subaccount_name
+                        ),
+                        params.product_id,
+                        params.amount,
+                        params.referral_code,
+                    ),
+                    signer,
+                )
+            else:
+                return self.execute(
+                    self.endpoint.functions.depositCollateralWithReferral(
+                        subaccount_name_to_bytes12(params.subaccount_name),
+                        params.product_id,
+                        params.amount,
+                        params.referral_code,
+                    ),
+                    signer,
+                )
         else:
             return self.execute(
                 self.endpoint.functions.depositCollateral(
