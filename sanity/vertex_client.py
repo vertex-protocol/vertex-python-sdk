@@ -42,11 +42,11 @@ def run():
     print("depositing collateral...")
     deposit_tx_hash = client.spot.deposit(
         DepositCollateralParams(
-            on_behalf_of="0x1042f83075161394Cd5bE4Ef9602b81Ed9E0563E",
+            # on_behalf_of="0x1042f83075161394Cd5bE4Ef9602b81Ed9E0563E",
             subaccount_name="default",
             product_id=0,
             amount=to_pow_10(100000, 6),
-            referral_code="FvCvUq6P9l",
+            referral_code="SmRA7MGhgE",
         )
     )
     print("deposit collateral tx hash:", deposit_tx_hash)
