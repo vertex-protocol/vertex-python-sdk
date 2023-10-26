@@ -1,5 +1,6 @@
 {
   "nodeUrl": "http://0.0.0.0:8545",
+  "publicNodeUrl": "http://0.0.0.0:8545",
   "explorerUrl": "",
   "subgraphCoreUrl": "http://localhost:8000/subgraphs/name/vertex-subgraphs-core",
   "subgraphMarketsUrl": "http://localhost:8000/subgraphs/name/vertex-subgraphs-markets",
