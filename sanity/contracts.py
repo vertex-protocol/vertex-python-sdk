@@ -11,6 +11,7 @@ def run():
         contracts_context=VertexContractsContext(**deployment.dict()),
     )
 
+    print("node url:", deployment.node_url)
     print("endpoint:", vertex_contracts.endpoint.address)
     print("querier:", vertex_contracts.querier.address)
     print("clearinghouse:", vertex_contracts.clearinghouse.address)

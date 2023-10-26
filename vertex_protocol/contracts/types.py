@@ -53,7 +53,7 @@ class VertexDeployment(VertexBaseModel):
         perp_engine_addr (str): The address of the perpetual engine contract.
     """
 
-    node_url: AnyUrl = Field(alias="nodeUrl")
+    node_url: AnyUrl = Field(alias="publicNodeUrl")
     quote_addr: str = Field(alias="quote")
     querier_addr: str = Field(alias="querier")
     fee_calculator_addr: str = Field(alias="feeCalculator")
