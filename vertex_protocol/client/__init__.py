@@ -166,22 +166,22 @@ def client_mode_to_setup(
     try:
         return {
             VertexClientMode.MAINNET: (
-                VertexBackendURL.MAINNET.value,
-                VertexBackendURL.MAINNET.value,
+                VertexBackendURL.MAINNET_GATEWAY.value,
+                VertexBackendURL.MAINNET_INDEXER.value,
                 VertexNetwork.ARBITRUM_ONE.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
-                VertexBackendURL.SEPOLIA_TESTNET.value,
-                VertexBackendURL.SEPOLIA_TESTNET.value,
+                VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
+                VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,
             ),
             VertexClientMode.DEVNET: (
-                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_GATEWAY.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
                 VertexNetwork.HARDHAT.value,
             ),
             VertexClientMode.TESTING: (
-                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_GATEWAY.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
                 VertexNetwork.TESTING.value,
             ),
