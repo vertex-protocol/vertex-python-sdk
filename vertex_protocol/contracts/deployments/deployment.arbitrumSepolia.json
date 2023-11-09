@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://sepolia-rollup.arbitrum.io/rpc",
+  "explorerUrl": "https://sepolia-rollup-explorer.arbitrum.io",
+  "startBlock": 1027154,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xbC47901f4d2C5fc871ae0037Ea05c3F614690781",
+  "querier": "0x2F579046eC1e88Ff580ca5ED9373e91ece8894b0",
+  "feeCalculator": "0x9D37c59380BA015cF0c115fB89ac6238B96c868E",
+  "clearinghouse": "0xDFA3926296eaAc8E33c9798836Eae7e8CA1B02FB",
+  "clearinghouseLiq": "0x0751C5360A418ff3cFe90B7A61199067f3b39ab5",
+  "endpoint": "0xaDeFDE1A14B6ba4DA3e82414209408a49930E8DC",
+  "spotEngine": "0x4597CFdd371239a99477Cdabf9cF0B23fDf559B4",
+  "perpEngine": "0xF2710b0BfBdE4F7aA701f632695e13f2ad118a9E",
+  "arbAirdrop": "0x73703D383a8023d7aA8C3D847b77DaFCaC311893"
+}
