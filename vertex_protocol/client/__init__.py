@@ -35,6 +35,7 @@ class VertexClientMode(StrEnum):
 
     MAINNET = "mainnet"
     TESTNET = "testnet"
+    SEPOLIA_TESTNET = "sepolia-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -172,6 +173,11 @@ def client_mode_to_setup(
                 VertexBackendURL.TESTNET.value,
                 VertexBackendURL.TESTNET.value,
                 VertexNetwork.ARBITRUM_GOERLI.value,
+            ),
+            VertexClientMode.SEPOLIA_TESTNET: (
+                VertexBackendURL.SEPOLIA_TESTNET.value,
+                VertexBackendURL.SEPOLIA_TESTNET.value,
+                VertexNetwork.ARBITRUM_SEPOLIA.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_ENGINE.value,
