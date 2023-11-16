@@ -64,6 +64,7 @@ class EngineQueryClient:
         """
         self._opts: EngineClientOpts = EngineClientOpts.parse_obj(opts)
         self.url: str = self._opts.url
+        self.session = requests.Session()
 
     def query(self, req: QueryRequest) -> QueryResponse:
         """
@@ -79,7 +80,7 @@ class EngineQueryClient:
             BadStatusCodeException: If the response status code is not 200.
             QueryFailedException: If the query status is not "success".
         """
-        res = requests.get(f"{self.url}/query?{urlencode(req.dict())}")
+        res = self.session.get(f"{self.url}/query?{urlencode(req.dict())}")
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         try:
@@ -97,7 +98,7 @@ class EngineQueryClient:
         Returns:
             ProductSymbolsData: Symbols for all available products.
         """
-        res = requests.get(f"{self.url}/symbols?")
+        res = self.session.get(f"{self.url}/symbols?")
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         try:

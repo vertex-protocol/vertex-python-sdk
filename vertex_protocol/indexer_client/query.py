@@ -66,6 +66,7 @@ class IndexerQueryClient:
         """
         self._opts = IndexerClientOpts.parse_obj(opts)
         self.url = self._opts.url
+        self.session = requests.Session()
 
     @singledispatchmethod
     def query(self, params: Union[IndexerParams, IndexerRequest]) -> IndexerResponse:
@@ -92,7 +93,7 @@ class IndexerQueryClient:
         return self._query(VertexBaseModel.parse_obj(req))  # type: ignore
 
     def _query(self, req: IndexerRequest) -> IndexerResponse:
-        res = requests.post(f"{self.url}/indexer", json=req.dict())
+        res = self.session.post(f"{self.url}/indexer", json=req.dict())
         if res.status_code != 200:
             raise Exception(res.text)
         try:

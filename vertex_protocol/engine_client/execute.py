@@ -66,6 +66,7 @@ class EngineExecuteClient:
         self._querier = querier or EngineQueryClient(opts)
         self._opts: EngineClientOpts = EngineClientOpts.parse_obj(opts)
         self.url: str = self._opts.url
+        self.session = requests.Session()
 
     def _inject_owner_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
         """
@@ -181,7 +182,7 @@ class EngineExecuteClient:
             BadStatusCodeException: If the server response status code is not 200.
             ExecuteFailedException: If there's an error in the execution or the response status is not "success".
         """
-        res = requests.post(f"{self.url}/execute", json=req.dict())
+        res = self.session.post(f"{self.url}/execute", json=req.dict())
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         try:
