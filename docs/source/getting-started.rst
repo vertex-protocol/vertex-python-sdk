@@ -40,8 +40,8 @@ Making a deposit
 
 The core client supports two modes:
 
-- `testnet`: Connects to our test environment.
-- `mainnet`: Connects to our production environment.
+- `sepolia-testnet`: Connects to our test environment on Arbitrum Sepolia.
+- `mainnet`: Connects to our production environment on Arbitrum One.
 
 The primary entry point of the SDK is via `create_vertex_client`, which allows you to create an instance of `VertexClient`.
 See  :doc:`api-reference` for more details.
@@ -50,7 +50,7 @@ See  :doc:`api-reference` for more details.
 
     >>> private_key = "xxx"
     >>> print("setting up vertex client...")
-    >>> client = create_vertex_client("testnet", private_key)
+    >>> client = create_vertex_client("sepolia-testnet", private_key)
     >>> # You must first approve allowance for the amount you want to deposit.
     >>> print("approving allowance...")
     >>> approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(100000, 6))
