@@ -105,7 +105,7 @@ $ source ./venv/bin/activate
 5. Setup an `.env` file and set the following envvars
 
 ```shell
-CLIENT_MODE='mainnet|testnet|devnet'
+CLIENT_MODE='mainnet|sepolia-testnet|devnet'
 SIGNER_PRIVATE_KEY="0x..."
 LINKED_SIGNER_PRIVATE_KEY="0x..." # not required
 ```

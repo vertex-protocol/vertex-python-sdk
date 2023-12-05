@@ -399,6 +399,7 @@ class SymbolsData(VertexBaseModel):
     """
     Data model for the symbols product info
     """
+
     symbols: dict[str, SymbolData]
 
 
