@@ -28,6 +28,8 @@ class VertexClientMode(StrEnum):
 
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
+        MANTLE_TESTNET: For operating in Vertex's testnet environment deployed on Mantle Testnet.
+
         DEVNET: For local development.
 
         TESTING: For running tests.
@@ -35,6 +37,7 @@ class VertexClientMode(StrEnum):
 
     MAINNET = "mainnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
+    MANTLE_TESTNET = "mantle-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -101,6 +104,7 @@ def create_vertex_client(
         mode (VertexClientMode): The mode in which to operate the client. Can be one of the following:
             VertexClientMode.MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
             VertexClientMode.SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
+            VertexClientMode.MANTLE_TESTNET: For operating in Vertex's testnet environment deployed on Mantle Testnet.
             VertexClientMode.DEVNET: For local development.
 
         signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
@@ -169,6 +173,11 @@ def client_mode_to_setup(
                 VertexNetwork.ARBITRUM_ONE.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
+                VertexBackendURL.MANTLET_TESTNET.value,
+                VertexBackendURL.MANTLET_TESTNET.value,
+                VertexNetwork.MANTLE_TESTNET.value,
+            ),
+            VertexClientMode.MANTLE_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET.value,
                 VertexBackendURL.SEPOLIA_TESTNET.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,

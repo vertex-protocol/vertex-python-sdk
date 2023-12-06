@@ -132,22 +132,45 @@ def test_create_vertex_client(
     assert mainnet_vertex_client.context.indexer_client.url == VertexBackendURL.MAINNET
     assert mainnet_vertex_client.context.engine_client.signer == signer
 
-    testnet_vertex_client = create_vertex_client(
+    sepolia_testnet_vertex_client = create_vertex_client(
         VertexClientMode.SEPOLIA_TESTNET, signer
     )
 
-    assert testnet_vertex_client.context.engine_client.chain_id == chain_id
-    assert testnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
-    assert testnet_vertex_client.context.engine_client.book_addrs == book_addrs
+    assert sepolia_testnet_vertex_client.context.engine_client.chain_id == chain_id
     assert (
-        testnet_vertex_client.context.engine_client.url
+        sepolia_testnet_vertex_client.context.engine_client.endpoint_addr
+        == endpoint_addr
+    )
+    assert sepolia_testnet_vertex_client.context.engine_client.book_addrs == book_addrs
+    assert (
+        sepolia_testnet_vertex_client.context.engine_client.url
         == VertexBackendURL.SEPOLIA_TESTNET
     )
     assert (
-        testnet_vertex_client.context.indexer_client.url
+        sepolia_testnet_vertex_client.context.indexer_client.url
         == VertexBackendURL.SEPOLIA_TESTNET
     )
-    assert testnet_vertex_client.context.engine_client.signer == signer
+    assert sepolia_testnet_vertex_client.context.engine_client.signer == signer
+
+    mantle_testnet_vertex_client = create_vertex_client(
+        VertexClientMode.MANTLE_TESTNET, signer
+    )
+
+    assert mantle_testnet_vertex_client.context.engine_client.chain_id == chain_id
+    assert (
+        mantle_testnet_vertex_client.context.engine_client.endpoint_addr
+        == endpoint_addr
+    )
+    assert mantle_testnet_vertex_client.context.engine_client.book_addrs == book_addrs
+    assert (
+        mantle_testnet_vertex_client.context.engine_client.url
+        == VertexBackendURL.MANTLET_TESTNET
+    )
+    assert (
+        mantle_testnet_vertex_client.context.indexer_client.url
+        == VertexBackendURL.MANTLET_TESTNET
+    )
+    assert mantle_testnet_vertex_client.context.engine_client.signer == signer
 
     devnet_vertex_client = create_vertex_client(VertexClientMode.TESTING, signer)
 
