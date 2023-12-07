@@ -172,12 +172,12 @@ def client_mode_to_setup(
                 VertexBackendURL.MAINNET.value,
                 VertexNetwork.ARBITRUM_ONE.value,
             ),
-            VertexClientMode.SEPOLIA_TESTNET: (
+            VertexClientMode.MANTLE_TESTNET: (
                 VertexBackendURL.MANTLET_TESTNET.value,
                 VertexBackendURL.MANTLET_TESTNET.value,
                 VertexNetwork.MANTLE_TESTNET.value,
             ),
-            VertexClientMode.MANTLE_TESTNET: (
+            VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET.value,
                 VertexBackendURL.SEPOLIA_TESTNET.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,

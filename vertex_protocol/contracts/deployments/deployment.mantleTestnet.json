@@ -1,5 +1,5 @@
 {
-  "publicNodeUrl": "https://rpc.testnet.mantle.xyz",
+  "publicNodeUrl": "https://mantle-goerli.public.blastapi.io",
   "explorerUrl": "https://explorer.testnet.mantle.xyz/",
   "startBlock": 26921136,
   "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",

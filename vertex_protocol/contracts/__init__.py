@@ -223,8 +223,8 @@ class VertexContracts:
             "from": signer.address,
             "nonce": self.w3.eth.get_transaction_count(signer.address),
         }
-        if os.getenv("CLIENT_MODE") == "devnet":
-            tx_params["gasPrice"] = self.w3.eth.gas_price
+        # if os.getenv("CLIENT_MODE") in ["devnet","mantle-test"] :
+        tx_params["gasPrice"] = self.w3.eth.gas_price
         return tx_params
 
 
