@@ -227,8 +227,7 @@ class VertexContracts:
             "nonce": self.w3.eth.get_transaction_count(signer.address),
         }
         needs_gas_price = self.network is not None and self.network.value in [
-            VertexNetwork.HARDHAT.value,
-            VertexNetwork.MANTLE_GOERLI.value,
+            VertexNetwork.HARDHAT.value
         ]
         if needs_gas_price or os.getenv("CLIENT_MODE") in ["devnet"]:
             tx_params["gasPrice"] = self.w3.eth.gas_price
