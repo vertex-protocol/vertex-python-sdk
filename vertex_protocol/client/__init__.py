@@ -118,9 +118,11 @@ def create_vertex_client(
     logging.info(f"Initializing default {mode} context")
     engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(mode)
     try:
-        deployment = load_deployment(VertexNetwork(network_name))
+        network = VertexNetwork(network_name)
+        deployment = load_deployment(network)
         rpc_node_url = deployment.node_url
         contracts_context = VertexContractsContext(
+            network=network,
             endpoint_addr=deployment.endpoint_addr,
             querier_addr=deployment.querier_addr,
             perp_engine_addr=deployment.perp_engine_addr,
