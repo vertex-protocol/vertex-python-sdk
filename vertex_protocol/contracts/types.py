@@ -12,6 +12,7 @@ class VertexNetwork(StrEnum):
 
     ARBITRUM_ONE = "arbitrumOne"
     ARBITRUM_SEPOLIA = "arbitrumSepolia"
+    MANTLE_GOERLI = "mantleGoerli"
     HARDHAT = "localhost"
     TESTING = "test"
 

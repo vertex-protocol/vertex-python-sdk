@@ -1,0 +1,14 @@
+{
+  "publicNodeUrl": "https://mantle-goerli.public.blastapi.io",
+  "explorerUrl": "https://explorer.testnet.mantle.xyz/",
+  "startBlock": 26921136,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xA7Fcb606611358afa388b6bd23b3B2F2c6abEd82",
+  "querier": "0x6f5F5d9Cb93062dd1d684c6694Fee7bbBE94eD6B",
+  "feeCalculator": "0xA1DbC395Cbaa8c7b74456697C42ADa8F2b08CAbb",
+  "clearinghouse": "0x1a77cB939B7C4fA5Cc90b09787260DABf5f05c41",
+  "endpoint": "0xB61B069d741C98DA3302986BF107aA9083b64133",
+  "spotEngine": "0xEC1149dF1559eaDB0Af4cf6d9BeAc7a08Aa9f694",
+  "perpEngine": "0x19a4B178654F42Ea994347D514ED9E4f99221Ba2",
+  "arbAirdrop": "0x0000000000000000000000000000000000000000"
+}

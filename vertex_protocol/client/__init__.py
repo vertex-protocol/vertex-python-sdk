@@ -28,6 +28,8 @@ class VertexClientMode(StrEnum):
 
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
+        MANTLE_TESTNET: For operating in Vertex's testnet environment deployed on Mantle Goerli.
+
         DEVNET: For local development.
 
         TESTING: For running tests.
@@ -35,6 +37,7 @@ class VertexClientMode(StrEnum):
 
     MAINNET = "mainnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
+    MANTLE_TESTNET = "mantle-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -101,6 +104,7 @@ def create_vertex_client(
         mode (VertexClientMode): The mode in which to operate the client. Can be one of the following:
             VertexClientMode.MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
             VertexClientMode.SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
+            VertexClientMode.MANTLE_TESTNET: For operating in Vertex's testnet environment deployed on Mantle Goerli.
             VertexClientMode.DEVNET: For local development.
 
         signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
@@ -114,9 +118,11 @@ def create_vertex_client(
     logging.info(f"Initializing default {mode} context")
     engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(mode)
     try:
-        deployment = load_deployment(VertexNetwork(network_name))
+        network = VertexNetwork(network_name)
+        deployment = load_deployment(network)
         rpc_node_url = deployment.node_url
         contracts_context = VertexContractsContext(
+            network=network,
             endpoint_addr=deployment.endpoint_addr,
             querier_addr=deployment.querier_addr,
             perp_engine_addr=deployment.perp_engine_addr,
@@ -167,6 +173,11 @@ def client_mode_to_setup(
                 VertexBackendURL.MAINNET.value,
                 VertexBackendURL.MAINNET.value,
                 VertexNetwork.ARBITRUM_ONE.value,
+            ),
+            VertexClientMode.MANTLE_TESTNET: (
+                VertexBackendURL.MANTLET_TESTNET.value,
+                VertexBackendURL.MANTLET_TESTNET.value,
+                VertexNetwork.MANTLE_GOERLI.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET.value,
