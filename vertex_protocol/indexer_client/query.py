@@ -92,7 +92,7 @@ class IndexerQueryClient:
         return self._query(VertexBaseModel.parse_obj(req))  # type: ignore
 
     def _query(self, req: IndexerRequest) -> IndexerResponse:
-        res = requests.post(f"{self.url}/indexer", json=req.dict())
+        res = requests.post(self.url, json=req.dict())
         if res.status_code != 200:
             raise Exception(res.text)
         try:
