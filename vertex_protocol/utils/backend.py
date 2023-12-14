@@ -4,7 +4,11 @@ from vertex_protocol.utils.enum import StrEnum
 class VertexBackendURL(StrEnum):
     """Enum representing different Vertex backend URLs."""
 
-    SEPOLIA_TESTNET = "https://api.sepolia-test.vertexprotocol.com"
-    MAINNET = "https://api.prod.vertexprotocol.com"
-    DEVNET_ENGINE = "http://localhost:80"
+    SEPOLIA_TESTNET_GATEWAY = "https://gateway.sepolia-test.vertexprotocol.com/v1"
+    SEPOLIA_TESTNET_INDEXER = "https://archive.sepolia-test.vertexprotocol.com/v1"
+    
+    MAINNET_GATEWAY = "https://gateway.prod.vertexprotocol.com/v1"
+    MAINNET_INDEXER = "https://archive.prod.vertexprotocol.com/v1"
+    
+    DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"
