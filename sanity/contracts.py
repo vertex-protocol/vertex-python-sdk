@@ -65,7 +65,7 @@ def run():
     )
 
     new_token = vertex_contracts.w3.eth.contract(
-        address="0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        address="0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43",
         abi=load_abi(VertexAbiName.MOCK_ERC20),
     )
 
@@ -87,28 +87,28 @@ def run():
     )
 
     client: VertexClient = create_vertex_client(CLIENT_MODE, SIGNER_PRIVATE_KEY)
-    slow_mode_withdrawal(client)
-    # print("minting test tokens...")
-    # mint_tx_hash = vertex_contracts._mint_mock_erc20(
-    #     new_token, to_pow_10(100000, 6), client.context.signer
-    # )
-    # print("mint tx hash:", mint_tx_hash)
+    # slow_mode_withdrawal(client)
+    print("minting test tokens...")
+    mint_tx_hash = vertex_contracts._mint_mock_erc20(
+        new_token, to_pow_10(4_000_000, 6), client.context.signer
+    )
+    print("mint tx hash:", mint_tx_hash)
 
-    # print("approving allowance...")
-    # approve_allowance_tx_hash = vertex_contracts.approve_allowance(
-    #     new_token, to_pow_10(100000, 6), client.context.signer
-    # )
-    # print("approve allowance tx hash:", approve_allowance_tx_hash)
+    print("approving allowance...")
+    approve_allowance_tx_hash = vertex_contracts.approve_allowance(
+        new_token, to_pow_10(4_000_000, 6), client.context.signer
+    )
+    print("approve allowance tx hash:", approve_allowance_tx_hash)
 
-    # time.sleep(1)
+    time.sleep(1)
 
-    # print("depositing collateral...")
-    # deposit_tx_hash = client.spot.deposit(
-    #     DepositCollateralParams(
-    #         subaccount_name="default", product_id=0, amount=to_pow_10(100000, 6)
-    #     )
-    # )
-    # print("deposit collateral tx hash:", deposit_tx_hash)
+    print("depositing collateral...")
+    deposit_tx_hash = client.spot.deposit(
+        DepositCollateralParams(
+            subaccount_name="default", product_id=0, amount=to_pow_10(3_000_000, 6)
+        )
+    )
+    print("deposit collateral tx hash:", deposit_tx_hash)
 
     subaccount = subaccount_to_hex(client.context.signer.address, "default")
 
@@ -116,7 +116,7 @@ def run():
 
     print("withdrawing collateral...")
     # withdraw_collateral_params = WithdrawCollateralParams(
-    #     productId=0, amount=to_pow_10(1, 6), sender=subaccount
+    #     productId=0, amount=to_pow_10(3_000_000, 6), sender=subaccount
     # )
     # res = client.spot.withdraw(withdraw_collateral_params)
     # print("withdraw result:", res.json(indent=2))
