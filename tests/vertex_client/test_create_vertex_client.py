@@ -128,18 +128,35 @@ def test_create_vertex_client(
     assert mainnet_vertex_client.context.engine_client.chain_id == chain_id
     assert mainnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
     assert mainnet_vertex_client.context.engine_client.book_addrs == book_addrs
-    assert mainnet_vertex_client.context.engine_client.url == VertexBackendURL.MAINNET
-    assert mainnet_vertex_client.context.indexer_client.url == VertexBackendURL.MAINNET
+    assert (
+        mainnet_vertex_client.context.engine_client.url
+        == VertexBackendURL.MAINNET_GATEWAY
+    )
+    assert (
+        mainnet_vertex_client.context.indexer_client.url
+        == VertexBackendURL.MAINNET_INDEXER
+    )
     assert mainnet_vertex_client.context.engine_client.signer == signer
 
-    testnet_vertex_client = create_vertex_client(VertexClientMode.TESTNET, signer)
+    sepolia_testnet_vertex_client = create_vertex_client(
+        VertexClientMode.SEPOLIA_TESTNET, signer
+    )
 
-    assert testnet_vertex_client.context.engine_client.chain_id == chain_id
-    assert testnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
-    assert testnet_vertex_client.context.engine_client.book_addrs == book_addrs
-    assert testnet_vertex_client.context.engine_client.url == VertexBackendURL.TESTNET
-    assert testnet_vertex_client.context.indexer_client.url == VertexBackendURL.TESTNET
-    assert testnet_vertex_client.context.engine_client.signer == signer
+    assert sepolia_testnet_vertex_client.context.engine_client.chain_id == chain_id
+    assert (
+        sepolia_testnet_vertex_client.context.engine_client.endpoint_addr
+        == endpoint_addr
+    )
+    assert sepolia_testnet_vertex_client.context.engine_client.book_addrs == book_addrs
+    assert (
+        sepolia_testnet_vertex_client.context.engine_client.url
+        == VertexBackendURL.SEPOLIA_TESTNET_GATEWAY
+    )
+    assert (
+        sepolia_testnet_vertex_client.context.indexer_client.url
+        == VertexBackendURL.SEPOLIA_TESTNET_INDEXER
+    )
+    assert sepolia_testnet_vertex_client.context.engine_client.signer == signer
 
     devnet_vertex_client = create_vertex_client(VertexClientMode.TESTING, signer)
 
@@ -147,7 +164,8 @@ def test_create_vertex_client(
     assert devnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
     assert devnet_vertex_client.context.engine_client.book_addrs == book_addrs
     assert (
-        devnet_vertex_client.context.engine_client.url == VertexBackendURL.DEVNET_ENGINE
+        devnet_vertex_client.context.engine_client.url
+        == VertexBackendURL.DEVNET_GATEWAY
     )
     assert (
         devnet_vertex_client.context.indexer_client.url

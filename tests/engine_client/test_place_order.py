@@ -197,7 +197,7 @@ def test_place_order_execute_success(
     mock_response.json.return_value = {
         "status": "success",
         "signature": expected_signature,
-        "data": {"digest": order_digest}
+        "data": {"digest": order_digest},
     }
     mock_post.return_value = mock_response
 

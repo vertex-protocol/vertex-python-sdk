@@ -24,9 +24,9 @@ class VertexClientMode(StrEnum):
     VertexClientMode is an enumeration representing the operational modes of the VertexClient.
 
     Attributes:
-        MAINNET: For operating in Vertex's mainnet environment.
+        MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
 
-        TESTNET: For operating in Vertex's testnet environment.
+        SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
         DEVNET: For local development.
 
@@ -34,7 +34,6 @@ class VertexClientMode(StrEnum):
     """
 
     MAINNET = "mainnet"
-    TESTNET = "testnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
@@ -100,8 +99,8 @@ def create_vertex_client(
 
     Args:
         mode (VertexClientMode): The mode in which to operate the client. Can be one of the following:
-            VertexClientMode.MAINNET: For operating in Vertex's mainnet environment.
-            VertexClientMode.TESTNET: For operating in Vertex's testnet environment.
+            VertexClientMode.MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
+            VertexClientMode.SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
             VertexClientMode.DEVNET: For local development.
 
         signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
@@ -115,9 +114,11 @@ def create_vertex_client(
     logging.info(f"Initializing default {mode} context")
     engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(mode)
     try:
-        deployment = load_deployment(VertexNetwork(network_name))
+        network = VertexNetwork(network_name)
+        deployment = load_deployment(network)
         rpc_node_url = deployment.node_url
         contracts_context = VertexContractsContext(
+            network=network,
             endpoint_addr=deployment.endpoint_addr,
             querier_addr=deployment.querier_addr,
             perp_engine_addr=deployment.perp_engine_addr,
@@ -165,27 +166,22 @@ def client_mode_to_setup(
     try:
         return {
             VertexClientMode.MAINNET: (
-                VertexBackendURL.MAINNET.value,
-                VertexBackendURL.MAINNET.value,
+                VertexBackendURL.MAINNET_GATEWAY.value,
+                VertexBackendURL.MAINNET_INDEXER.value,
                 VertexNetwork.ARBITRUM_ONE.value,
             ),
-            VertexClientMode.TESTNET: (
-                VertexBackendURL.TESTNET.value,
-                VertexBackendURL.TESTNET.value,
-                VertexNetwork.ARBITRUM_GOERLI.value,
-            ),
             VertexClientMode.SEPOLIA_TESTNET: (
-                VertexBackendURL.SEPOLIA_TESTNET.value,
-                VertexBackendURL.SEPOLIA_TESTNET.value,
+                VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
+                VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,
             ),
             VertexClientMode.DEVNET: (
-                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_GATEWAY.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
                 VertexNetwork.HARDHAT.value,
             ),
             VertexClientMode.TESTING: (
-                VertexBackendURL.DEVNET_ENGINE.value,
+                VertexBackendURL.DEVNET_GATEWAY.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
                 VertexNetwork.TESTING.value,
             ),

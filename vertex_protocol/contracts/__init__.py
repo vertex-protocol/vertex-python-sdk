@@ -34,6 +34,7 @@ class VertexContractsContext(BaseModel):
         clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
     """
 
+    network: Optional[VertexNetwork]
     endpoint_addr: str
     querier_addr: str
     spot_engine_addr: Optional[str]
@@ -47,6 +48,7 @@ class VertexContracts:
     """
 
     w3: Web3
+    network: Optional[VertexNetwork]
     contracts_context: VertexContractsContext
     querier: Contract
     endpoint: Contract
@@ -66,6 +68,7 @@ class VertexContracts:
 
             contracts_context (VertexContractsContext): The Vertex contracts context, holding the relevant addresses.
         """
+        self.network = contracts_context.network
         self.w3 = Web3(Web3.HTTPProvider(node_url))
 
         self.contracts_context = VertexContractsContext.parse_obj(contracts_context)
@@ -223,7 +226,10 @@ class VertexContracts:
             "from": signer.address,
             "nonce": self.w3.eth.get_transaction_count(signer.address),
         }
-        if os.getenv("CLIENT_MODE") == "devnet":
+        needs_gas_price = self.network is not None and self.network.value in [
+            VertexNetwork.HARDHAT.value
+        ]
+        if needs_gas_price or os.getenv("CLIENT_MODE") in ["devnet"]:
             tx_params["gasPrice"] = self.w3.eth.gas_price
         return tx_params
 
