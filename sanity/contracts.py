@@ -21,7 +21,7 @@ def slow_mode_withdrawal(client: VertexClient):
         [
             subaccount_to_bytes32(client.context.signer.address, "default"),
             0,  # productId
-            to_pow_10(1, 6),  # amount
+            str(to_pow_10(1_000_000, 6)),  # amount
             1,  # nonce
         ],
     )
@@ -64,18 +64,21 @@ def run():
         abi=load_abi(VertexAbiName.MOCK_ERC20),
     )
 
+    spot_engine_token = vertex_contracts.spot_engine.functions.getConfig(0).call()[0]
+
     new_token = vertex_contracts.w3.eth.contract(
-        address="0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43",
+        address=spot_engine_token,
         abi=load_abi(VertexAbiName.MOCK_ERC20),
     )
 
-    print("node url:", deployment.node_url)
-    print("endpoint:", vertex_contracts.endpoint.address)
-    print("querier:", vertex_contracts.querier.address)
-    print("clearinghouse:", vertex_contracts.clearinghouse.address)
-    print("spot_engine:", vertex_contracts.spot_engine.address)
-    print("perp_engine:", vertex_contracts.perp_engine.address)
-    print("n-submissions", vertex_contracts.endpoint.functions.nSubmissions().call())
+    # print("node url:", deployment.node_url)
+    # print("endpoint:", vertex_contracts.endpoint.address)
+    # print("querier:", vertex_contracts.querier.address)
+    # print("clearinghouse:", vertex_contracts.clearinghouse.address)
+    # print("spot_engine:", vertex_contracts.spot_engine.address)
+    # print("perp_engine:", vertex_contracts.perp_engine.address)
+    # print("n-submissions", vertex_contracts.endpoint.functions.nSubmissions().call())
+    print("spot engine token:", spot_engine_token)
     print("quote:", vertex_contracts.clearinghouse.functions.getQuote().call())
     print(
         "old token balance:",
@@ -85,36 +88,42 @@ def run():
         "new token balance:",
         new_token.functions.balanceOf(vertex_contracts.clearinghouse.address).call(),
     )
+    print(
+        "my balance:",
+        new_token.functions.balanceOf(
+            "0x7a5ec2748E9065794491A8d29DcF3F9eDB8d7C43"
+        ).call(),
+    )
 
     client: VertexClient = create_vertex_client(CLIENT_MODE, SIGNER_PRIVATE_KEY)
-    # slow_mode_withdrawal(client)
-    print("minting test tokens...")
-    mint_tx_hash = vertex_contracts._mint_mock_erc20(
-        new_token, to_pow_10(4_000_000, 6), client.context.signer
-    )
-    print("mint tx hash:", mint_tx_hash)
-
-    print("approving allowance...")
-    approve_allowance_tx_hash = vertex_contracts.approve_allowance(
-        new_token, to_pow_10(4_000_000, 6), client.context.signer
-    )
-    print("approve allowance tx hash:", approve_allowance_tx_hash)
-
-    time.sleep(1)
-
-    print("depositing collateral...")
-    deposit_tx_hash = client.spot.deposit(
-        DepositCollateralParams(
-            subaccount_name="default", product_id=0, amount=to_pow_10(3_000_000, 6)
-        )
-    )
-    print("deposit collateral tx hash:", deposit_tx_hash)
 
     subaccount = subaccount_to_hex(client.context.signer.address, "default")
 
     print("subaccount:", subaccount)
 
-    print("withdrawing collateral...")
+    # slow_mode_withdrawal(client)
+    for token in [new_token]:
+        print("minting test tokens...")
+        # mint_tx_hash = vertex_contracts._mint_mock_erc20(
+        #     token, to_pow_10(1_000_000, 6), client.context.signer
+        # )
+        # # print("mint tx hash:", mint_tx_hash)
+
+        # # print("approving allowance...")
+        # approve_allowance_tx_hash = vertex_contracts.approve_allowance(
+        #     token, to_pow_10(1_000_000, 6), client.context.signer
+        # )
+        # print("approve allowance tx hash:", approve_allowance_tx_hash)
+
+    # print("depositing collateral...")
+    # deposit_tx_hash = client.spot.deposit(
+    #     DepositCollateralParams(
+    #         subaccount_name="default", product_id=0, amount=to_pow_10(1_000_000, 6)
+    #     )
+    # )
+    # print("deposit collateral tx hash:", deposit_tx_hash)
+
+    # print("withdrawing collateral...")
     # withdraw_collateral_params = WithdrawCollateralParams(
     #     productId=0, amount=to_pow_10(3_000_000, 6), sender=subaccount
     # )
