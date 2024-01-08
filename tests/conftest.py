@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 from eth_account import Account
 import pytest
+import requests
 from vertex_protocol.client import VertexClient, create_vertex_client
 from vertex_protocol.contracts import VertexContractsContext
 from vertex_protocol.engine_client import EngineClient
@@ -190,13 +191,13 @@ def link_signer_params(senders: list[str]) -> dict:
 
 @pytest.fixture
 def mock_post() -> MagicMock:
-    with patch("requests.post") as mock_post:
+    with patch.object(requests.Session, "post") as mock_post:
         yield mock_post
 
 
 @pytest.fixture
 def mock_get() -> MagicMock:
-    with patch("requests.get") as mock_post:
+    with patch.object(requests.Session, "get") as mock_post:
         yield mock_post
 
 

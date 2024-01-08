@@ -6,9 +6,9 @@ class VertexBackendURL(StrEnum):
 
     SEPOLIA_TESTNET_GATEWAY = "https://gateway.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_INDEXER = "https://archive.sepolia-test.vertexprotocol.com/v1"
-    
+
     MAINNET_GATEWAY = "https://gateway.prod.vertexprotocol.com/v1"
     MAINNET_INDEXER = "https://archive.prod.vertexprotocol.com/v1"
-    
+
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"
