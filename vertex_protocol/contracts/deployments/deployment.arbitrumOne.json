@@ -6,7 +6,7 @@
   "subgraphCandleSticksUrl": "https://api.thegraph.com/subgraphs/name/vertex-protocol/vertex-prod-candlesticks",
   "startBlock": 67108377,
   "deployer": "0xB746472C10f9F128FF9F5029f424cC91bb1D8C3a",
-  "quote": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+  "quote": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
   "querier": "0x1693273B443699bee277eCbc60e2C8027E91995d",
   "feeCalculator": "0x2259440579447D0625a5E28dfF3E743d207e8890",
   "clearinghouse": "0xAE1ec28d6225dCE2ff787dcb8CE11cF6D3AE064f",
