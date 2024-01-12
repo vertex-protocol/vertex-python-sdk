@@ -3,7 +3,7 @@
   "explorerUrl": "https://sepolia-rollup-explorer.arbitrum.io",
   "startBlock": 1027154,
   "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
-  "quote": "0xbC47901f4d2C5fc871ae0037Ea05c3F614690781",
+  "quote": "0xD32ea1C76ef1c296F131DD4C5B2A0aac3b22485a",
   "querier": "0x2F579046eC1e88Ff580ca5ED9373e91ece8894b0",
   "feeCalculator": "0x9D37c59380BA015cF0c115fB89ac6238B96c868E",
   "clearinghouse": "0xDFA3926296eaAc8E33c9798836Eae7e8CA1B02FB",
