@@ -110,6 +110,8 @@ class PlaceOrderParams(SignatureParams):
     Class for defining the parameters needed to place an order.
 
     Attributes:
+        id (Optional[int]): An optional custom order id that is echoed back in subscription events e.g: fill orders, etc.
+
         product_id (int): The id of the product for which the order is being placed.
 
         order (OrderParams): The parameters of the order.
@@ -119,6 +121,7 @@ class PlaceOrderParams(SignatureParams):
         spot_leverage (Optional[bool]): An optional flag indicating whether leverage should be used for the order. By default, leverage is assumed.
     """
 
+    id: Optional[int]
     product_id: int
     order: OrderParams
     digest: Optional[str]
