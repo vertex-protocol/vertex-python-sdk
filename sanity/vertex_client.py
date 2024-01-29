@@ -120,7 +120,7 @@ def run():
     )
     print("cancel order result:", res.json(indent=2))
 
-    print("placing perp order...")
+    print("placing long perp order (`amount` provided is positive)")
     perp_product_id = 2
     perp_order = OrderParams(
         sender=SubaccountParams(
@@ -129,6 +129,30 @@ def run():
         ),
         priceX18=to_x18(20000),
         amount=to_pow_10(1, 17),
+        expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
+        nonce=gen_order_nonce(),
+    )
+
+    perp_order.sender = subaccount_to_bytes32(perp_order.sender)
+    perp_order_digest = client.context.engine_client.get_order_digest(
+        perp_order, perp_product_id
+    )
+    print("order digest:", perp_order_digest)
+
+    res = client.market.place_order(
+        {"product_id": perp_product_id, "order": perp_order}
+    )
+    print("order result:", res.json(indent=2))
+
+    print("placing short perp order (`amount` provided is negative)")
+    perp_product_id = 2
+    perp_order = OrderParams(
+        sender=SubaccountParams(
+            subaccount_owner=owner,
+            subaccount_name="default",
+        ),
+        priceX18=to_x18(20000),
+        amount=-to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
         nonce=gen_order_nonce(),
     )
