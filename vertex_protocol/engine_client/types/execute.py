@@ -76,7 +76,7 @@ class MarketOrderParams(BaseParams):
     Class for defining the parameters of a market order.
 
     Attributes:
-        amount (int): The amount of the asset to be bought or sold in the order.
+        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
 
         expiration (int): The unix timestamp at which the order will expire.
 
@@ -96,7 +96,7 @@ class OrderParams(MarketOrderParams):
 
         expiration (int): The unix timestamp at which the order will expire.
 
-        amount (int): The amount of the asset to be bought or sold in the order.
+        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
 
         nonce (Optional[int]): A unique number used to prevent replay attacks.
     """
