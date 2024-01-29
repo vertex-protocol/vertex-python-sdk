@@ -106,6 +106,24 @@ def test_place_order_params(senders: list[str], owners: list[str], order_params:
         }
     }
 
+    params_from_dict.id = 100
+    place_order_req = PlaceOrderRequest(place_order=params_from_dict)
+    assert place_order_req == to_execute_request(params_from_dict)
+    assert place_order_req.dict() == {
+        "place_order": {
+            "id": 100,
+            "product_id": product_id,
+            "order": {
+                "sender": senders[0].lower(),
+                "priceX18": str(order_params["priceX18"]),
+                "amount": str(order_params["amount"]),
+                "expiration": str(order_params["expiration"]),
+                "nonce": str(params_from_dict.order.nonce),
+            },
+            "signature": params_from_dict.signature,
+        }
+    }
+
 
 def test_place_order_execute_fails_incomplete_client(
     mock_post: MagicMock,

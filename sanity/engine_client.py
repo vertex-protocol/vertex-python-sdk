@@ -75,6 +75,21 @@ def run():
     res = client.place_order(place_order)
     print("order result:", res.json(indent=2))
 
+    print("placing order with custom id...")
+    product_id = 1
+    order = OrderParams(
+        sender=SubaccountParams(
+            subaccount_owner=client.signer.address, subaccount_name="default"
+        ),
+        priceX18=to_x18(20000),
+        amount=to_pow_10(1, 17),
+        expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
+        nonce=gen_order_nonce(),
+    )
+    place_order = PlaceOrderParams(product_id=product_id, order=order, id=100)
+    res = client.place_order(place_order)
+    print("order with custom id result:", res.json(indent=2))
+
     print("querying order...")
     order = client.get_order(product_id, order_digest)
     print("order found", order.json(indent=2))
