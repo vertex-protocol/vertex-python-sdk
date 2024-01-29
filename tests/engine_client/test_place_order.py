@@ -106,7 +106,7 @@ def test_place_order_params(senders: list[str], owners: list[str], order_params:
         }
     }
 
-    params_from_dict["id"] = 100
+    params_from_dict.id = 100
     place_order_req = PlaceOrderRequest(place_order=params_from_dict)
     assert place_order_req == to_execute_request(params_from_dict)
     assert place_order_req.dict() == {
