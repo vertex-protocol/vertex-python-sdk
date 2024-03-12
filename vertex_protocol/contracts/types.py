@@ -43,8 +43,6 @@ class VertexDeployment(VertexBaseModel):
 
         querier_addr (str): The address of the querier contract.
 
-        fee_calculator_addr (str): The address of the fee calculator contract.
-
         clearinghouse_addr (str): The address of the clearinghouse contract.
 
         endpoint_addr (str): The address of the endpoint contract.
@@ -57,7 +55,6 @@ class VertexDeployment(VertexBaseModel):
     node_url: AnyUrl = Field(alias="publicNodeUrl")
     quote_addr: str = Field(alias="quote")
     querier_addr: str = Field(alias="querier")
-    fee_calculator_addr: str = Field(alias="feeCalculator")
     clearinghouse_addr: str = Field(alias="clearinghouse")
     endpoint_addr: str = Field(alias="endpoint")
     spot_engine_addr: str = Field(alias="spotEngine")

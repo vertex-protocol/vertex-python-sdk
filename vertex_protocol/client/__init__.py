@@ -103,6 +103,7 @@ def create_vertex_client(
     Args:
         mode (VertexClientMode): The mode in which to operate the client. Can be one of the following:
             VertexClientMode.MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
+            VertexClientMode.BLAST_MAINNET: For operating in Vertex's mainnet environment deployed on Blast Mainnet.
             VertexClientMode.SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
             VertexClientMode.DEVNET: For local development.
 
