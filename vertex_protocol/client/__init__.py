@@ -26,6 +26,8 @@ class VertexClientMode(StrEnum):
     Attributes:
         MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
 
+        BLAST_MAINNET: For operating in Vertex's mainnet environment deployed on Blast Mainnet.
+
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
         DEVNET: For local development.
@@ -34,6 +36,7 @@ class VertexClientMode(StrEnum):
     """
 
     MAINNET = "mainnet"
+    BLAST_MAINNET = "blast-mainnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
@@ -169,6 +172,11 @@ def client_mode_to_setup(
                 VertexBackendURL.MAINNET_GATEWAY.value,
                 VertexBackendURL.MAINNET_INDEXER.value,
                 VertexNetwork.ARBITRUM_ONE.value,
+            ),
+            VertexClientMode.BLAST_MAINNET: (
+                VertexBackendURL.BLAST_MAINNET_GATEWAY.value,
+                VertexBackendURL.BLAST_MAINNET_INDEXER.value,
+                VertexNetwork.BLAST_MAINNET.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,

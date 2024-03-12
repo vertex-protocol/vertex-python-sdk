@@ -1,0 +1,12 @@
+{
+  "publicNodeUrl": "https://mainnet-rpc.blast.io",
+  "explorerUrl": "https://blastscan.io",
+  "startBlock": 184008,
+  "deployer": "0x02DE3328969394bc3C791c465EeDBb1C654aDec6",
+  "quote": "0x4300000000000000000000000000000000000003",
+  "querier": "0x24367B4f22dD406C8BaC3fc54bd5bD0E0d9C56F1",
+  "clearinghouse": "0xC748532C202828969b2Ee68E0F8487E69cC1d800",
+  "endpoint": "0x00F076FE36f2341A1054B16ae05FcE0C65180DeD",
+  "spotEngine": "0x57c1AB256403532d02D1150C5790423967B22Bf2",
+  "perpEngine": "0x0bc0c84976e21aaF7bE71d318eD93A5f5c9978A4"
+}
