@@ -39,6 +39,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerSubaccountsParams,
     IndexerTokenRewardsData,
     IndexerTokenRewardsParams,
+    IndexerUsdcPriceParams,
+    IndexerUsdcPriceData,
     to_indexer_request,
 )
 from vertex_protocol.utils.model import (
@@ -368,4 +370,10 @@ class IndexerQueryClient:
         return ensure_data_type(
             self.query(params).data,
             IndexerSubaccountsData,
+        )
+
+    def get_usdc_price(self) -> IndexerUsdcPriceData:
+        return ensure_data_type(
+            self.query(IndexerUsdcPriceParams()).data,
+            IndexerUsdcPriceData,
         )

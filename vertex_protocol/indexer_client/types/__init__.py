@@ -108,4 +108,5 @@ __all__ = [
     "IndexerMarketMaker",
     "IndexerLiquidatableAccount",
     "IndexerSubaccount",
+    "IndexerUsdcPriceData",
 ]

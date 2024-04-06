@@ -41,6 +41,7 @@ class IndexerQueryType(StrEnum):
     LINKED_SIGNER_RATE_LIMIT = "linked_signer_rate_limit"
     REFERRAL_CODE = "referral_code"
     SUBACCOUNTS = "subaccounts"
+    USDC_PRICE = "usdc_price"
 
 
 class IndexerBaseParams(VertexBaseModel):
@@ -225,6 +226,14 @@ class IndexerSubaccountsParams(VertexBaseModel):
     start: Optional[int]
 
 
+class IndexerUsdcPriceParams(VertexBaseModel):
+    """
+    Parameters for querying usdc price.
+    """
+
+    pass
+
+
 IndexerParams = Union[
     IndexerSubaccountHistoricalOrdersParams,
     IndexerHistoricalOrdersByDigestParams,
@@ -242,6 +251,7 @@ IndexerParams = Union[
     IndexerLinkedSignerRateLimitParams,
     IndexerReferralCodeParams,
     IndexerSubaccountsParams,
+    IndexerUsdcPriceParams,
 ]
 
 
@@ -375,6 +385,14 @@ class IndexerSubaccountsRequest(VertexBaseModel):
     subaccounts: IndexerSubaccountsParams
 
 
+class IndexerUsdcPriceRequest(VertexBaseModel):
+    """
+    Request object for querying usdc price.
+    """
+
+    usdc_price: IndexerUsdcPriceParams
+
+
 IndexerRequest = Union[
     IndexerHistoricalOrdersRequest,
     IndexerMatchesRequest,
@@ -391,6 +409,7 @@ IndexerRequest = Union[
     IndexerLinkedSignerRateLimitRequest,
     IndexerReferralCodeRequest,
     IndexerSubaccountsRequest,
+    IndexerUsdcPriceRequest,
 ]
 
 
@@ -523,6 +542,14 @@ class IndexerSubaccountsData(VertexBaseModel):
     subaccounts: list[IndexerSubaccount]
 
 
+class IndexerUsdcPriceData(VertexBaseModel):
+    """
+    Data object for the usdc price response from the indexer.
+    """
+
+    price_x18: str
+
+
 IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
 
 
@@ -541,6 +568,7 @@ IndexerResponseData = Union[
     IndexerLinkedSignerRateLimitData,
     IndexerReferralCodeData,
     IndexerSubaccountsData,
+    IndexerUsdcPriceData,
     IndexerLiquidationFeedData,
     IndexerFundingRatesData,
 ]
@@ -629,6 +657,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerSubaccountsParams: (
             IndexerSubaccountsRequest,
             IndexerQueryType.SUBACCOUNTS.value,
+        ),
+        IndexerUsdcPriceParams: (
+            IndexerUsdcPriceRequest,
+            IndexerQueryType.USDC_PRICE.value,
         ),
     }
 
