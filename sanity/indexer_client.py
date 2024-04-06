@@ -40,12 +40,6 @@ def run():
     historical_orders_by_digest = client.get_historical_orders_by_digest(digests)
     print("historical orders by digest:", historical_orders_by_digest.json(indent=2))
 
-    print("querying matches by product...")
-    last_spot_matches = client.get_matches(
-        IndexerMatchesParams(product_ids=[1, 3], limit=2)
-    )
-    print("last spot matches:", last_spot_matches.json(indent=2))
-
     print("querying subaccount matches...")
     subaccount_matches = client.get_matches(
         IndexerMatchesParams(subaccount=subaccount, limit=2, product_ids=[1])
@@ -138,3 +132,7 @@ def run():
         IndexerSubaccountsParams(limit=2, start=0, address=owner)
     )
     print("subaccounts:", subaccounts.json(indent=2))
+
+    print("querying usdc price...")
+    usdc_price = client.get_usdc_price()
+    print("usdc price", usdc_price.price_x18)
