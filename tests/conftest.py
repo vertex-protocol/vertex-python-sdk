@@ -151,8 +151,8 @@ def liquidate_subaccount_params(senders: list[str]) -> dict:
     return {
         "sender": hex_to_bytes32(senders[0]),
         "liquidatee": hex_to_bytes32(senders[1]),
-        "mode": 0,
-        "healthGroup": 1,
+        "productId": 1,
+        "isEncodedSpread": False,
         "amount": 10000000000000000,
         "nonce": 1,
     }

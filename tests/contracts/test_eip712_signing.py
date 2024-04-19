@@ -98,8 +98,8 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "liquidatee", "type": "bytes32"},
-                {"name": "mode", "type": "uint8"},
-                {"name": "healthGroup", "type": "uint32"},
+                {"name": "productId", "type": "uint32"},
+                {"name": "isEncodedSpread", "type": "bool"},
                 {"name": "amount", "type": "int128"},
                 {"name": "nonce", "type": "uint64"},
             ],
@@ -207,8 +207,8 @@ def test_build_eip712_domain_type():
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
                 "liquidatee": "0x12a0b4888021576eb10a67616dd3dd3d9ce206b664656661756c740000000000",
-                "mode": 0,
-                "healthGroup": 1,
+                "productId": 1,
+                "isEncodedSpread": False,
                 "amount": 10000000000000000,
                 "nonce": 1,
             },

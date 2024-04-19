@@ -11,37 +11,37 @@ def test_liquidate_subaccount_params(
 ):
     sender = senders[0]
     liquidatee = senders[1]
-    mode = liquidate_subaccount_params["mode"]
-    healthGroup = liquidate_subaccount_params["healthGroup"]
+    product_id = liquidate_subaccount_params["productId"]
+    is_encoded_spread = liquidate_subaccount_params["isEncodedSpread"]
     amount = liquidate_subaccount_params["amount"]
     params_from_dict = LiquidateSubaccountParams(
         **{
             "sender": sender,
             "liquidatee": liquidatee,
-            "mode": mode,
-            "healthGroup": healthGroup,
+            "productId": product_id,
+            "isEncodedSpread": is_encoded_spread,
             "amount": amount,
         }
     )
     params_from_obj = LiquidateSubaccountParams(
         sender=sender,
         liquidatee=liquidatee,
-        mode=mode,
-        healthGroup=healthGroup,
+        productId=product_id,
+        isEncodedSpread=is_encoded_spread,
         amount=amount,
     )
     bytes32_sender = LiquidateSubaccountParams(
         sender=hex_to_bytes32(senders[0]),
         liquidatee=hex_to_bytes32(senders[1]),
-        mode=mode,
-        healthGroup=healthGroup,
+        productId=product_id,
+        isEncodedSpread=is_encoded_spread,
         amount=amount,
     )
     subaccount_params_sender = LiquidateSubaccountParams(
         sender={"subaccount_owner": owners[0], "subaccount_name": "default"},
         liquidatee={"subaccount_owner": owners[1], "subaccount_name": "default"},
-        mode=mode,
-        healthGroup=healthGroup,
+        productId=product_id,
+        isEncodedSpread=is_encoded_spread,
         amount=amount,
     )
 
@@ -62,8 +62,8 @@ def test_liquidate_subaccount_params(
             "tx": {
                 "sender": sender.lower(),
                 "liquidatee": liquidatee.lower(),
-                "mode": mode,
-                "healthGroup": healthGroup,
+                "productId": product_id,
+                "isEncodedSpread": is_encoded_spread,
                 "amount": str(amount),
                 "nonce": str(params_from_dict.nonce),
             },

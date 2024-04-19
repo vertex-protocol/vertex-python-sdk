@@ -227,9 +227,9 @@ class LiquidateSubaccountParams(BaseParamsSigned):
     Attributes:
         liquidatee (Subaccount): The subaccount that is to be liquidated.
 
-        mode (int): The mode of liquidation.
+        productId (int): ID of product to liquidate.
 
-        healthGroup (int): The ID of the health group associated with the product being traded.
+        isEncodedSpread (bool): When set to True, productId is expected to encode a perp and spot product Ids as follows: (perp_id << 16) | spot_id
 
         amount (int): The amount to be liquidated.
 
@@ -238,8 +238,8 @@ class LiquidateSubaccountParams(BaseParamsSigned):
     """
 
     liquidatee: Subaccount
-    mode: int
-    healthGroup: int
+    productId: int
+    isEncodedSpread: bool
     amount: int
 
     @validator("liquidatee")

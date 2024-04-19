@@ -98,8 +98,8 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
             "LiquidateSubaccount": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "liquidatee", "type": "bytes32"},
-                {"name": "mode", "type": "uint8"},
-                {"name": "healthGroup", "type": "uint32"},
+                {"name": "productId", "type": "uint32"},
+                {"name": "isEncodedSpread", "type": "bool"},
                 {"name": "amount", "type": "int128"},
                 {"name": "nonce", "type": "uint64"},
             ],
