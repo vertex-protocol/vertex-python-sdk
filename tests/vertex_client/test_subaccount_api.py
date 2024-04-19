@@ -19,8 +19,8 @@ def test_liquidate_subaccount(
     params = LiquidateSubaccountParams(
         sender=senders[0],
         liquidatee=senders[1],
-        mode=1,
-        healthGroup=1,
+        productId=1,
+        isEncodedSpread=False,
         amount=10,
         nonce=2,
     )
@@ -38,8 +38,8 @@ def test_liquidate_subaccount(
             "tx": {
                 "sender": senders[0].lower(),
                 "liquidatee": senders[1].lower(),
-                "mode": 1,
-                "healthGroup": 1,
+                "productId": 1,
+                "isEncodedSpread": False,
                 "amount": str(10),
                 "nonce": str(2),
             },

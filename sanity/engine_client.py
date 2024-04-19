@@ -199,8 +199,8 @@ def run():
         liquidatee=subaccount_to_bytes32(
             "0x13df46D99A81DcA51A7fC9852a0c1b88072B6Ba9", "default"
         ),
-        mode=0,
-        healthGroup=1,
+        productId=1,
+        isEncodedSpread=False,
         amount=to_x18(1),
     )
     try:
