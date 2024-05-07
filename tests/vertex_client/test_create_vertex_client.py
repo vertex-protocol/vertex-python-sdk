@@ -123,23 +123,23 @@ def test_create_vertex_client(
     mock_get.return_value = mock_response
 
     signer = Account.from_key(private_keys[0])
-    mainnet_vertex_client = create_vertex_client(VertexClientMode.MAINNET, signer)
+    mainnet_vertex_client = create_vertex_client(VertexClientMode.ARBITRUM, signer)
 
     assert mainnet_vertex_client.context.engine_client.chain_id == chain_id
     assert mainnet_vertex_client.context.engine_client.endpoint_addr == endpoint_addr
     assert mainnet_vertex_client.context.engine_client.book_addrs == book_addrs
     assert (
         mainnet_vertex_client.context.engine_client.url
-        == VertexBackendURL.MAINNET_GATEWAY
+        == VertexBackendURL.ARBITRUM_GATEWAY
     )
     assert (
         mainnet_vertex_client.context.indexer_client.url
-        == VertexBackendURL.MAINNET_INDEXER
+        == VertexBackendURL.ARBITRUM_INDEXER
     )
     assert mainnet_vertex_client.context.engine_client.signer == signer
 
     sepolia_testnet_vertex_client = create_vertex_client(
-        VertexClientMode.SEPOLIA_TESTNET, signer
+        VertexClientMode.ARBITRUM_SEPOLIA, signer
     )
 
     assert sepolia_testnet_vertex_client.context.engine_client.chain_id == chain_id
@@ -150,11 +150,11 @@ def test_create_vertex_client(
     assert sepolia_testnet_vertex_client.context.engine_client.book_addrs == book_addrs
     assert (
         sepolia_testnet_vertex_client.context.engine_client.url
-        == VertexBackendURL.SEPOLIA_TESTNET_GATEWAY
+        == VertexBackendURL.ARBITRUM_SEPOLIA_GATEWAY
     )
     assert (
         sepolia_testnet_vertex_client.context.indexer_client.url
-        == VertexBackendURL.SEPOLIA_TESTNET_INDEXER
+        == VertexBackendURL.ARBITRUM_SEPOLIA_INDEXER
     )
     assert sepolia_testnet_vertex_client.context.engine_client.signer == signer
 

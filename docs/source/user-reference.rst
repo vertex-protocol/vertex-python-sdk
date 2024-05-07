@@ -14,9 +14,9 @@ You must initialize the Vertex client via the `create_vertex_client` util for pr
     >>> from eth_account import Account
     >>> from eth_account.signers.local import LocalAccount
     >>> from vertex_protocol.client import create_vertex_client
-    >>> client_from_private_key = create_vertex_client("mainnet", "xxx")
+    >>> client_from_private_key = create_vertex_client("arbitrum", "xxx")
     >>> signer: LocalAccount = Account.from_key("xxx")
-    >>> client_from_signer = create_vertex_client("mainnet", signer)
+    >>> client_from_signer = create_vertex_client("arbitrum", signer)
 
 See :mod:`vertex_protocol.client.create_vertex_client()` for details.
 

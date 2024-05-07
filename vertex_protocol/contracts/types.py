@@ -10,9 +10,17 @@ class VertexNetwork(StrEnum):
     Enumeration representing various network environments for the Vertex protocol.
     """
 
-    ARBITRUM_ONE = "arbitrumOne"
-    BLAST_MAINNET = "blastMainnet"
+    # mainnet
+    ARBITRUM = "arbitrum"
+    BLAST = "blast"
+    MANTLE = "mantle"
+
+    # testnet
     ARBITRUM_SEPOLIA = "arbitrumSepolia"
+    BLAST_SEPOLIA = "blastSepolia"
+    MANTLE_SEPOLIA = "mantleSepolia"
+
+    # local dev
     HARDHAT = "localhost"
     TESTING = "test"
 

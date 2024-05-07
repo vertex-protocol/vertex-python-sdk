@@ -24,20 +24,29 @@ class VertexClientMode(StrEnum):
     VertexClientMode is an enumeration representing the operational modes of the VertexClient.
 
     Attributes:
-        MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
+        ARBITRUM: For Vertex's mainnet environment deployed on Arbitrum One.
 
-        BLAST_MAINNET: For operating in Vertex's mainnet environment deployed on Blast Mainnet.
+        BLAST: For Vertex's mainnet environment deployed on Blast Mainnet.
 
-        SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
+        MANTLE: For Vertex's mainnet environment deployed on Mantle Mainnet.
+
+        ARBITRUM_SEPOLIA: For Vertex's testnet environment deployed on Arbitrum Sepolia.
+
+        BLAST_SEPOLIA: For Vertex's testnet environment deployed on Blast Sepolia.
+
+        MANTLE_SEPOLIA: For Vertex's testnet environment deployed on Mantle Sepolia.
 
         DEVNET: For local development.
 
         TESTING: For running tests.
     """
 
-    MAINNET = "mainnet"
-    BLAST_MAINNET = "blast-mainnet"
-    SEPOLIA_TESTNET = "sepolia-testnet"
+    ARBITRUM = "arbitrum"
+    BLAST = "blast"
+    MANTLE = "mantle"
+    ARBITRUM_SEPOLIA = "arbitrum-sepolia"
+    BLAST_SEPOLIA = "blast-sepolia"
+    MANTLE_SEPOLIA = "mantle-sepolia"
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -102,9 +111,12 @@ def create_vertex_client(
 
     Args:
         mode (VertexClientMode): The mode in which to operate the client. Can be one of the following:
-            VertexClientMode.MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
-            VertexClientMode.BLAST_MAINNET: For operating in Vertex's mainnet environment deployed on Blast Mainnet.
-            VertexClientMode.SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
+            VertexClientMode.ARBITRUM: For Vertex's mainnet environment deployed on Arbitrum One.
+            VertexClientMode.BLAST: For Vertex's mainnet environment deployed on Blast Mainnet.
+            VertexClientMode.MANTLE: For Vertex's mainnet environment deployed on Mantle Mainnet.
+            VertexClientMode.ARBITRUM_SEPOLIA: For Vertex's testnet environment deployed on Arbitrum Sepolia.
+            VertexClientMode.BLAST_SEPOLIA: For Vertex's testnet environment deployed on Blast Sepolia.
+            VertexClientMode.MANTLE_SEPOLIA: For Vertex's testnet environment deployed on Mantle Sepolia.
             VertexClientMode.DEVNET: For local development.
 
         signer (Signer, optional): An instance of LocalAccount or a private key string for signing transactions.
@@ -169,20 +181,35 @@ def client_mode_to_setup(
 ) -> tuple[str, str, str]:
     try:
         return {
-            VertexClientMode.MAINNET: (
-                VertexBackendURL.MAINNET_GATEWAY.value,
-                VertexBackendURL.MAINNET_INDEXER.value,
-                VertexNetwork.ARBITRUM_ONE.value,
+            VertexClientMode.ARBITRUM: (
+                VertexBackendURL.ARBITRUM_GATEWAY.value,
+                VertexBackendURL.ARBITRUM_INDEXER.value,
+                VertexNetwork.ARBITRUM.value,
             ),
-            VertexClientMode.BLAST_MAINNET: (
-                VertexBackendURL.BLAST_MAINNET_GATEWAY.value,
-                VertexBackendURL.BLAST_MAINNET_INDEXER.value,
-                VertexNetwork.BLAST_MAINNET.value,
+            VertexClientMode.BLAST: (
+                VertexBackendURL.BLAST_GATEWAY.value,
+                VertexBackendURL.BLAST_INDEXER.value,
+                VertexNetwork.BLAST.value,
             ),
-            VertexClientMode.SEPOLIA_TESTNET: (
-                VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
-                VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
+            VertexClientMode.MANTLE: (
+                VertexBackendURL.MANTLE_GATEWAY.value,
+                VertexBackendURL.MANTLE_INDEXER.value,
+                VertexNetwork.MANTLE.value,
+            ),
+            VertexClientMode.ARBITRUM_SEPOLIA: (
+                VertexBackendURL.ARBITRUM_SEPOLIA_GATEWAY.value,
+                VertexBackendURL.ARBITRUM_SEPOLIA_INDEXER.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,
+            ),
+            VertexClientMode.BLAST_SEPOLIA: (
+                VertexBackendURL.BLAST_SEPOLIA_GATEWAY.value,
+                VertexBackendURL.BLAST_SEPOLIA_INDEXER.value,
+                VertexNetwork.BLAST_SEPOLIA.value,
+            ),
+            VertexClientMode.MANTLE_SEPOLIA: (
+                VertexBackendURL.MANTLE_SEPOLIA_GATEWAY.value,
+                VertexBackendURL.MANTLE_SEPOLIA_INDEXER.value,
+                VertexNetwork.MANTLE_SEPOLIA.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,

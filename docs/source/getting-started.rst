@@ -38,10 +38,14 @@ Making a deposit
     
     Remember to always keep your signer's private key securely stored and never expose it to the public.
 
-The core client supports two modes:
+The core client supports the following modes:
 
-- `sepolia-testnet`: Connects to our test environment on Arbitrum Sepolia.
-- `mainnet`: Connects to our production environment on Arbitrum One.
+- `arbitrum`: For Vertex's mainnet environment deployed on Arbitrum One.
+- `blast`: For Vertex's mainnet environment deployed on Blast Mainnet.
+- `mantle`: For Vertex's mainnet environment deployed on Mantle Mainnet.
+- `arbitrum-sepolia`: For Vertex's testnet environment deployed on Arbitrum Sepolia.
+- `blast-sepolia`: For Vertex's testnet environment deployed on Blast Sepolia.
+- `mantle-sepolia`: For Vertex's testnet environment deployed on Mantle Sepolia.
 
 The primary entry point of the SDK is via `create_vertex_client`, which allows you to create an instance of `VertexClient`.
 See  :doc:`api-reference` for more details.
@@ -50,7 +54,7 @@ See  :doc:`api-reference` for more details.
 
     >>> private_key = "xxx"
     >>> print("setting up vertex client...")
-    >>> client = create_vertex_client("sepolia-testnet", private_key)
+    >>> client = create_vertex_client("arbitrum-sepolia", private_key)
     >>> # You must first approve allowance for the amount you want to deposit.
     >>> print("approving allowance...")
     >>> approve_allowance_tx_hash = client.spot.approve_allowance(0, to_pow_10(100000, 6))
