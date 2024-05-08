@@ -19,6 +19,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerSubaccountHistoricalOrdersParams,
     IndexerProductSnapshotsData,
     IndexerProductSnapshotsParams,
+    IndexerMarketSnapshotsParams,
+    IndexerMarketSnapshotsData,
 )
 
 
@@ -244,3 +246,17 @@ class MarketQueryAPI(VertexBaseAPI):
             IndexerProductSnapshotsData: Object containing lists of product snapshots and related transaction data.
         """
         return self.context.indexer_client.get_product_snapshots(params)
+
+    def get_market_snapshots(
+        self, params: IndexerMarketSnapshotsParams
+    ) -> IndexerMarketSnapshotsData:
+        """
+        Fetches the historical market snapshots from the indexer.
+
+        Args:
+            params (IndexerMarketSnapshotsParams): Parameters specifying the historical market snapshot request.
+
+        Returns:
+            IndexerMarketSnapshotsData: The market snapshot data corresponding to the provided parameters.
+        """
+        return self.context.indexer_client.get_market_snapshots(params)

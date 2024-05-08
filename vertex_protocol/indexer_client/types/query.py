@@ -13,6 +13,7 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerMatch,
     IndexerOraclePrice,
     IndexerProduct,
+    IndexerMarketSnapshot,
     IndexerSubaccount,
     IndexerTokenReward,
     IndexerTx,
@@ -30,6 +31,7 @@ class IndexerQueryType(StrEnum):
     EVENTS = "events"
     SUMMARY = "summary"
     PRODUCTS = "products"
+    MARKET_SNAPSHOTS = "market_snapshots"
     CANDLESTICKS = "candlesticks"
     FUNDING_RATE = "funding_rate"
     FUNDING_RATES = "funding_rates"
@@ -128,6 +130,21 @@ class IndexerProductSnapshotsParams(IndexerBaseParams):
     """
 
     product_id: int
+
+
+class IndexerMarketSnapshotInterval(VertexBaseModel):
+    count: int
+    granularity: int
+    max_time: Optional[int]
+
+
+class IndexerMarketSnapshotsParams(VertexBaseModel):
+    """
+    Parameters for querying market snapshots.
+    """
+
+    interval: IndexerMarketSnapshotInterval
+    product_ids: Optional[list[int]]
 
 
 class IndexerCandlesticksParams(IndexerBaseParams):
@@ -252,6 +269,7 @@ IndexerParams = Union[
     IndexerReferralCodeParams,
     IndexerSubaccountsParams,
     IndexerUsdcPriceParams,
+    IndexerMarketSnapshotsParams,
 ]
 
 
@@ -295,6 +313,14 @@ class IndexerProductSnapshotsRequest(VertexBaseModel):
     """
 
     products: IndexerProductSnapshotsParams
+
+
+class IndexerMarketSnapshotsRequest(VertexBaseModel):
+    """
+    Request object for querying market snapshots.
+    """
+
+    market_snapshots: IndexerMarketSnapshotsParams
 
 
 class IndexerCandlesticksRequest(VertexBaseModel):
@@ -410,6 +436,7 @@ IndexerRequest = Union[
     IndexerReferralCodeRequest,
     IndexerSubaccountsRequest,
     IndexerUsdcPriceRequest,
+    IndexerMarketSnapshotsRequest,
 ]
 
 
@@ -454,6 +481,14 @@ class IndexerProductSnapshotsData(VertexBaseModel):
 
     products: list[IndexerProduct]
     txs: list[IndexerTx]
+
+
+class IndexerMarketSnapshotsData(VertexBaseModel):
+    """
+    Data object for market snapshots.
+    """
+
+    snapshots: list[IndexerMarketSnapshot]
 
 
 class IndexerCandlesticksData(VertexBaseModel):
@@ -569,6 +604,7 @@ IndexerResponseData = Union[
     IndexerReferralCodeData,
     IndexerSubaccountsData,
     IndexerUsdcPriceData,
+    IndexerMarketSnapshotsData,
     IndexerLiquidationFeedData,
     IndexerFundingRatesData,
 ]
@@ -613,6 +649,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerProductSnapshotsParams: (
             IndexerProductSnapshotsRequest,
             IndexerQueryType.PRODUCTS.value,
+        ),
+        IndexerMarketSnapshotsParams: (
+            IndexerMarketSnapshotsRequest,
+            IndexerQueryType.MARKET_SNAPSHOTS.value,
         ),
         IndexerCandlesticksParams: (
             IndexerCandlesticksRequest,

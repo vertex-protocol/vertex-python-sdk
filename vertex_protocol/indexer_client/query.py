@@ -20,6 +20,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerLinkedSignerRateLimitParams,
     IndexerLiquidationFeedData,
     IndexerLiquidationFeedParams,
+    IndexerMarketSnapshotsData,
+    IndexerMarketSnapshotsParams,
     IndexerMakerStatisticsData,
     IndexerMakerStatisticsParams,
     IndexerMatchesParams,
@@ -204,6 +206,23 @@ class IndexerQueryClient:
         return ensure_data_type(
             self.query(IndexerProductSnapshotsParams.parse_obj(params)).data,
             IndexerProductSnapshotsData,
+        )
+
+    def get_market_snapshots(
+        self, params: IndexerMarketSnapshotsParams
+    ) -> IndexerMarketSnapshotsData:
+        """
+        Retrieves historical market snapshots.
+
+        Args:
+            params (IndexerMarketSnapshotsParams): Parameters specifying the historical market snapshot request.
+
+        Returns:
+            IndexerMarketSnapshotsData: The market snapshot data corresponding to the provided parameters.
+        """
+        return ensure_data_type(
+            self.query(IndexerMarketSnapshotsParams.parse_obj(params)).data,
+            IndexerMarketSnapshotsData,
         )
 
     def get_candlesticks(

@@ -198,6 +198,29 @@ class IndexerProduct(IndexerBaseModel):
     product: IndexerProductData
 
 
+class IndexerMarketSnapshot(VertexBaseModel):
+    timestamp: int
+    cumulative_users: int
+    daily_active_users: int
+    tvl: str
+
+    # product_id -> cumulative_metric
+    cumulative_trades: dict
+    cumulative_volumes: dict
+    cumulative_trade_sizes: dict
+    cumulative_sequencer_fees: dict
+    cumulative_maker_fees: dict
+    cumulative_liquidation_amounts: dict
+    open_interests: dict
+    total_deposits: dict
+    total_borrows: dict
+    funding_rates: dict
+    deposit_rates: dict
+    borrow_rates: dict
+    cumulative_inflows: dict
+    cumulative_outflows: dict
+
+
 class IndexerCandlestick(IndexerBaseModel):
     product_id: int
     granularity: int

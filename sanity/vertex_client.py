@@ -324,6 +324,18 @@ def run():
     )
     print("product snapshots:", product_snapshots.json(indent=2))
 
+    one_day_ago = int(time.time()) - 86400
+    print("querying market snapshots...")
+    market_snapshots = client.market.get_market_snapshots(
+        {"interval": {"count": 2, "granularity": 3600, "max_time": one_day_ago}}
+    )
+
+    print(
+        "market snapshots",
+        market_snapshots.json(indent=2),
+        len(market_snapshots.snapshots),
+    )
+
     print("querying perp prices...")
     perp_prices = client.perp.get_prices(2)
     print("perp prices:", perp_prices.json(indent=2))
