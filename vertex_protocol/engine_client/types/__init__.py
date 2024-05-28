@@ -1,7 +1,7 @@
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from typing import Optional, Union
-from pydantic import field_validator, ConfigDict, BaseModel, AnyUrl, root_validator
+from pydantic import field_validator, ConfigDict, BaseModel, AnyUrl, model_validator
 from vertex_protocol.engine_client.types.execute import *
 from vertex_protocol.engine_client.types.models import *
 from vertex_protocol.engine_client.types.query import *
@@ -36,7 +36,7 @@ class EngineClientOpts(BaseModel):
     book_addrs: Optional[list[str]] = None
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    @root_validator
+    @model_validator(mode='before')
     def check_linked_signer(cls, values: dict):
         """
         Validates that if a linked_signer is set, a signer must also be set.
