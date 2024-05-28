@@ -38,7 +38,7 @@ class IndexerCandlesticksGranularity(IntEnum):
 
 class IndexerBaseModel(VertexBaseModel):
     submission_idx: str
-    timestamp: Optional[str]
+    timestamp: Optional[str] = None
 
 
 class IndexerBaseOrder(VertexBaseModel):

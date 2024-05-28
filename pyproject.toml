@@ -16,9 +16,10 @@ keywords = ["vertex protocol", "vertex sdk", "vertex protocol api"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pydantic = "^1.10.7"
+pydantic = "2.7.1"
 web3 = "^6.4.0"
 eth-account = "^0.8.0"
+bump-pydantic = "^0.8.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"

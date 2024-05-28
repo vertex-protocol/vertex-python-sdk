@@ -1,7 +1,7 @@
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from typing import Optional, Union
-from pydantic import BaseModel, AnyUrl, validator, root_validator
+from pydantic import field_validator, ConfigDict, BaseModel, AnyUrl, root_validator
 from vertex_protocol.engine_client.types.execute import *
 from vertex_protocol.engine_client.types.models import *
 from vertex_protocol.engine_client.types.query import *
@@ -34,9 +34,7 @@ class EngineClientOpts(BaseModel):
     chain_id: Optional[int] = None
     endpoint_addr: Optional[str] = None
     book_addrs: Optional[list[str]] = None
-
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @root_validator
     def check_linked_signer(cls, values: dict):
@@ -57,7 +55,8 @@ class EngineClientOpts(BaseModel):
             raise ValueError("linked_signer cannot be set if signer is not set")
         return values
 
-    @validator("url")
+    @field_validator("url")
+    @classmethod
     def clean_url(cls, v: AnyUrl) -> str:
         """
         Cleans the URL input by removing trailing slashes.
@@ -70,7 +69,8 @@ class EngineClientOpts(BaseModel):
         """
         return v.rstrip("/")
 
-    @validator("signer")
+    @field_validator("signer")
+    @classmethod
     def signer_to_local_account(cls, v: Optional[Signer]) -> Optional[LocalAccount]:
         """
         Validates and converts the signer to a LocalAccount instance.
@@ -85,7 +85,8 @@ class EngineClientOpts(BaseModel):
             return v
         return Account.from_key(v)
 
-    @validator("linked_signer")
+    @field_validator("linked_signer")
+    @classmethod
     def linked_signer_to_local_account(
         cls, v: Optional[Signer]
     ) -> Optional[LocalAccount]:

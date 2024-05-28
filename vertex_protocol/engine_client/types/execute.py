@@ -1,5 +1,5 @@
 from typing import Optional, Type, Union
-from pydantic import validator
+from pydantic import field_validator, ConfigDict, validator
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.utils.model import VertexBaseModel
@@ -29,12 +29,11 @@ class BaseParams(VertexBaseModel):
     """
 
     sender: Subaccount
-    nonce: Optional[int]
+    nonce: Optional[int] = None
+    model_config = ConfigDict(validate_assignment=True)
 
-    class Config:
-        validate_assignment = True
-
-    @validator("sender")
+    @field_validator("sender")
+    @classmethod
     def serialize_sender(cls, v: Subaccount) -> Union[bytes, Subaccount]:
         """
         Validates and serializes the sender to bytes32 format.
@@ -59,7 +58,7 @@ class SignatureParams(VertexBaseModel):
         signature (Optional[str]): An optional string representing the signature for the request.
     """
 
-    signature: Optional[str]
+    signature: Optional[str] = None
 
 
 class BaseParamsSigned(BaseParams, SignatureParams):
@@ -167,7 +166,8 @@ class CancelOrdersParams(BaseParamsSigned):
     digests: list[Digest]
     nonce: Optional[int]
 
-    @validator("digests")
+    @field_validator("digests")
+    @classmethod
     def serialize_digests(cls, v: list[Digest]) -> list[bytes]:
         return [hex_to_bytes32(digest) for digest in v]
 
@@ -242,7 +242,8 @@ class LiquidateSubaccountParams(BaseParamsSigned):
     isEncodedSpread: bool
     amount: int
 
-    @validator("liquidatee")
+    @field_validator("liquidatee")
+    @classmethod
     def serialize_liquidatee(cls, v: Subaccount) -> bytes:
         return subaccount_to_bytes32(v)
 
@@ -299,7 +300,8 @@ class LinkSignerParams(BaseParamsSigned):
 
     signer: Subaccount
 
-    @validator("signer")
+    @field_validator("signer")
+    @classmethod
     def serialize_signer(cls, v: Subaccount) -> bytes:
         return subaccount_to_bytes32(v)
 
@@ -330,7 +332,8 @@ class PlaceOrderRequest(VertexBaseModel):
 
     place_order: PlaceOrderParams
 
-    @validator("place_order")
+    @field_validator("place_order")
+    @classmethod
     def serialize(cls, v: PlaceOrderParams) -> PlaceOrderParams:
         if v.order.nonce is None:
             raise ValueError("Missing order `nonce`")
@@ -362,10 +365,11 @@ class TxRequest(VertexBaseModel):
 
     tx: dict
     signature: str
-    spot_leverage: Optional[bool]
-    digest: Optional[str]
+    spot_leverage: Optional[bool] = None
+    digest: Optional[str] = None
 
-    @validator("tx")
+    @field_validator("tx")
+    @classmethod
     def serialize(cls, v: dict) -> dict:
         """
         Validates and serializes the transaction parameters.
@@ -426,7 +430,8 @@ class CancelOrdersRequest(VertexBaseModel):
 
     cancel_orders: CancelOrdersParams
 
-    @validator("cancel_orders")
+    @field_validator("cancel_orders")
+    @classmethod
     def serialize(cls, v: CancelOrdersParams) -> CancelOrdersParams:
         """
         Serializes 'digests' in 'cancel_orders' into their hexadecimal representation.
@@ -453,7 +458,8 @@ class CancelAndPlaceRequest(VertexBaseModel):
 
     cancel_and_place: CancelAndPlaceParams
 
-    @validator("cancel_and_place")
+    @field_validator("cancel_and_place")
+    @classmethod
     def serialize(cls, v: CancelAndPlaceParams) -> dict:
         cancel_tx = TxRequest.parse_obj(
             CancelOrdersRequest(cancel_orders=v.cancel_orders).cancel_orders
@@ -496,7 +502,8 @@ class WithdrawCollateralRequest(VertexBaseModel):
 
     withdraw_collateral: WithdrawCollateralParams
 
-    @validator("withdraw_collateral")
+    @field_validator("withdraw_collateral")
+    @classmethod
     def serialize(cls, v: WithdrawCollateralParams) -> WithdrawCollateralParams:
         v.serialize_dict(["amount"], str)
         return v
@@ -520,7 +527,8 @@ class LiquidateSubaccountRequest(VertexBaseModel):
 
     liquidate_subaccount: LiquidateSubaccountParams
 
-    @validator("liquidate_subaccount")
+    @field_validator("liquidate_subaccount")
+    @classmethod
     def serialize(cls, v: LiquidateSubaccountParams) -> LiquidateSubaccountParams:
         v.serialize_dict(["amount"], str)
         v.serialize_dict(["liquidatee"], bytes32_to_hex)
@@ -545,7 +553,8 @@ class MintLpRequest(VertexBaseModel):
 
     mint_lp: MintLpParams
 
-    @validator("mint_lp")
+    @field_validator("mint_lp")
+    @classmethod
     def serialize(cls, v: MintLpParams) -> MintLpParams:
         v.serialize_dict(["amountBase", "quoteAmountLow", "quoteAmountHigh"], str)
         return v
@@ -568,7 +577,8 @@ class BurnLpRequest(VertexBaseModel):
 
     burn_lp: BurnLpParams
 
-    @validator("burn_lp")
+    @field_validator("burn_lp")
+    @classmethod
     def serialize(cls, v: BurnLpParams) -> BurnLpParams:
         v.serialize_dict(["amount"], str)
         return v
@@ -591,7 +601,8 @@ class LinkSignerRequest(VertexBaseModel):
 
     link_signer: LinkSignerParams
 
-    @validator("link_signer")
+    @field_validator("link_signer")
+    @classmethod
     def serialize(cls, v: LinkSignerParams) -> LinkSignerParams:
         v.serialize_dict(["signer"], bytes32_to_hex)
         return v
@@ -652,12 +663,12 @@ class ExecuteResponse(VertexBaseModel):
     """
 
     status: ResponseStatus
-    signature: Optional[str]
-    data: Optional[ExecuteResponseData]
-    error_code: Optional[int]
-    error: Optional[str]
-    request_type: Optional[str]
-    req: Optional[dict]
+    signature: Optional[str] = None
+    data: Optional[ExecuteResponseData] = None
+    error_code: Optional[int] = None
+    error: Optional[str] = None
+    request_type: Optional[str] = None
+    req: Optional[dict] = None
 
 
 def to_execute_request(params: ExecuteParams) -> ExecuteRequest:

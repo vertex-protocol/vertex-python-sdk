@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import ConfigDict, BaseModel
 from vertex_protocol.contracts.types import VertexExecuteType
 
 
@@ -28,10 +28,7 @@ class EIP712Types(BaseModel):
     """
 
     EIP712Domain: list[dict]
-
-    class Config:
-        arbitrary_types_allowed = True
-        extra = "allow"
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow")
 
 
 class EIP712TypedData(BaseModel):

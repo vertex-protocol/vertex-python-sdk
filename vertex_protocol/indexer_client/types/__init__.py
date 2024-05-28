@@ -1,4 +1,4 @@
-from pydantic import BaseModel, AnyUrl, validator
+from pydantic import field_validator, BaseModel, AnyUrl
 from vertex_protocol.indexer_client.types.models import *
 from vertex_protocol.indexer_client.types.query import *
 
@@ -10,7 +10,8 @@ class IndexerClientOpts(BaseModel):
 
     url: AnyUrl
 
-    @validator("url")
+    @field_validator("url")
+    @classmethod
     def clean_url(cls, v: AnyUrl) -> str:
         return v.rstrip("/")
 

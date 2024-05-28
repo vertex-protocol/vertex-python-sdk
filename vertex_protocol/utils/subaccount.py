@@ -11,7 +11,7 @@ class SubaccountParams(VertexBaseModel):
         subaccount_name (str): The subaccount name identifier.
     """
 
-    subaccount_owner: Optional[str]
+    subaccount_owner: Optional[str] = None
     subaccount_name: str
 
 

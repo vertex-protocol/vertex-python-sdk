@@ -78,7 +78,7 @@ class DepositCollateralParams(VertexBaseModel):
     subaccount_name: str
     product_id: int
     amount: int
-    referral_code: Optional[str]
+    referral_code: Optional[str] = None
 
 
 class VertexExecuteType(StrEnum):

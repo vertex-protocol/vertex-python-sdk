@@ -34,12 +34,12 @@ class VertexContractsContext(BaseModel):
         clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
     """
 
-    network: Optional[VertexNetwork]
+    network: Optional[VertexNetwork] = None
     endpoint_addr: str
     querier_addr: str
-    spot_engine_addr: Optional[str]
-    perp_engine_addr: Optional[str]
-    clearinghouse_addr: Optional[str]
+    spot_engine_addr: Optional[str] = None
+    perp_engine_addr: Optional[str] = None
+    clearinghouse_addr: Optional[str] = None
 
 
 class VertexContracts:

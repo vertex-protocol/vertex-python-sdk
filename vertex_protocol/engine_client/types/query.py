@@ -1,6 +1,6 @@
 from vertex_protocol.utils.enum import StrEnum
 from typing import Optional, Union
-from pydantic import validator
+from pydantic import field_validator
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,
@@ -88,7 +88,7 @@ class QuerySubaccountInfoParams(VertexBaseModel):
 
     type = EngineQueryType.SUBACCOUNT_INFO.value
     subaccount: str
-    txs: Optional[list[QuerySubaccountInfoTx]]
+    txs: Optional[list[QuerySubaccountInfoTx]] = None
 
 
 class QuerySubaccountOpenOrdersParams(VertexBaseModel):
@@ -117,8 +117,8 @@ class QuerySymbolsParams(VertexBaseModel):
     """
 
     type = EngineQueryType.SYMBOLS.value
-    product_type: Optional[str]
-    product_ids: Optional[list[int]]
+    product_type: Optional[str] = None
+    product_ids: Optional[list[int]] = None
 
 
 class QueryAllProductsParams(VertexBaseModel):
@@ -148,9 +148,10 @@ class QueryMaxOrderSizeParams(VertexBaseModel):
     product_id: int
     price_x18: str
     direction: MaxOrderSizeDirection
-    spot_leverage: Optional[bool]
+    spot_leverage: Optional[bool] = None
 
-    @validator("direction")
+    @field_validator("direction")
+    @classmethod
     def direction_to_str(cls, v: MaxOrderSizeDirection) -> str:
         return v.value
 
@@ -163,7 +164,7 @@ class QueryMaxWithdrawableParams(VertexBaseModel):
     type = EngineQueryType.MAX_WITHDRAWABLE.value
     sender: str
     product_id: int
-    spot_leverage: Optional[bool]
+    spot_leverage: Optional[bool] = None
 
 
 class QueryMaxLpMintableParams(VertexBaseModel):
@@ -174,7 +175,7 @@ class QueryMaxLpMintableParams(VertexBaseModel):
     type = EngineQueryType.MAX_LP_MINTABLE.value
     sender: str
     product_id: int
-    spot_leverage: Optional[bool]
+    spot_leverage: Optional[bool] = None
 
 
 class QueryFeeRatesParams(VertexBaseModel):
@@ -443,7 +444,7 @@ class QueryResponse(VertexBaseModel):
     """
 
     status: ResponseStatus
-    data: Optional[QueryResponseData]
-    error: Optional[str]
-    error_code: Optional[int]
-    request_type: Optional[str]
+    data: Optional[QueryResponseData] = None
+    error: Optional[str] = None
+    error_code: Optional[int] = None
+    request_type: Optional[str] = None

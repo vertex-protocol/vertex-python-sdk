@@ -1,8 +1,9 @@
-from typing import Union
+from typing import List, Union
 from typing import Annotated
 from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
-from pydantic import conlist
+from pydantic import Field
+from typing_extensions import Annotated
 
 
 class ResponseStatus(StrEnum):
@@ -194,4 +195,4 @@ class SubaccountPosition(VertexBaseModel):
 
 
 # (price, amount)
-MarketLiquidity = Annotated[list, conlist(str, min_items=2, max_items=2)]
+MarketLiquidity = Annotated[list, Annotated[List[str], Field(min_items=2, max_items=2)]]

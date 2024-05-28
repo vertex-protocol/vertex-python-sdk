@@ -1,7 +1,7 @@
 from vertex_protocol.utils.enum import StrEnum
 from typing import Dict, Optional, Union
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 from vertex_protocol.indexer_client.types.models import (
     IndexerCandlestick,
     IndexerCandlesticksGranularity,
@@ -51,12 +51,10 @@ class IndexerBaseParams(VertexBaseModel):
     Base parameters for the indexer queries.
     """
 
-    idx: Optional[int] = Field(alias="submission_idx")
-    max_time: Optional[int]
-    limit: Optional[int]
-
-    class Config:
-        allow_population_by_field_name = True
+    idx: Optional[int] = Field(None, alias="submission_idx")
+    max_time: Optional[int] = None
+    limit: Optional[int] = None
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class IndexerSubaccountHistoricalOrdersParams(IndexerBaseParams):
@@ -121,7 +119,7 @@ class IndexerSubaccountSummaryParams(VertexBaseModel):
     """
 
     subaccount: str
-    timestamp: Optional[int]
+    timestamp: Optional[int] = None
 
 
 class IndexerProductSnapshotsParams(IndexerBaseParams):
@@ -135,7 +133,7 @@ class IndexerProductSnapshotsParams(IndexerBaseParams):
 class IndexerMarketSnapshotInterval(VertexBaseModel):
     count: int
     granularity: int
-    max_time: Optional[int]
+    max_time: Optional[int] = None
 
 
 class IndexerMarketSnapshotsParams(VertexBaseModel):
@@ -144,7 +142,7 @@ class IndexerMarketSnapshotsParams(VertexBaseModel):
     """
 
     interval: IndexerMarketSnapshotInterval
-    product_ids: Optional[list[int]]
+    product_ids: Optional[list[int]] = None
 
 
 class IndexerCandlesticksParams(IndexerBaseParams):
@@ -154,9 +152,9 @@ class IndexerCandlesticksParams(IndexerBaseParams):
 
     product_id: int
     granularity: IndexerCandlesticksGranularity
-
-    class Config:
-        fields = {"idx": {"exclude": True}}
+    # TODO[pydantic]: The following keys were removed: `fields`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(fields={"idx": {"exclude": True}})
 
 
 class IndexerFundingRateParams(VertexBaseModel):
@@ -238,9 +236,9 @@ class IndexerSubaccountsParams(VertexBaseModel):
     Parameters for querying subaccounts.
     """
 
-    address: Optional[str]
-    limit: Optional[int]
-    start: Optional[int]
+    address: Optional[str] = None
+    limit: Optional[int] = None
+    start: Optional[int] = None
 
 
 class IndexerUsdcPriceParams(VertexBaseModel):
