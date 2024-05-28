@@ -48,7 +48,7 @@ class QueryStatusParams(VertexBaseModel):
     Parameters for querying the status of the engine.
     """
 
-    type = EngineQueryType.STATUS.value
+    type: str = EngineQueryType.STATUS.value
 
 
 class QueryContractsParams(VertexBaseModel):
@@ -56,7 +56,7 @@ class QueryContractsParams(VertexBaseModel):
     Parameters for querying the Vertex contract addresses.
     """
 
-    type = EngineQueryType.CONTRACTS.value
+    type: str = EngineQueryType.CONTRACTS.value
 
 
 class QueryNoncesParams(VertexBaseModel):
@@ -64,7 +64,7 @@ class QueryNoncesParams(VertexBaseModel):
     Parameters for querying the nonces associated with a specific address.
     """
 
-    type = EngineQueryType.NONCES.value
+    type: str = EngineQueryType.NONCES.value
     address: str
 
 
@@ -73,7 +73,7 @@ class QueryOrderParams(VertexBaseModel):
     Parameters for querying a specific order using its product_id and digest.
     """
 
-    type = EngineQueryType.ORDER.value
+    type: str = EngineQueryType.ORDER.value
     product_id: int
     digest: str
 
@@ -86,7 +86,7 @@ class QuerySubaccountInfoParams(VertexBaseModel):
     Parameters for querying the subaccount summary from engine, including balances.
     """
 
-    type = EngineQueryType.SUBACCOUNT_INFO.value
+    type: str = EngineQueryType.SUBACCOUNT_INFO.value
     subaccount: str
     txs: Optional[list[QuerySubaccountInfoTx]] = None
 
@@ -96,7 +96,7 @@ class QuerySubaccountOpenOrdersParams(VertexBaseModel):
     Parameters for querying open orders associated with a subaccount for a specific product.
     """
 
-    type = EngineQueryType.SUBACCOUNT_ORDERS.value
+    type: str = EngineQueryType.SUBACCOUNT_ORDERS.value
     product_id: int
     sender: str
 
@@ -106,7 +106,7 @@ class QueryMarketLiquidityParams(VertexBaseModel):
     Parameters for querying the market liquidity for a specific product up to a defined depth.
     """
 
-    type = EngineQueryType.MARKET_LIQUIDITY.value
+    type: str = EngineQueryType.MARKET_LIQUIDITY.value
     product_id: int
     depth: int
 
@@ -116,7 +116,7 @@ class QuerySymbolsParams(VertexBaseModel):
     Parameters for querying symbols and product info
     """
 
-    type = EngineQueryType.SYMBOLS.value
+    type: str = EngineQueryType.SYMBOLS.value
     product_type: Optional[str] = None
     product_ids: Optional[list[int]] = None
 
@@ -126,7 +126,7 @@ class QueryAllProductsParams(VertexBaseModel):
     Parameters for querying all products available in the engine.
     """
 
-    type = EngineQueryType.ALL_PRODUCTS.value
+    type: str = EngineQueryType.ALL_PRODUCTS.value
 
 
 class QueryMarketPriceParams(VertexBaseModel):
@@ -134,7 +134,7 @@ class QueryMarketPriceParams(VertexBaseModel):
     Parameters for querying the market price of a specific product.
     """
 
-    type = EngineQueryType.MARKET_PRICE.value
+    type: str = EngineQueryType.MARKET_PRICE.value
     product_id: int
 
 
@@ -143,7 +143,7 @@ class QueryMaxOrderSizeParams(VertexBaseModel):
     Parameters for querying the maximum order size for a specific product and a given sender.
     """
 
-    type = EngineQueryType.MAX_ORDER_SIZE.value
+    type: str = EngineQueryType.MAX_ORDER_SIZE.value
     sender: str
     product_id: int
     price_x18: str
@@ -161,7 +161,7 @@ class QueryMaxWithdrawableParams(VertexBaseModel):
     Parameters for querying the maximum withdrawable amount for a specific product and a given sender.
     """
 
-    type = EngineQueryType.MAX_WITHDRAWABLE.value
+    type: str = EngineQueryType.MAX_WITHDRAWABLE.value
     sender: str
     product_id: int
     spot_leverage: Optional[bool] = None
@@ -172,7 +172,7 @@ class QueryMaxLpMintableParams(VertexBaseModel):
     Parameters for querying the maximum liquidity that can be minted by a specified sender for a specific product.
     """
 
-    type = EngineQueryType.MAX_LP_MINTABLE.value
+    type: str = EngineQueryType.MAX_LP_MINTABLE.value
     sender: str
     product_id: int
     spot_leverage: Optional[bool] = None
@@ -183,7 +183,7 @@ class QueryFeeRatesParams(VertexBaseModel):
     Parameters for querying the fee rates associated with a specified sender.
     """
 
-    type = EngineQueryType.FEE_RATES.value
+    type: str = EngineQueryType.FEE_RATES.value
     sender: str
 
 
@@ -192,7 +192,7 @@ class QueryHealthGroupsParams(VertexBaseModel):
     Parameters for querying the health groups in the engine.
     """
 
-    type = EngineQueryType.HEALTH_GROUPS.value
+    type: str = EngineQueryType.HEALTH_GROUPS.value
 
 
 class QueryLinkedSignerParams(VertexBaseModel):
@@ -200,7 +200,7 @@ class QueryLinkedSignerParams(VertexBaseModel):
     Parameters for querying the signer linked to a specified subaccount.
     """
 
-    type = EngineQueryType.LINKED_SIGNER.value
+    type: str = EngineQueryType.LINKED_SIGNER.value
     subaccount: str
 
 
