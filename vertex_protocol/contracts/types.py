@@ -95,3 +95,4 @@ class VertexExecuteType(StrEnum):
     MINT_LP = "mint_lp"
     BURN_LP = "burn_lp"
     LINK_SIGNER = "link_signer"
+    AUTHENTICATION = "authenticate"

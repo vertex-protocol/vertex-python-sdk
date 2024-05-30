@@ -127,6 +127,10 @@ class PlaceOrderParams(SignatureParams):
     digest: Optional[str]
     spot_leverage: Optional[bool]
 
+class StreamAuthenticationParams(SignatureParams):
+    sender: str
+    expiration: int
+
 
 class PlaceMarketOrderParams(SignatureParams):
     """
