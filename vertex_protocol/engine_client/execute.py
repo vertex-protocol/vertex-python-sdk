@@ -190,6 +190,7 @@ class EngineExecuteClient:
             execute_res = ExecuteResponse(**res.json(), req=req.dict())
         except ValidationError:
             print(f"temporarily catching for pydantic, TODO -- revisit")
+            return res.json()
         except Exception:
             raise ExecuteFailedException(res.text)
         if execute_res.status != "success":
