@@ -1,5 +1,5 @@
 {
-  "publicNodeUrl": "https://mainnet-rpc.blast.io",
+  "publicNodeUrl": "https://rpc.blast.io",
   "explorerUrl": "https://blastscan.io",
   "startBlock": 184008,
   "deployer": "0x02DE3328969394bc3C791c465EeDBb1C654aDec6",
