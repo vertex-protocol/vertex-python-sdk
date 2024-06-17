@@ -1,5 +1,6 @@
 from copy import deepcopy
 import time
+from pydantic import ValidationError
 import requests
 from functools import singledispatchmethod
 
@@ -187,6 +188,8 @@ class EngineExecuteClient:
             raise BadStatusCodeException(res.text)
         try:
             execute_res = ExecuteResponse(**res.json(), req=req.dict())
+        except ValidationError:
+            print(f"temporarily catching for pydantic, TODO -- revisit")
         except Exception:
             raise ExecuteFailedException(res.text)
         if execute_res.status != "success":

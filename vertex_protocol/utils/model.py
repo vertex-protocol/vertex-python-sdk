@@ -45,7 +45,10 @@ class VertexBaseModel(BaseModel):
             func (Callable): Function to apply to each field.
         """
         for field in fields:
-            self.__dict__[field] = func(self.__dict__[field])
+            try:
+                self.__dict__[field] = func(self.__dict__[field])
+            except Exception as e:
+                print(f"serialization exception for field -- {e}")
 
 
 def parse_enum_value(value: Union[str, Enum]) -> str:
