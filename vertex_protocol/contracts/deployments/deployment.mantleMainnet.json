@@ -1,0 +1,12 @@
+{
+  "publicNodeUrl": "https://rpc.mantle.xyz",
+  "explorerUrl": "https://explorer.mantle.xyz",
+  "startBlock": 63224056,
+  "deployer": "0xFF9346dFAF07520ef64B006F5F4B2C17c54F59f4",
+  "quote": "0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9",
+  "querier": "0x71b50Ce0E7f7B920c1BAee3BDE00F2c3F7470395",
+  "clearinghouse": "0x5bcfC8AD38Ee1da5F45d9795aCaDf57D37FEC172",
+  "endpoint": "0x526D7C7ea3677efF28CB5bA457f9d341F297Fd52",
+  "spotEngine": "0xb64d2d606DC23D7a055B770e192631f5c8e1d9f8",
+  "perpEngine": "0x38080ee5fb939d045A9e533dF355e85Ff4f7e13D"
+}

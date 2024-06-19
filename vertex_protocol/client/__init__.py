@@ -28,6 +28,8 @@ class VertexClientMode(StrEnum):
 
         BLAST_MAINNET: For operating in Vertex's mainnet environment deployed on Blast Mainnet.
 
+        MANTLE_MAINNET: For operating in Vertex's mainnet environment deployed on Mantle Mainnet.
+
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
         DEVNET: For local development.
@@ -37,6 +39,7 @@ class VertexClientMode(StrEnum):
 
     MAINNET = "mainnet"
     BLAST_MAINNET = "blast-mainnet"
+    MANTLE_MAINNET = "mantle-mainnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
@@ -177,6 +180,11 @@ def client_mode_to_setup(
             VertexClientMode.BLAST_MAINNET: (
                 VertexBackendURL.BLAST_MAINNET_GATEWAY.value,
                 VertexBackendURL.BLAST_MAINNET_INDEXER.value,
+                VertexNetwork.BLAST_MAINNET.value,
+            ),
+            VertexClientMode.MANTLE_MAINNET: (
+                VertexBackendURL.MANTLE_MAINNET_GATEWAY.value,
+                VertexBackendURL.MANTLE_MAINNET_INDEXER.value,
                 VertexNetwork.BLAST_MAINNET.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
