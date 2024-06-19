@@ -19,6 +19,11 @@ from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import round_x18, to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
+from vertex_protocol.utils.interest import (
+    calc_deposit_rate_in_period,
+    calc_borrow_rate_in_period,
+)
+from vertex_protocol.utils.time import TimeInSeconds
 
 
 def run():
@@ -391,3 +396,19 @@ def run():
     )
     res = client.spot.withdraw(withdraw_collateral_params)
     print("withdraw result:", res.json(indent=2))
+
+    spot_products = client.market.get_all_engine_markets().spot_products
+    for product in spot_products:
+        deposit_apr = calc_deposit_rate_in_period(
+            product, TimeInSeconds.YEAR, 0.2
+        )  # 20% interest fee
+        borrow_apr = calc_borrow_rate_in_period(product, TimeInSeconds.YEAR)
+
+        print(
+            "product:",
+            product.product_id,
+            "deposit APR:",
+            f"{deposit_apr * 100:.2f}",
+            "borrow APR:",
+            f"{borrow_apr * 100:.2f}",
+        ),
