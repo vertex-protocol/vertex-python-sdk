@@ -39,12 +39,10 @@ def calc_borrow_rate_per_second(product: SpotProduct) -> float:
     interest_small_cap = from_x18(int(product.config.interest_small_cap_x18))
     interest_large_cap = from_x18(int(product.config.interest_large_cap_x18))
 
-    is_past_inflection = utilization > interest_inflection_util
-    print("product:", product.product_id, "is_past_inflection", is_past_inflection)
     annual_rate = 0.0
-    if is_past_inflection:
+    if utilization > interest_inflection_util:
         utilization_term = interest_large_cap * (
-            (utilization - interest_inflection_util) / 1 - interest_inflection_util
+            (utilization - interest_inflection_util) / (1 - interest_inflection_util)
         )
         annual_rate = interest_floor + interest_small_cap + utilization_term
     else:
