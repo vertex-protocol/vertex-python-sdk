@@ -185,7 +185,7 @@ def client_mode_to_setup(
             VertexClientMode.MANTLE_MAINNET: (
                 VertexBackendURL.MANTLE_MAINNET_GATEWAY.value,
                 VertexBackendURL.MANTLE_MAINNET_INDEXER.value,
-                VertexNetwork.BLAST_MAINNET.value,
+                VertexNetwork.MANTLE_MAINNET.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
