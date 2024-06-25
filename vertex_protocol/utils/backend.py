@@ -13,5 +13,8 @@ class VertexBackendURL(StrEnum):
     BLAST_MAINNET_GATEWAY = "https://gateway.blast-prod.vertexprotocol.com/v1"
     BLAST_MAINNET_INDEXER = "https://archive.blast-prod.vertexprotocol.com/v1"
 
+    MANTLE_MAINNET_GATEWAY = "https://gateway.mantle-prod.vertexprotocol.com/v1"
+    MANTLE_MAINNET_INDEXER = "https://archive.mantle-prod.vertexprotocol.com/v1"
+
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"

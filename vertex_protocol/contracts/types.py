@@ -12,6 +12,7 @@ class VertexNetwork(StrEnum):
 
     ARBITRUM_ONE = "arbitrumOne"
     BLAST_MAINNET = "blastMainnet"
+    MANTLE_MAINNET = "mantleMainnet"
     ARBITRUM_SEPOLIA = "arbitrumSepolia"
     HARDHAT = "localhost"
     TESTING = "test"
