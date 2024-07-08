@@ -136,3 +136,17 @@ def run():
     print("querying usdc price...")
     usdc_price = client.get_usdc_price()
     print("usdc price", usdc_price.price_x18)
+
+    print("querying vrtx merkle proofs...")
+    print(owner)
+    vrtx_merkle_proofs = client.get_vrtx_merkle_proofs(owner)
+    print("vrtx merkle proofs:", vrtx_merkle_proofs.json(indent=2))
+
+    print("querying foundation rewards merkle proofs...")
+    foundation_rewards_merkle_proofs = client.get_foundation_rewards_merkle_proofs(
+        owner
+    )
+    print(
+        "foundation rewards merkle proofs:",
+        foundation_rewards_merkle_proofs.json(indent=2),
+    )

@@ -32,6 +32,12 @@ class VertexContractsContext(BaseModel):
         perp_engine_addr (Optional[str]): The perp engine address. This may be None.
 
         clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
+
+        vrtx_airdrop_addr (Optional[str]): The VRTX airdrop address. This may be None.
+
+        vrtx_staking_addr (Optional[str]): The VRTX staking address. This may be None.
+
+        foundation_rewards_airdrop_addr (Optional[str]): The Foundation Rewards airdrop address of the corresponding chain (e.g: Arb airdrop for Arbitrum). This may be None.
     """
 
     network: Optional[VertexNetwork]
@@ -40,6 +46,9 @@ class VertexContractsContext(BaseModel):
     spot_engine_addr: Optional[str]
     perp_engine_addr: Optional[str]
     clearinghouse_addr: Optional[str]
+    vrtx_airdrop_addr: Optional[str]
+    vrtx_staking_addr: Optional[str]
+    foundation_rewards_airdrop_addr: Optional[str]
 
 
 class VertexContracts:
@@ -55,6 +64,9 @@ class VertexContracts:
     clearinghouse: Optional[Contract]
     spot_engine: Optional[Contract]
     perp_engine: Optional[Contract]
+    vrtx_airdrop: Optional[Contract]
+    vrtx_staking: Optional[Contract]
+    foundation_rewards_airdrop: Optional[Contract]
 
     def __init__(self, node_url: str, contracts_context: VertexContractsContext):
         """
@@ -99,6 +111,24 @@ class VertexContracts:
             self.perp_engine: Contract = self.w3.eth.contract(
                 address=self.contracts_context.perp_engine_addr,
                 abi=load_abi(VertexAbiName.IPERP_ENGINE),  # type: ignore
+            )
+
+        if self.contracts_context.vrtx_staking_addr:
+            self.vrtx_staking: Contract = self.w3.eth.contract(
+                address=self.contracts_context.vrtx_staking_addr,
+                abi=load_abi(VertexAbiName.ISTAKING),
+            )
+
+        if self.contracts_context.vrtx_airdrop_addr:
+            self.vrtx_airdrop: Contract = self.w3.eth.contract(
+                address=self.contracts_context.vrtx_airdrop_addr,
+                abi=load_abi(VertexAbiName.IVRTX_AIRDROP),
+            )
+
+        if self.contracts_context.foundation_rewards_airdrop_addr:
+            self.foundation_rewards_airdrop: Contract = self.w3.eth.contract(
+                address=self.contracts_context.foundation_rewards_airdrop_addr,
+                abi=load_abi(VertexAbiName.IFOUNDATION_REWARDS_AIRDROP),
             )
 
     def deposit_collateral(
@@ -152,6 +182,22 @@ class VertexContracts:
         """
         return self.execute(
             erc20.functions.approve(self.endpoint.address, amount), signer
+        )
+
+    def claim_vrtx(
+        self,
+        epoch: int,
+        amount_to_claim: str,
+        total_claimable_amount: str,
+        merkle_proofs: list[str],
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_airdrop is not None
+        return self.execute(
+            self.vrtx_airdrop.functions.claim(
+                epoch, amount_to_claim, total_claimable_amount, merkle_proofs
+            ),
+            signer,
         )
 
     def _mint_mock_erc20(

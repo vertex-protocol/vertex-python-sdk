@@ -31,6 +31,9 @@ class VertexAbiName(StrEnum):
     IPERP_ENGINE = "IPerpEngine"
     ISPOT_ENGINE = "ISpotEngine"
     MOCK_ERC20 = "MockERC20"
+    ISTAKING = "IStaking"
+    IVRTX_AIRDROP = "IVrtxAirdrop"
+    IFOUNDATION_REWARDS_AIRDROP = "IFoundationRewardsAirdrop"
 
 
 class VertexDeployment(VertexBaseModel):
@@ -51,6 +54,12 @@ class VertexDeployment(VertexBaseModel):
         spot_engine_addr (str): The address of the spot engine contract.
 
         perp_engine_addr (str): The address of the perpetual engine contract.
+
+        vrtx_airdrop_addr (str): The address of the VRTX airdrop contract.
+
+        vrtx_staking_addr (str): The address of the VRTX staking contract.
+
+        foundation_rewards_airdrop_addr (str): The address of Foundation Rewards airdrop contract for the corresponding chain (e.g: Arb airdrop for Arbitrum).
     """
 
     node_url: AnyUrl = Field(alias="publicNodeUrl")
@@ -60,6 +69,9 @@ class VertexDeployment(VertexBaseModel):
     endpoint_addr: str = Field(alias="endpoint")
     spot_engine_addr: str = Field(alias="spotEngine")
     perp_engine_addr: str = Field(alias="perpEngine")
+    vrtx_airdrop_addr: str = Field(alias="vrtxAirdrop")
+    vrtx_staking_addr: str = Field(alias="vrtxStaking")
+    foundation_rewards_airdrop_addr: str = Field(alias="foundationRewardsAirdrop")
 
 
 class DepositCollateralParams(VertexBaseModel):
@@ -80,6 +92,23 @@ class DepositCollateralParams(VertexBaseModel):
     product_id: int
     amount: int
     referral_code: Optional[str]
+
+
+class ClaimVrtxParams(VertexBaseModel):
+    epoch: int
+    amount: Optional[int]
+    claim_all: Optional[bool]
+
+
+class ClaimVrtxContractParams(VertexBaseModel):
+    epoch: int
+    amount_to_claim: str
+    total_claimable_amount: str
+    merkle_proofs: list[str]
+
+
+class ClaimFoundationRewardsContractParams(VertexBaseModel):
+    pass
 
 
 class VertexExecuteType(StrEnum):

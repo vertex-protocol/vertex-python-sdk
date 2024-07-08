@@ -1,7 +1,7 @@
 from vertex_protocol.utils.enum import StrEnum
 from typing import Dict, Optional, Union
 
-from pydantic import Field
+from pydantic import Field, validator
 from vertex_protocol.indexer_client.types.models import (
     IndexerCandlestick,
     IndexerCandlesticksGranularity,
@@ -17,6 +17,7 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerSubaccount,
     IndexerTokenReward,
     IndexerTx,
+    IndexerMerkleProof,
 )
 from vertex_protocol.utils.model import VertexBaseModel
 
@@ -44,6 +45,8 @@ class IndexerQueryType(StrEnum):
     REFERRAL_CODE = "referral_code"
     SUBACCOUNTS = "subaccounts"
     USDC_PRICE = "usdc_price"
+    VRTX_MERKLE_PROOFS = "vrtx_merkle_proofs"
+    FOUNDATION_REWARDS_MERKLE_PROOFS = "foundation_rewards_merkle_proofs"
 
 
 class IndexerBaseParams(VertexBaseModel):
@@ -251,6 +254,22 @@ class IndexerUsdcPriceParams(VertexBaseModel):
     pass
 
 
+class IndexerVrtxMerkleProofsParams(VertexBaseModel):
+    """
+    Parameters for querying VRTX merkle proofs.
+    """
+
+    address: str
+
+
+class IndexerFoundationRewardsMerkleProofsParams(VertexBaseModel):
+    """
+    Parameters for querying Foundation Rewards merkle proofs.
+    """
+
+    address: str
+
+
 IndexerParams = Union[
     IndexerSubaccountHistoricalOrdersParams,
     IndexerHistoricalOrdersByDigestParams,
@@ -270,6 +289,8 @@ IndexerParams = Union[
     IndexerSubaccountsParams,
     IndexerUsdcPriceParams,
     IndexerMarketSnapshotsParams,
+    IndexerVrtxMerkleProofsParams,
+    IndexerFoundationRewardsMerkleProofsParams,
 ]
 
 
@@ -419,6 +440,22 @@ class IndexerUsdcPriceRequest(VertexBaseModel):
     usdc_price: IndexerUsdcPriceParams
 
 
+class IndexerVrtxMerkleProofsRequest(VertexBaseModel):
+    """
+    Request object for querying VRTX merkle proofs.
+    """
+
+    vrtx_merkle_proofs: IndexerVrtxMerkleProofsParams
+
+
+class IndexerFoundationRewardsMerkleProofsRequest(VertexBaseModel):
+    """
+    Request object for querying Foundation Rewards merkle proofs.
+    """
+
+    foundation_rewards_merkle_proofs: IndexerFoundationRewardsMerkleProofsParams
+
+
 IndexerRequest = Union[
     IndexerHistoricalOrdersRequest,
     IndexerMatchesRequest,
@@ -437,6 +474,8 @@ IndexerRequest = Union[
     IndexerSubaccountsRequest,
     IndexerUsdcPriceRequest,
     IndexerMarketSnapshotsRequest,
+    IndexerVrtxMerkleProofsRequest,
+    IndexerFoundationRewardsMerkleProofsRequest,
 ]
 
 
@@ -568,6 +607,10 @@ class IndexerReferralCodeData(VertexBaseModel):
 
     referral_code: str
 
+    @validator("referral_code", pre=True, always=True)
+    def set_default_referral_code(cls, v):
+        return v or ""
+
 
 class IndexerSubaccountsData(VertexBaseModel):
     """
@@ -583,6 +626,14 @@ class IndexerUsdcPriceData(VertexBaseModel):
     """
 
     price_x18: str
+
+
+class IndexerMerkleProofsData(VertexBaseModel):
+    """
+    Data object for the merkle proofs response from the indexer.
+    """
+
+    merkle_proofs: list[IndexerMerkleProof]
 
 
 IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
@@ -605,6 +656,7 @@ IndexerResponseData = Union[
     IndexerSubaccountsData,
     IndexerUsdcPriceData,
     IndexerMarketSnapshotsData,
+    IndexerMerkleProofsData,
     IndexerLiquidationFeedData,
     IndexerFundingRatesData,
 ]
@@ -701,6 +753,14 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerUsdcPriceParams: (
             IndexerUsdcPriceRequest,
             IndexerQueryType.USDC_PRICE.value,
+        ),
+        IndexerVrtxMerkleProofsParams: (
+            IndexerVrtxMerkleProofsRequest,
+            IndexerQueryType.VRTX_MERKLE_PROOFS.value,
+        ),
+        IndexerFoundationRewardsMerkleProofsParams: (
+            IndexerFoundationRewardsMerkleProofsRequest,
+            IndexerQueryType.FOUNDATION_REWARDS_MERKLE_PROOFS.value,
         ),
     }
 

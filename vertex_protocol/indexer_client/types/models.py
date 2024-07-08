@@ -295,3 +295,8 @@ class IndexerLiquidatableAccount(VertexBaseModel):
 class IndexerSubaccount(VertexBaseModel):
     id: str
     subaccount: str
+
+
+class IndexerMerkleProof(VertexBaseModel):
+    total_amount: str
+    proof: list[str]
