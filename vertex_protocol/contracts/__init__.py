@@ -187,8 +187,8 @@ class VertexContracts:
     def claim_vrtx(
         self,
         epoch: int,
-        amount_to_claim: str,
-        total_claimable_amount: str,
+        amount_to_claim: int,
+        total_claimable_amount: int,
         merkle_proof: list[str],
         signer: LocalAccount,
     ) -> str:

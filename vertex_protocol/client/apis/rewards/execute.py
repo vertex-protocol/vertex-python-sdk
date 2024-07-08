@@ -66,17 +66,15 @@ class RewardsExecuteAPI(VertexBaseAPI):
         epoch_merkle_proofs = self.context.indexer_client.get_vrtx_merkle_proofs(
             signer.address
         ).merkle_proofs[params.epoch]
-        total_claimable_amount = epoch_merkle_proofs.total_amount
+        total_claimable_amount = int(epoch_merkle_proofs.total_amount)
         if params.amount is not None:
-            amount_to_claim = str(params.amount)
+            amount_to_claim = params.amount
         else:
             assert self.context.contracts.vrtx_airdrop is not None
             amount_claimed = self.context.contracts.vrtx_airdrop.functions.getClaimed(
                 signer.address
-            )
-            amount_to_claim = str(
-                int(total_claimable_amount) - amount_claimed[params.epoch]
-            )
+            ).cal()
+            amount_to_claim = total_claimable_amount - amount_claimed[params.epoch]
         return ClaimVrtxContractParams(
             epoch=params.epoch,
             amount_to_claim=amount_to_claim,
