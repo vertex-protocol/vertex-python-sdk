@@ -104,7 +104,7 @@ class ClaimVrtxContractParams(VertexBaseModel):
     epoch: int
     amount_to_claim: str
     total_claimable_amount: str
-    merkle_proofs: list[str]
+    merkle_proof: list[str]
 
 
 class ClaimFoundationRewardsContractParams(VertexBaseModel):

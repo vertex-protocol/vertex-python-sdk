@@ -21,8 +21,14 @@ class RewardsExecuteAPI(VertexBaseAPI):
     ) -> str:
         self._validate_claim_params(params)
         signer = self._get_signer(signer)
-        return ""
-        # return self.context.contracts.claim_vrtx()
+        claim_params = self._get_claim_vrtx_contract_params(params, signer)
+        return self.context.contracts.claim_vrtx(
+            claim_params.epoch,
+            claim_params.amount_to_claim,
+            claim_params.total_claimable_amount,
+            claim_params.merkle_proof,
+            signer,
+        )
 
     def claim_and_stake_vrtx(
         self, params: ClaimVrtxParams, signer: Optional[LocalAccount] = None
@@ -57,10 +63,26 @@ class RewardsExecuteAPI(VertexBaseAPI):
     def _get_claim_vrtx_contract_params(
         self, params: ClaimVrtxParams, signer: LocalAccount
     ) -> ClaimVrtxContractParams:
-        # epoch_merkle_proofs = self.context.indexer_client.get_vrtx_merkle_proofs(
-        #     signer.address
-        # ).merkle_proofs[params.epoch]
-        return ClaimVrtxContractParams(epoch=params.epoch)
+        epoch_merkle_proofs = self.context.indexer_client.get_vrtx_merkle_proofs(
+            signer.address
+        ).merkle_proofs[params.epoch]
+        total_claimable_amount = epoch_merkle_proofs.total_amount
+        if params.amount is not None:
+            amount_to_claim = str(params.amount)
+        else:
+            assert self.context.contracts.vrtx_airdrop is not None
+            amount_claimed = self.context.contracts.vrtx_airdrop.functions.getClaimed(
+                signer.address
+            )
+            amount_to_claim = str(
+                int(total_claimable_amount) - amount_claimed[params.epoch]
+            )
+        return ClaimVrtxContractParams(
+            epoch=params.epoch,
+            amount_to_claim=amount_to_claim,
+            total_claimable_amount=total_claimable_amount,
+            merkle_proof=epoch_merkle_proofs.proof,
+        )
 
     def _get_claim_foundation_rewards_contract_params(
         self, signer: LocalAccount

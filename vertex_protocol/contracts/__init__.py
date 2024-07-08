@@ -189,13 +189,13 @@ class VertexContracts:
         epoch: int,
         amount_to_claim: str,
         total_claimable_amount: str,
-        merkle_proofs: list[str],
+        merkle_proof: list[str],
         signer: LocalAccount,
     ) -> str:
         assert self.vrtx_airdrop is not None
         return self.execute(
             self.vrtx_airdrop.functions.claim(
-                epoch, amount_to_claim, total_claimable_amount, merkle_proofs
+                epoch, amount_to_claim, total_claimable_amount, merkle_proof
             ),
             signer,
         )
