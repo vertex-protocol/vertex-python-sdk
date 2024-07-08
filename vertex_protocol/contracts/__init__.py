@@ -116,19 +116,19 @@ class VertexContracts:
         if self.contracts_context.vrtx_staking_addr:
             self.vrtx_staking: Contract = self.w3.eth.contract(
                 address=self.contracts_context.vrtx_staking_addr,
-                abi=load_abi(VertexAbiName.ISTAKING),
+                abi=load_abi(VertexAbiName.ISTAKING),  # type: ignore
             )
 
         if self.contracts_context.vrtx_airdrop_addr:
             self.vrtx_airdrop: Contract = self.w3.eth.contract(
                 address=self.contracts_context.vrtx_airdrop_addr,
-                abi=load_abi(VertexAbiName.IVRTX_AIRDROP),
+                abi=load_abi(VertexAbiName.IVRTX_AIRDROP),  # type: ignore
             )
 
         if self.contracts_context.foundation_rewards_airdrop_addr:
             self.foundation_rewards_airdrop: Contract = self.w3.eth.contract(
                 address=self.contracts_context.foundation_rewards_airdrop_addr,
-                abi=load_abi(VertexAbiName.IFOUNDATION_REWARDS_AIRDROP),
+                abi=load_abi(VertexAbiName.IFOUNDATION_REWARDS_AIRDROP),  # type: ignore
             )
 
     def deposit_collateral(
