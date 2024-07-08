@@ -1,6 +1,7 @@
 from typing import Optional
 from vertex_protocol.contracts.types import (
     ClaimFoundationRewardsContractParams,
+    ClaimFoundationRewardsProofStruct,
     ClaimVrtxContractParams,
     ClaimVrtxParams,
 )
@@ -69,6 +70,10 @@ class RewardsExecuteAPI(VertexBaseAPI):
         Claims all available foundation rewards. Foundation rewards are tokens associated with the chain. For example, ARB on Arbitrum.
         """
         signer = self._get_signer(signer)
+        claim_params = self._get_claim_foundation_rewards_contract_params(signer)
+        return self.context.contracts.claim_foundation_rewards(
+            claim_params.claim_proofs, signer
+        )
 
     def _get_claim_vrtx_contract_params(
         self, params: ClaimVrtxParams, signer: LocalAccount
@@ -83,7 +88,7 @@ class RewardsExecuteAPI(VertexBaseAPI):
             assert self.context.contracts.vrtx_airdrop is not None
             amount_claimed = self.context.contracts.vrtx_airdrop.functions.getClaimed(
                 signer.address
-            ).cal()
+            ).call()
             amount_to_claim = total_claimable_amount - amount_claimed[params.epoch]
         return ClaimVrtxContractParams(
             epoch=params.epoch,
@@ -95,4 +100,32 @@ class RewardsExecuteAPI(VertexBaseAPI):
     def _get_claim_foundation_rewards_contract_params(
         self, signer: LocalAccount
     ) -> ClaimFoundationRewardsContractParams:
-        return ClaimFoundationRewardsContractParams()
+        assert self.context.contracts.foundation_rewards_airdrop is not None
+        claimed = (
+            self.context.contracts.foundation_rewards_airdrop.functions.getClaimed(
+                signer.address
+            ).call()
+        )
+        merkle_proofs = (
+            self.context.indexer_client.get_foundation_rewards_merkle_proofs(
+                signer.address
+            )
+        )
+        claim_proofs = []
+
+        for idx, proof in enumerate(merkle_proofs.merkle_proofs):
+            if idx == 0:
+                # week 0 is invalid
+                continue
+
+            total_amount = int(proof.total_amount)
+
+            # There's no partial claim, so find weeks where there's a claimable amount and amt claimed is zero
+            if total_amount > 0 and int(claimed[idx]) == 0:
+                claim_proofs.append(
+                    ClaimFoundationRewardsProofStruct(
+                        totalAmount=total_amount, week=idx, proof=proof.proof
+                    )
+                )
+
+        return ClaimFoundationRewardsContractParams(claim_proofs=claim_proofs)

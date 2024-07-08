@@ -107,8 +107,14 @@ class ClaimVrtxContractParams(VertexBaseModel):
     merkle_proof: list[str]
 
 
+class ClaimFoundationRewardsProofStruct(VertexBaseModel):
+    totalAmount: int
+    week: int
+    proof: list[str]
+
+
 class ClaimFoundationRewardsContractParams(VertexBaseModel):
-    pass
+    claim_proofs: list[ClaimFoundationRewardsProofStruct]
 
 
 class VertexExecuteType(StrEnum):

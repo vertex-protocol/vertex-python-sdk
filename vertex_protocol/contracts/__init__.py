@@ -273,6 +273,17 @@ class VertexContracts:
             signer,
         )
 
+    def claim_foundation_rewards(
+        self,
+        claim_proofs: list[ClaimFoundationRewardsProofStruct],
+        signer: LocalAccount,
+    ) -> str:
+        assert self.foundation_rewards_airdrop is not None
+        proofs = [proof.dict() for proof in claim_proofs]
+        return self.execute(
+            self.foundation_rewards_airdrop.functions.claim(proofs), signer
+        )
+
     def _mint_mock_erc20(
         self, erc20: Contract, amount: int, signer: LocalAccount
     ) -> str:
