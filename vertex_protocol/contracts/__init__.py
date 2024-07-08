@@ -166,9 +166,15 @@ class VertexContracts:
                 signer,
             )
 
-    def approve_allowance(self, erc20: Contract, amount: int, signer: LocalAccount):
+    def approve_allowance(
+        self,
+        erc20: Contract,
+        amount: int,
+        signer: LocalAccount,
+        to: Optional[str] = None,
+    ):
         """
-        Approves a specified amount of allowance for the ERC20 token contract.
+        Approves a specified amount of allowance to the endpoint contract for the ERC20 token contract.
 
         Args:
             erc20 (Contract): The ERC20 token contract.
@@ -180,9 +186,8 @@ class VertexContracts:
         Returns:
             str: The transaction hash of the approval operation.
         """
-        return self.execute(
-            erc20.functions.approve(self.endpoint.address, amount), signer
-        )
+        to = to or self.endpoint.address
+        return self.execute(erc20.functions.approve(to, amount), signer)
 
     def claim_vrtx(
         self,
@@ -213,6 +218,58 @@ class VertexContracts:
             self.vrtx_airdrop.functions.claimAndStake(
                 epoch, amount_to_claim, total_claimable_amount, merkle_proof
             ),
+            signer,
+        )
+
+    def stake_vrtx(
+        self,
+        amount: int,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.stake(amount),
+            signer,
+        )
+
+    def unstake_vrtx(
+        self,
+        amount: int,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.withdraw(amount),
+            signer,
+        )
+
+    def withdraw_unstaked_vrtx(
+        self,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.claimVrtx(),
+            signer,
+        )
+
+    def claim_usdc_rewards(
+        self,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.claimUsdc(),
+            signer,
+        )
+
+    def claim_and_stake_usdc_rewards(
+        self,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.claimUsdcAndStake(),
             signer,
         )
 
