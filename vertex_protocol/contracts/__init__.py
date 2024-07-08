@@ -174,7 +174,7 @@ class VertexContracts:
         to: Optional[str] = None,
     ):
         """
-        Approves a specified amount of allowance to the endpoint contract for the ERC20 token contract.
+        Approves a specified amount of allowance for the ERC20 token contract.
 
         Args:
             erc20 (Contract): The ERC20 token contract.
@@ -182,6 +182,8 @@ class VertexContracts:
             amount (int): The amount of the ERC20 token to be approved.
 
             signer (LocalAccount): The account that will sign the approval transaction.
+
+            to (Optional[str]): When specified, approves allowance to the provided contract address, otherwise it approves it to Vertex's Endpoint.
 
         Returns:
             str: The transaction hash of the approval operation.
