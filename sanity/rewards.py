@@ -12,11 +12,11 @@ def run():
     print("network:", client.context.contracts.network)
     print("signer:", signer.address)
 
-    claim_vrtx_contract_params = client.rewards._get_claim_vrtx_contract_params(
-        ClaimVrtxParams(epoch=10, amount=to_x18(100)), signer
-    )
+    # claim_vrtx_contract_params = client.rewards._get_claim_vrtx_contract_params(
+    #     ClaimVrtxParams(epoch=10, amount=to_x18(100)), signer
+    # )
 
-    print("claim vrtx params:", claim_vrtx_contract_params)
+    # print("claim vrtx params:", claim_vrtx_contract_params)
 
     vrtx = client.context.contracts.get_token_contract_for_product(41)
     vrtx_balance = vrtx.functions.balanceOf(signer.address).call()
@@ -29,3 +29,20 @@ def run():
 
     vrtx_balance = vrtx.functions.balanceOf(signer.address).call()
     print("vrtx balance (post-claim):", vrtx_balance)
+
+    claim_and_stake_vrtx_contract_params = (
+        client.rewards._get_claim_vrtx_contract_params(
+            ClaimVrtxParams(epoch=10, amount=to_x18(100)), signer
+        )
+    )
+
+    print("claim and stake vrtx params:", claim_and_stake_vrtx_contract_params)
+
+    print("claiming and staking vrtx...")
+    tx = client.rewards.claim_and_stake_vrtx(
+        ClaimVrtxParams(epoch=10, amount=to_x18(100))
+    )
+    print("tx:", tx)
+
+    vrtx_balance = vrtx.functions.balanceOf(signer.address).call()
+    print("vrtx balance (post-claim-and-stake):", vrtx_balance)

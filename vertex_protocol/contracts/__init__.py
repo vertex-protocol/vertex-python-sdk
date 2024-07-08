@@ -200,6 +200,22 @@ class VertexContracts:
             signer,
         )
 
+    def claim_and_stake_vrtx(
+        self,
+        epoch: int,
+        amount_to_claim: int,
+        total_claimable_amount: int,
+        merkle_proof: list[str],
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_airdrop is not None
+        return self.execute(
+            self.vrtx_airdrop.functions.claimAndStake(
+                epoch, amount_to_claim, total_claimable_amount, merkle_proof
+            ),
+            signer,
+        )
+
     def _mint_mock_erc20(
         self, erc20: Contract, amount: int, signer: LocalAccount
     ) -> str:

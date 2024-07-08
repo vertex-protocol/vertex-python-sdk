@@ -35,7 +35,14 @@ class RewardsExecuteAPI(VertexBaseAPI):
     ) -> str:
         self._validate_claim_params(params)
         signer = self._get_signer(signer)
-        return ""
+        claim_params = self._get_claim_vrtx_contract_params(params, signer)
+        return self.context.contracts.claim_and_stake_vrtx(
+            claim_params.epoch,
+            claim_params.amount_to_claim,
+            claim_params.total_claimable_amount,
+            claim_params.merkle_proof,
+            signer,
+        )
 
     def stake_vrtx(self, amount: int, signer: Optional[LocalAccount] = None) -> str:
         signer = self._get_signer(signer)
