@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vertex-protocol"
-version = "2.0.6"
+version = "2.1.0"
 description = "Vertex Protocol SDK"
 authors = ["Jeury Mejia <jeury@vertexprotocol.com>"]
 homepage = "https://vertexprotocol.com/"
