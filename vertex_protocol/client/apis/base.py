@@ -1,4 +1,7 @@
+from typing import Optional
 from vertex_protocol.client.context import VertexClientContext
+from vertex_protocol.utils.exceptions import MissingSignerException
+from eth_account.signers.local import LocalAccount
 
 
 class VertexBaseAPI:
@@ -29,3 +32,11 @@ class VertexBaseAPI:
             of the Vertex client.
         """
         self.context = context
+
+    def _get_signer(self, signer: Optional[LocalAccount]) -> LocalAccount:
+        signer = signer if signer else self.context.signer
+        if not signer:
+            raise MissingSignerException(
+                "A signer must be provided or set via the context."
+            )
+        return signer

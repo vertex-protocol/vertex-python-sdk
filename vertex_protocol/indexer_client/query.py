@@ -43,6 +43,9 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerTokenRewardsParams,
     IndexerUsdcPriceParams,
     IndexerUsdcPriceData,
+    IndexerVrtxMerkleProofsParams,
+    IndexerFoundationRewardsMerkleProofsParams,
+    IndexerMerkleProofsData,
     to_indexer_request,
 )
 from vertex_protocol.utils.model import (
@@ -395,4 +398,20 @@ class IndexerQueryClient:
         return ensure_data_type(
             self.query(IndexerUsdcPriceParams()).data,
             IndexerUsdcPriceData,
+        )
+
+    def get_vrtx_merkle_proofs(self, address: str) -> IndexerMerkleProofsData:
+        return ensure_data_type(
+            self.query(IndexerVrtxMerkleProofsParams(address=address)).data,
+            IndexerMerkleProofsData,
+        )
+
+    def get_foundation_rewards_merkle_proofs(
+        self, address: str
+    ) -> IndexerMerkleProofsData:
+        return ensure_data_type(
+            self.query(
+                IndexerFoundationRewardsMerkleProofsParams(address=address)
+            ).data,
+            IndexerMerkleProofsData,
         )

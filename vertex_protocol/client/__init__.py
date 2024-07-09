@@ -3,6 +3,7 @@ from vertex_protocol.client.apis.market import MarketAPI
 from vertex_protocol.client.apis.perp import PerpAPI
 from vertex_protocol.client.apis.spot import SpotAPI
 from vertex_protocol.client.apis.subaccount import SubaccountAPI
+from vertex_protocol.client.apis.rewards import RewardsAPI
 from vertex_protocol.client.context import (
     VertexClientContext,
     VertexClientContextOpts,
@@ -60,6 +61,7 @@ class VertexClient:
         - subaccount (SubaccountAPI): Sub-client for executing and querying subaccount operations.
         - spot (SpotAPI): Sub-client for executing and querying spot operations.
         - perp (PerpAPI): Sub-client for executing and querying perpetual operations.
+        - rewards (RewardsAPI): Sub-client for executing and querying rewards operations (e.g: staking, claiming, etc).
     """
 
     context: VertexClientContext
@@ -67,6 +69,7 @@ class VertexClient:
     subaccount: SubaccountAPI
     spot: SpotAPI
     perp: PerpAPI
+    rewards: RewardsAPI
 
     def __init__(self, context: VertexClientContext):
         """
@@ -87,6 +90,7 @@ class VertexClient:
         self.subaccount = SubaccountAPI(context)
         self.spot = SpotAPI(context)
         self.perp = PerpAPI(context)
+        self.rewards = RewardsAPI(context)
 
 
 def create_vertex_client(
@@ -131,6 +135,9 @@ def create_vertex_client(
             perp_engine_addr=deployment.perp_engine_addr,
             spot_engine_addr=deployment.spot_engine_addr,
             clearinghouse_addr=deployment.clearinghouse_addr,
+            vrtx_airdrop_addr=deployment.vrtx_airdrop_addr,
+            vrtx_staking_addr=deployment.vrtx_staking_addr,
+            foundation_rewards_airdrop_addr=deployment.foundation_rewards_airdrop_addr,
         )
     except Exception as e:
         logging.warning(

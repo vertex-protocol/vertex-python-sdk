@@ -32,6 +32,12 @@ class VertexContractsContext(BaseModel):
         perp_engine_addr (Optional[str]): The perp engine address. This may be None.
 
         clearinghouse_addr (Optional[str]): The clearinghouse address. This may be None.
+
+        vrtx_airdrop_addr (Optional[str]): The VRTX airdrop address. This may be None.
+
+        vrtx_staking_addr (Optional[str]): The VRTX staking address. This may be None.
+
+        foundation_rewards_airdrop_addr (Optional[str]): The Foundation Rewards airdrop address of the corresponding chain (e.g: Arb airdrop for Arbitrum). This may be None.
     """
 
     network: Optional[VertexNetwork]
@@ -40,6 +46,9 @@ class VertexContractsContext(BaseModel):
     spot_engine_addr: Optional[str]
     perp_engine_addr: Optional[str]
     clearinghouse_addr: Optional[str]
+    vrtx_airdrop_addr: Optional[str]
+    vrtx_staking_addr: Optional[str]
+    foundation_rewards_airdrop_addr: Optional[str]
 
 
 class VertexContracts:
@@ -55,6 +64,9 @@ class VertexContracts:
     clearinghouse: Optional[Contract]
     spot_engine: Optional[Contract]
     perp_engine: Optional[Contract]
+    vrtx_airdrop: Optional[Contract]
+    vrtx_staking: Optional[Contract]
+    foundation_rewards_airdrop: Optional[Contract]
 
     def __init__(self, node_url: str, contracts_context: VertexContractsContext):
         """
@@ -101,6 +113,24 @@ class VertexContracts:
                 abi=load_abi(VertexAbiName.IPERP_ENGINE),  # type: ignore
             )
 
+        if self.contracts_context.vrtx_staking_addr:
+            self.vrtx_staking: Contract = self.w3.eth.contract(
+                address=self.contracts_context.vrtx_staking_addr,
+                abi=load_abi(VertexAbiName.ISTAKING),  # type: ignore
+            )
+
+        if self.contracts_context.vrtx_airdrop_addr:
+            self.vrtx_airdrop: Contract = self.w3.eth.contract(
+                address=self.contracts_context.vrtx_airdrop_addr,
+                abi=load_abi(VertexAbiName.IVRTX_AIRDROP),  # type: ignore
+            )
+
+        if self.contracts_context.foundation_rewards_airdrop_addr:
+            self.foundation_rewards_airdrop: Contract = self.w3.eth.contract(
+                address=self.contracts_context.foundation_rewards_airdrop_addr,
+                abi=load_abi(VertexAbiName.IFOUNDATION_REWARDS_AIRDROP),  # type: ignore
+            )
+
     def deposit_collateral(
         self, params: DepositCollateralParams, signer: LocalAccount
     ) -> str:
@@ -136,7 +166,13 @@ class VertexContracts:
                 signer,
             )
 
-    def approve_allowance(self, erc20: Contract, amount: int, signer: LocalAccount):
+    def approve_allowance(
+        self,
+        erc20: Contract,
+        amount: int,
+        signer: LocalAccount,
+        to: Optional[str] = None,
+    ):
         """
         Approves a specified amount of allowance for the ERC20 token contract.
 
@@ -147,11 +183,107 @@ class VertexContracts:
 
             signer (LocalAccount): The account that will sign the approval transaction.
 
+            to (Optional[str]): When specified, approves allowance to the provided contract address, otherwise it approves it to Vertex's Endpoint.
+
         Returns:
             str: The transaction hash of the approval operation.
         """
+        to = to or self.endpoint.address
+        return self.execute(erc20.functions.approve(to, amount), signer)
+
+    def claim_vrtx(
+        self,
+        epoch: int,
+        amount_to_claim: int,
+        total_claimable_amount: int,
+        merkle_proof: list[str],
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_airdrop is not None
         return self.execute(
-            erc20.functions.approve(self.endpoint.address, amount), signer
+            self.vrtx_airdrop.functions.claim(
+                epoch, amount_to_claim, total_claimable_amount, merkle_proof
+            ),
+            signer,
+        )
+
+    def claim_and_stake_vrtx(
+        self,
+        epoch: int,
+        amount_to_claim: int,
+        total_claimable_amount: int,
+        merkle_proof: list[str],
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_airdrop is not None
+        return self.execute(
+            self.vrtx_airdrop.functions.claimAndStake(
+                epoch, amount_to_claim, total_claimable_amount, merkle_proof
+            ),
+            signer,
+        )
+
+    def stake_vrtx(
+        self,
+        amount: int,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.stake(amount),
+            signer,
+        )
+
+    def unstake_vrtx(
+        self,
+        amount: int,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.withdraw(amount),
+            signer,
+        )
+
+    def withdraw_unstaked_vrtx(
+        self,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.claimVrtx(),
+            signer,
+        )
+
+    def claim_usdc_rewards(
+        self,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.claimUsdc(),
+            signer,
+        )
+
+    def claim_and_stake_usdc_rewards(
+        self,
+        signer: LocalAccount,
+    ) -> str:
+        assert self.vrtx_staking is not None
+        return self.execute(
+            self.vrtx_staking.functions.claimUsdcAndStake(),
+            signer,
+        )
+
+    def claim_foundation_rewards(
+        self,
+        claim_proofs: list[ClaimFoundationRewardsProofStruct],
+        signer: LocalAccount,
+    ) -> str:
+        assert self.foundation_rewards_airdrop is not None
+        proofs = [proof.dict() for proof in claim_proofs]
+        return self.execute(
+            self.foundation_rewards_airdrop.functions.claim(proofs), signer
         )
 
     def _mint_mock_erc20(

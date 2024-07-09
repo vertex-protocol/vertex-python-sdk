@@ -36,3 +36,14 @@ class InvalidProductId(Exception):
     def __init__(self, message="Invalid product id provided"):
         self.message = message
         super().__init__(self.message)
+
+
+class InvalidVrtxClaimParams(Exception):
+    """Raised when providing invalid VRTX claim parameters."""
+
+    def __init__(
+        self,
+        message="Invalid VRTX params. Either `amount` or `claim_all` must be provided",
+    ):
+        self.message = message
+        super().__init__(self.message)
