@@ -30,6 +30,8 @@ def run():
     print("setting up vertex client...")
     client: VertexClient = create_vertex_client(CLIENT_MODE, SIGNER_PRIVATE_KEY)
 
+    print("chain_id:", client.context.engine_client.get_contracts().chain_id)
+
     print("minting test tokens...")
     mint_tx_hash = client.spot._mint_mock_erc20(0, to_pow_10(100000, 6))
     print("mint tx hash:", mint_tx_hash)

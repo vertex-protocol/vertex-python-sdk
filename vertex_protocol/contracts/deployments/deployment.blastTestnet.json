@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://sepolia.blast.io",
+  "explorerUrl": "https://testnet.blastscan.io",
+  "startBlock": 1301404,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xbC47901f4d2C5fc871ae0037Ea05c3F614690781",
+  "querier": "0xae557AEf1C7290252BA390589C717b9355017fD4",
+  "clearinghouse": "0xf72BE10454B2fB514A2639da885045C89e3EB693",
+  "endpoint": "0xDFA3926296eaAc8E33c9798836Eae7e8CA1B02FB",
+  "spotEngine": "0x9D37c59380BA015cF0c115fB89ac6238B96c868E",
+  "perpEngine": "0x4597CFdd371239a99477Cdabf9cF0B23fDf559B4",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}
