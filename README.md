@@ -21,11 +21,12 @@ pip install vertex-protocol
 ### Import the necessary utilities:
 
 ```python
-from vertex_protocol.client import create_vertex_client, ClientMode
+from vertex_protocol.client import create_vertex_client, VertexClientMode
 from vertex_protocol.contracts.types import DepositCollateralParams
 from vertex_protocol.engine_client.types.execute import (
     OrderParams,
-    PlaceOrderParams
+    PlaceOrderParams,
+    SubaccountParams
 )
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
@@ -37,7 +38,7 @@ from vertex_protocol.utils.nonce import gen_order_nonce
 ```python
 print("setting up vertex client...")
 private_key = "xxx"
-client = create_vertex_client(ClientMode.MAINNET, private_key)
+client = create_vertex_client(VertexClientMode.MAINNET, private_key)
 ```
 
 ### Perform basic operations:
