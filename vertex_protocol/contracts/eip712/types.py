@@ -62,6 +62,12 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
         dict: A dictionary containing the EIP712 type information for the given execute type.
     """
     return {
+        VertexExecuteType.AUTHENTICATION: {
+            "StreamAuthentication": [
+                {"name": "sender", "type": "bytes32"},
+                {"name": "expiration", "type": "uint64"},
+            ]
+        },
         VertexExecuteType.PLACE_ORDER: {
             "Order": [
                 {"name": "sender", "type": "bytes32"},
