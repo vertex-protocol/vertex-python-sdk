@@ -31,7 +31,15 @@ class VertexClientMode(StrEnum):
 
         MANTLE_MAINNET: For operating in Vertex's mainnet environment deployed on Mantle Mainnet.
 
+        SEI_MAINNET: For operating in Vertex's mainnet environment deployed on Sei Mainnet.
+
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
+
+        BLAST_TESTNET: For operating in Vertex's testnet environment deployed on Blast Testnet.
+
+        MANTLE_TESTNET: For operating in Vertex's testnet environment deployed on Mantle Testnet.
+
+        SEI_TESTNET: For operating in Vertex's testnet environment deployed on Sei Testnet.
 
         DEVNET: For local development.
 
@@ -41,7 +49,11 @@ class VertexClientMode(StrEnum):
     MAINNET = "mainnet"
     BLAST_MAINNET = "blast-mainnet"
     MANTLE_MAINNET = "mantle-mainnet"
+    SEI_MAINNET = "sei-mainnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
+    BLAST_TESTNET = "blast-testnet"
+    MANTLE_TESTNET = "mantle-testnet"
+    SEI_TESTNET = "sei-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -194,10 +206,30 @@ def client_mode_to_setup(
                 VertexBackendURL.MANTLE_MAINNET_INDEXER.value,
                 VertexNetwork.MANTLE_MAINNET.value,
             ),
+            VertexClientMode.SEI_MAINNET: (
+                VertexBackendURL.SEI_MAINNET_GATEWAY.value,
+                VertexBackendURL.SEI_MAINNET_INDEXER.value,
+                VertexNetwork.SEI_MAINNET.value,
+            ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
                 VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,
+            ),
+            VertexClientMode.BLAST_TESTNET: (
+                VertexBackendURL.BLAST_TESTNET_GATEWAY.value,
+                VertexBackendURL.BLAST_TESTNET_INDEXER.value,
+                VertexNetwork.BLAST_TESTNET.value,
+            ),
+            VertexClientMode.MANTLE_TESTNET: (
+                VertexBackendURL.MANTLE_TESTNET_GATEWAY.value,
+                VertexBackendURL.MANTLE_TESTNET_INDEXER.value,
+                VertexNetwork.MANTLE_TESTNET.value,
+            ),
+            VertexClientMode.SEI_TESTNET: (
+                VertexBackendURL.SEI_TESTNET_GATEWAY.value,
+                VertexBackendURL.SEI_TESTNET_INDEXER.value,
+                VertexNetwork.SEI_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,

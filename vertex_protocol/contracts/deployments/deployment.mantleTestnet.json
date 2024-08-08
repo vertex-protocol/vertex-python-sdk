@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://rpc.sepolia.mantle.xyz",
+  "explorerUrl": "https://explorer.sepolia.mantle.xyz",
+  "startBlock": 6137613,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xA7Fcb606611358afa388b6bd23b3B2F2c6abEd82",
+  "querier": "0x97F9430c279637267D43bcD996F789e1d52Efd60",
+  "clearinghouse": "0x08F44516d84Eb6D0f057b1Dd198B928aa7191AbD",
+  "endpoint": "0x1a77cB939B7C4fA5Cc90b09787260DABf5f05c41",
+  "spotEngine": "0xA1DbC395Cbaa8c7b74456697C42ADa8F2b08CAbb",
+  "perpEngine": "0xEC1149dF1559eaDB0Af4cf6d9BeAc7a08Aa9f694",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x22614Ae2A21c22d46279dB4ADd1aFb9902763465"
+}

@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://evm-rpc.sei-apis.com",
+  "explorerUrl": "https://seitrace.com/?chain=pacific-1",
+  "startBlock": 94136270,
+  "deployer": "0x4007fA559E09Afe29f0b1d58f35b9671e2b82FF0",
+  "quote": "0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F1",
+  "querier": "0xecc3dE1cD86CB07c3763D21A45041791574964C2",
+  "clearinghouse": "0xaE1510367aA8d500bdF507E251147Ea50B22307F",
+  "endpoint": "0x2777268EeE0d224F99013Bc4af24ec756007f1a6",
+  "spotEngine": "0x3E113cde3D6309e9bd45Bf7E273ecBB8b50ca127",
+  "perpEngine": "0x0F54f46979C62aB73D03Da60eBE044c8D63F724f",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0xC73fBEBb30b1415Fdb40a0aD650c76d6f7e522B5"
+}

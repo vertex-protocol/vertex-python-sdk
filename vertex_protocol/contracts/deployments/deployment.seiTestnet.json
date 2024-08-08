@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://evm-rpc-testnet.sei-apis.com",
+  "explorerUrl": "https://seitrace.com/?chain=atlantic-2",
+  "startBlock": 101101325,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xbC47901f4d2C5fc871ae0037Ea05c3F614690781",
+  "querier": "0x7aDd4cCa426B9dc80564644D8fE19687fFcE4dCE",
+  "clearinghouse": "0x1A56da8f3619ac25207A754DF19dAd84420F6ed3",
+  "endpoint": "0xa822AfcdDff7c3236D2dC2643646C7B36BDefb3c",
+  "spotEngine": "0x9DC1A319dA6aF2D16B6Bac84303cC63ac9e3E2b2",
+  "perpEngine": "0xF9DE3847F0bD11a15886741a64Db7dc50c79ED89",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x5Ab918fCcdE0236C537C2c97BFA40b52180ea643"
+}
