@@ -279,7 +279,7 @@ class IndexerInterestAndFundingParams(VertexBaseModel):
 
     subaccount: str
     product_ids: list[int]
-    max_idx: Optional[str | int]
+    max_idx: Optional[Union[str, int]]
     limit: int
 
 
