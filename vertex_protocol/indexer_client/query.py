@@ -46,6 +46,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerVrtxMerkleProofsParams,
     IndexerFoundationRewardsMerkleProofsParams,
     IndexerMerkleProofsData,
+    IndexerInterestAndFundingParams,
+    IndexerInterestAndFundingData,
     to_indexer_request,
 )
 from vertex_protocol.utils.model import (
@@ -414,4 +416,14 @@ class IndexerQueryClient:
                 IndexerFoundationRewardsMerkleProofsParams(address=address)
             ).data,
             IndexerMerkleProofsData,
+        )
+
+    def get_interest_and_funding_payments(
+        self, params: IndexerInterestAndFundingParams
+    ) -> IndexerInterestAndFundingData:
+        return ensure_data_type(
+            self.query(
+                params,
+            ).data,
+            IndexerInterestAndFundingData,
         )

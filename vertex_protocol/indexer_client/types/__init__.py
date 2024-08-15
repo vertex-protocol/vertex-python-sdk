@@ -109,4 +109,7 @@ __all__ = [
     "IndexerLiquidatableAccount",
     "IndexerSubaccount",
     "IndexerUsdcPriceData",
+    "IndexerInterestAndFundingParams",
+    "IndexerInterestAndFundingRequest",
+    "IndexerInterestAndFundingData",
 ]

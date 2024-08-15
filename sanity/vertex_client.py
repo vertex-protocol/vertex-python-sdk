@@ -414,3 +414,9 @@ def run():
             "borrow APR:",
             f"{borrow_apr * 100:.2f}",
         ),
+
+    print("getting interest and funding payments...")
+    payments = client.subaccount.get_interest_and_funding_payments(
+        subaccount, [1, 2, 3, 4, 5, 6], 10
+    )
+    print("interest and funding payments:", payments.json(indent=2))

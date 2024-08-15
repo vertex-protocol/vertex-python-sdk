@@ -11,6 +11,8 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerSubaccountsData,
     IndexerSubaccountsParams,
     IndexerTokenRewardsData,
+    IndexerInterestAndFundingParams,
+    IndexerInterestAndFundingData,
 )
 
 
@@ -112,4 +114,32 @@ class SubaccountQueryAPI(VertexBaseAPI):
         """
         return self.context.indexer_client.get_subaccounts(
             IndexerSubaccountsParams(address=address, start=start_idx, limit=limit)
+        )
+
+    def get_interest_and_funding_payments(
+        self,
+        subaccount: str,
+        product_ids: list[int],
+        limit: int,
+        max_idx: Optional[int] = None,
+    ) -> IndexerInterestAndFundingData:
+        """
+        List interests and funding payments for a subaccount and provided products from the indexer.
+
+        Args:
+            subaccount (str): Subaccount to fetch interest / funding payments for.
+            product_ids (list[int]): List of product IDs to fetch interest / funding payments for.
+            limit (int): Max number of records to return. Max possible of 100.
+            max_idx (Optional[int]): When provided, only return records with idx <= max_idx. Used for pagination.
+
+        Returns:
+            IndexerInterestAndFundingData: A data class object containing the list of interest / funding payments found.
+        """
+        return self.context.indexer_client.get_interest_and_funding_payments(
+            IndexerInterestAndFundingParams(
+                subaccount=subaccount,
+                product_ids=product_ids,
+                limit=limit,
+                max_idx=max_idx,
+            )
         )
