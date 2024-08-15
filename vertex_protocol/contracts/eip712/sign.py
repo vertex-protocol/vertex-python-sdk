@@ -10,17 +10,17 @@ from vertex_protocol.contracts.eip712.types import (
 )
 from eth_account.messages import encode_structured_data, _hash_eip191_message
 
-from vertex_protocol.contracts.types import VertexExecuteType
+from vertex_protocol.contracts.types import VertexTxType
 
 
 def build_eip712_typed_data(
-    execute: VertexExecuteType, msg: dict, verifying_contract: str, chain_id: int
+    tx: VertexTxType, msg: dict, verifying_contract: str, chain_id: int
 ) -> EIP712TypedData:
     """
     Util to build EIP712 typed data for Vertex execution.
 
     Args:
-        execute (VertexExecuteType): The Vertex execute type being signed.
+        tx (VertexTxType): The Vertex tx type being signed.
 
         msg (dict): The message being signed.
 
@@ -32,12 +32,12 @@ def build_eip712_typed_data(
         EIP712TypedData: A structured data object that adheres to the EIP-712 standard.
     """
     eip17_domain = get_vertex_eip712_domain(verifying_contract, chain_id)
-    eip712_execute_type = get_vertex_eip712_type(execute)
-    eip712_primary_type = list(eip712_execute_type.keys())[0]
+    eip712_tx_type = get_vertex_eip712_type(tx)
+    eip712_primary_type = list(eip712_tx_type.keys())[0]
     eip712_types = EIP712Types(
         **{
             "EIP712Domain": get_eip712_domain_type(),
-            **eip712_execute_type,
+            **eip712_tx_type,
         }
     )
     return EIP712TypedData(

@@ -135,3 +135,14 @@ class VertexExecuteType(StrEnum):
     MINT_LP = "mint_lp"
     BURN_LP = "burn_lp"
     LINK_SIGNER = "link_signer"
+
+
+VertexTxType = StrEnum(
+    "VertexTxType",
+    {
+        **{
+            name: member.value for name, member in VertexExecuteType.__members__.items()
+        },
+        **{"AUTHENTICATE_STREAM": "authenticate"},
+    },
+)  # type: ignore

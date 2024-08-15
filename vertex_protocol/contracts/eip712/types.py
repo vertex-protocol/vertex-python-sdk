@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from vertex_protocol.contracts.types import VertexExecuteType
+from vertex_protocol.contracts.types import VertexTxType
 
 
 class EIP712Domain(BaseModel):
@@ -51,18 +51,18 @@ class EIP712TypedData(BaseModel):
     message: dict
 
 
-def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
+def get_vertex_eip712_type(tx: VertexTxType) -> dict:
     """
     Util that provides the EIP712 type information for Vertex execute types.
 
     Args:
-        execute (VertexExecuteType): The Vertex execute type for which to retrieve EIP712 type information.
+        tx (VertexTxType): The Vertex transaction type for which to retrieve EIP712 type information.
 
     Returns:
         dict: A dictionary containing the EIP712 type information for the given execute type.
     """
     return {
-        VertexExecuteType.PLACE_ORDER: {
+        VertexTxType.PLACE_ORDER: {
             "Order": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "priceX18", "type": "int128"},
@@ -71,7 +71,7 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecuteType.CANCEL_ORDERS: {
+        VertexTxType.CANCEL_ORDERS: {
             "Cancellation": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productIds", "type": "uint32[]"},
@@ -79,14 +79,14 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecuteType.CANCEL_PRODUCT_ORDERS: {
+        VertexTxType.CANCEL_PRODUCT_ORDERS: {
             "CancellationProducts": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productIds", "type": "uint32[]"},
                 {"name": "nonce", "type": "uint64"},
             ],
         },
-        VertexExecuteType.WITHDRAW_COLLATERAL: {
+        VertexTxType.WITHDRAW_COLLATERAL: {
             "WithdrawCollateral": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productId", "type": "uint32"},
@@ -94,7 +94,7 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecuteType.LIQUIDATE_SUBACCOUNT: {
+        VertexTxType.LIQUIDATE_SUBACCOUNT: {
             "LiquidateSubaccount": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "liquidatee", "type": "bytes32"},
@@ -104,7 +104,7 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ],
         },
-        VertexExecuteType.MINT_LP: {
+        VertexTxType.MINT_LP: {
             "MintLp": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productId", "type": "uint32"},
@@ -114,7 +114,7 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecuteType.BURN_LP: {
+        VertexTxType.BURN_LP: {
             "BurnLp": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "productId", "type": "uint32"},
@@ -122,11 +122,17 @@ def get_vertex_eip712_type(execute: VertexExecuteType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-        VertexExecuteType.LINK_SIGNER: {
+        VertexTxType.LINK_SIGNER: {
             "LinkSigner": [
                 {"name": "sender", "type": "bytes32"},
                 {"name": "signer", "type": "bytes32"},
                 {"name": "nonce", "type": "uint64"},
             ]
         },
-    }[execute]
+        VertexTxType.AUTHENTICATE_STREAM: {
+            "StreamAuthentication": [
+                {"name": "sender", "type": "bytes32"},
+                {"name": "expiration", "type": "uint64"},
+            ]
+        },
+    }[tx]
