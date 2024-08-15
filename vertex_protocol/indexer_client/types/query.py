@@ -18,6 +18,7 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerTokenReward,
     IndexerTx,
     IndexerMerkleProof,
+    IndexerPayment,
 )
 from vertex_protocol.utils.model import VertexBaseModel
 
@@ -47,6 +48,7 @@ class IndexerQueryType(StrEnum):
     USDC_PRICE = "usdc_price"
     VRTX_MERKLE_PROOFS = "vrtx_merkle_proofs"
     FOUNDATION_REWARDS_MERKLE_PROOFS = "foundation_rewards_merkle_proofs"
+    INTEREST_AND_FUNDING = "interest_and_funding"
 
 
 class IndexerBaseParams(VertexBaseModel):
@@ -270,6 +272,17 @@ class IndexerFoundationRewardsMerkleProofsParams(VertexBaseModel):
     address: str
 
 
+class IndexerInterestAndFundingParams(VertexBaseModel):
+    """
+    Parameters for querying interest and funding payments.
+    """
+
+    subaccount: str
+    product_ids: list[int]
+    max_idx: Optional[str | int]
+    limit: int
+
+
 IndexerParams = Union[
     IndexerSubaccountHistoricalOrdersParams,
     IndexerHistoricalOrdersByDigestParams,
@@ -291,6 +304,7 @@ IndexerParams = Union[
     IndexerMarketSnapshotsParams,
     IndexerVrtxMerkleProofsParams,
     IndexerFoundationRewardsMerkleProofsParams,
+    IndexerInterestAndFundingParams,
 ]
 
 
@@ -456,6 +470,14 @@ class IndexerFoundationRewardsMerkleProofsRequest(VertexBaseModel):
     foundation_rewards_merkle_proofs: IndexerFoundationRewardsMerkleProofsParams
 
 
+class IndexerInterestAndFundingRequest(VertexBaseModel):
+    """
+    Request object for querying Interest and funding payments.
+    """
+
+    interest_and_funding: IndexerInterestAndFundingParams
+
+
 IndexerRequest = Union[
     IndexerHistoricalOrdersRequest,
     IndexerMatchesRequest,
@@ -476,6 +498,7 @@ IndexerRequest = Union[
     IndexerMarketSnapshotsRequest,
     IndexerVrtxMerkleProofsRequest,
     IndexerFoundationRewardsMerkleProofsRequest,
+    IndexerInterestAndFundingRequest,
 ]
 
 
@@ -636,6 +659,16 @@ class IndexerMerkleProofsData(VertexBaseModel):
     merkle_proofs: list[IndexerMerkleProof]
 
 
+class IndexerInterestAndFundingData(VertexBaseModel):
+    """
+    Data object for the interest and funding payments response from the indexer.
+    """
+
+    interest_payments: list[IndexerPayment]
+    funding_payments: list[IndexerPayment]
+    next_idx: str
+
+
 IndexerLiquidationFeedData = list[IndexerLiquidatableAccount]
 
 
@@ -657,6 +690,7 @@ IndexerResponseData = Union[
     IndexerUsdcPriceData,
     IndexerMarketSnapshotsData,
     IndexerMerkleProofsData,
+    IndexerInterestAndFundingData,
     IndexerLiquidationFeedData,
     IndexerFundingRatesData,
 ]
@@ -761,6 +795,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
         IndexerFoundationRewardsMerkleProofsParams: (
             IndexerFoundationRewardsMerkleProofsRequest,
             IndexerQueryType.FOUNDATION_REWARDS_MERKLE_PROOFS.value,
+        ),
+        IndexerInterestAndFundingParams: (
+            IndexerInterestAndFundingRequest,
+            IndexerQueryType.INTEREST_AND_FUNDING.value,
         ),
     }
 

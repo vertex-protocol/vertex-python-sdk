@@ -300,3 +300,13 @@ class IndexerSubaccount(VertexBaseModel):
 class IndexerMerkleProof(VertexBaseModel):
     total_amount: str
     proof: list[str]
+
+
+class IndexerPayment(VertexBaseModel):
+    product_id: int
+    idx: str
+    timestamp: str
+    amount: str
+    balance_amount: str
+    rate_x18: str
+    oracle_price_x18: str
