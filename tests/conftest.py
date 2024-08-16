@@ -190,6 +190,14 @@ def link_signer_params(senders: list[str]) -> dict:
 
 
 @pytest.fixture
+def authenticate_stream_params(senders: list[str]) -> dict:
+    return {
+        "sender": hex_to_bytes32(senders[0]),
+        "expiration": 4611687701117784255,
+    }
+
+
+@pytest.fixture
 def mock_post() -> MagicMock:
     with patch.object(requests.Session, "post") as mock_post:
         yield mock_post

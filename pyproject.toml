@@ -41,6 +41,7 @@ indexer-sanity = "sanity.indexer_client:run"
 contracts-sanity = "sanity.contracts:run"
 client-sanity = "sanity.vertex_client:run"
 rewards-sanity = "sanity.rewards:run"
+signing-sanity = "sanity.signing:run"
 
 [[tool.poetry.source]]
 name = "private"

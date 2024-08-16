@@ -5,6 +5,7 @@ from pydantic import BaseModel, AnyUrl, validator, root_validator
 from vertex_protocol.engine_client.types.execute import *
 from vertex_protocol.engine_client.types.models import *
 from vertex_protocol.engine_client.types.query import *
+from vertex_protocol.engine_client.types.stream import *
 
 PrivateKey = str
 Signer = Union[LocalAccount, PrivateKey]
@@ -194,4 +195,5 @@ __all__ = [
     "PerpProduct",
     "MaxOrderSizeDirection",
     "MarketLiquidity",
+    "StreamAuthenticationParams",
 ]

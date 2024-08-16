@@ -9,7 +9,7 @@ from vertex_protocol.contracts.eip712.sign import (
     sign_eip712_typed_data,
 )
 from vertex_protocol.contracts.eip712.types import get_vertex_eip712_type
-from vertex_protocol.contracts.types import VertexExecuteType
+from vertex_protocol.contracts.types import VertexTxType
 import pytest
 
 
@@ -50,10 +50,10 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
 
 
 @pytest.mark.parametrize(
-    "execute, primary_type, eip712_type",
+    "tx, primary_type, eip712_type",
     [
         (
-            VertexExecuteType.PLACE_ORDER,
+            VertexTxType.PLACE_ORDER,
             "Order",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -64,7 +64,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.CANCEL_ORDERS,
+            VertexTxType.CANCEL_ORDERS,
             "Cancellation",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -74,7 +74,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.CANCEL_PRODUCT_ORDERS,
+            VertexTxType.CANCEL_PRODUCT_ORDERS,
             "CancellationProducts",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -83,7 +83,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.WITHDRAW_COLLATERAL,
+            VertexTxType.WITHDRAW_COLLATERAL,
             "WithdrawCollateral",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -93,7 +93,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexTxType.LIQUIDATE_SUBACCOUNT,
             "LiquidateSubaccount",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -105,7 +105,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.MINT_LP,
+            VertexTxType.MINT_LP,
             "MintLp",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -117,7 +117,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.BURN_LP,
+            VertexTxType.BURN_LP,
             "BurnLp",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -127,7 +127,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
             ],
         ),
         (
-            VertexExecuteType.LINK_SIGNER,
+            VertexTxType.LINK_SIGNER,
             "LinkSigner",
             [
                 {"name": "sender", "type": "bytes32"},
@@ -135,16 +135,24 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
                 {"name": "nonce", "type": "uint64"},
             ],
         ),
+        (
+            VertexTxType.AUTHENTICATE_STREAM,
+            "StreamAuthentication",
+            [
+                {"name": "sender", "type": "bytes32"},
+                {"name": "expiration", "type": "uint64"},
+            ],
+        ),
     ],
 )
 def test_build_eip712_types(
-    execute: VertexExecuteType, primary_type: str, eip712_type: list[dict]
+    tx: VertexTxType, primary_type: str, eip712_type: list[dict]  # type: ignore
 ):
-    place_order_type = get_vertex_eip712_type(execute)
-    place_order_primary_type = list(place_order_type.keys())[0]
+    computed_eip712_type = get_vertex_eip712_type(tx)
+    eip712_primary_type = list(computed_eip712_type.keys())[0]
 
-    assert place_order_primary_type == primary_type
-    assert list(place_order_type.values())[0] == eip712_type
+    assert eip712_primary_type == primary_type
+    assert list(computed_eip712_type.values())[0] == eip712_type
 
 
 def test_build_eip712_domain_type():
@@ -157,10 +165,10 @@ def test_build_eip712_domain_type():
 
 
 @pytest.mark.parametrize(
-    "execute, primary_type, msg",
+    "tx, primary_type, msg",
     [
         (
-            VertexExecuteType.PLACE_ORDER,
+            VertexTxType.PLACE_ORDER,
             "Order",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -171,7 +179,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.CANCEL_ORDERS,
+            VertexTxType.CANCEL_ORDERS,
             "Cancellation",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -183,7 +191,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.CANCEL_PRODUCT_ORDERS,
+            VertexTxType.CANCEL_PRODUCT_ORDERS,
             "CancellationProducts",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -192,7 +200,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.WITHDRAW_COLLATERAL,
+            VertexTxType.WITHDRAW_COLLATERAL,
             "WithdrawCollateral",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -202,7 +210,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexTxType.LIQUIDATE_SUBACCOUNT,
             "LiquidateSubaccount",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -214,7 +222,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.MINT_LP,
+            VertexTxType.MINT_LP,
             "MintLp",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -226,7 +234,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.BURN_LP,
+            VertexTxType.BURN_LP,
             "BurnLp",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -236,7 +244,7 @@ def test_build_eip712_domain_type():
             },
         ),
         (
-            VertexExecuteType.LINK_SIGNER,
+            VertexTxType.LINK_SIGNER,
             "LinkSigner",
             {
                 "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
@@ -244,17 +252,25 @@ def test_build_eip712_domain_type():
                 "nonce": 1,
             },
         ),
+        (
+            VertexTxType.AUTHENTICATE_STREAM,
+            "StreamAuthentication",
+            {
+                "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
+                "expiration": 4611687701117784255,
+            },
+        ),
     ],
 )
 def test_build_eip712_typed_data(
-    execute: VertexExecuteType,
+    tx: VertexTxType,  # type: ignore
     primary_type: str,
     msg: dict,
     endpoint_addr: str,
     chain_id: int,
 ):
     eip712_typed_data = build_eip712_typed_data(
-        execute, verifying_contract=endpoint_addr, chain_id=chain_id, msg=msg
+        tx, verifying_contract=endpoint_addr, chain_id=chain_id, msg=msg
     )
     assert eip712_typed_data.dict() == {
         "types": {
@@ -264,7 +280,7 @@ def test_build_eip712_typed_data(
                 {"name": "chainId", "type": "uint256"},
                 {"name": "verifyingContract", "type": "address"},
             ],
-            primary_type: list(get_vertex_eip712_type(execute).values())[0],
+            primary_type: list(get_vertex_eip712_type(tx).values())[0],
         },
         "primaryType": primary_type,
         "domain": {
@@ -290,35 +306,37 @@ def test_sign_eip712_typed_data(
     mint_lp_params: dict,
     burn_lp_params: dict,
     link_signer_params: dict,
+    authenticate_stream_params: dict,
 ):
     to_sign = [
-        (VertexExecuteType.PLACE_ORDER, book_addrs[1], order_params),
-        (VertexExecuteType.CANCEL_ORDERS, endpoint_addr, cancellation_params),
+        (VertexTxType.PLACE_ORDER, book_addrs[1], order_params),
+        (VertexTxType.CANCEL_ORDERS, endpoint_addr, cancellation_params),
         (
-            VertexExecuteType.CANCEL_PRODUCT_ORDERS,
+            VertexTxType.CANCEL_PRODUCT_ORDERS,
             endpoint_addr,
             cancellation_products_params,
         ),
         (
-            VertexExecuteType.WITHDRAW_COLLATERAL,
+            VertexTxType.WITHDRAW_COLLATERAL,
             endpoint_addr,
             withdraw_collateral_params,
         ),
         (
-            VertexExecuteType.LIQUIDATE_SUBACCOUNT,
+            VertexTxType.LIQUIDATE_SUBACCOUNT,
             endpoint_addr,
             liquidate_subaccount_params,
         ),
-        (VertexExecuteType.MINT_LP, endpoint_addr, mint_lp_params),
-        (VertexExecuteType.BURN_LP, endpoint_addr, burn_lp_params),
-        (VertexExecuteType.LINK_SIGNER, endpoint_addr, link_signer_params),
+        (VertexTxType.MINT_LP, endpoint_addr, mint_lp_params),
+        (VertexTxType.BURN_LP, endpoint_addr, burn_lp_params),
+        (VertexTxType.LINK_SIGNER, endpoint_addr, link_signer_params),
+        (VertexTxType.AUTHENTICATE_STREAM, endpoint_addr, authenticate_stream_params),
     ]
 
     signer = Account.from_key(private_keys[0])
 
-    for execute, verifying_contract, msg in to_sign:
+    for tx, verifying_contract, msg in to_sign:
         eip712_typed_data = build_eip712_typed_data(
-            execute, msg, verifying_contract, chain_id
+            tx, msg, verifying_contract, chain_id
         )
         # raises an exception if signing fails
         sign_eip712_typed_data(eip712_typed_data, signer)
