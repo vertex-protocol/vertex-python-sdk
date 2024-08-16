@@ -50,7 +50,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
 
 
 @pytest.mark.parametrize(
-    "execute, primary_type, eip712_type",
+    "tx, primary_type, eip712_type",
     [
         (
             VertexTxType.PLACE_ORDER,
@@ -146,7 +146,7 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
     ],
 )
 def test_build_eip712_types(
-    tx: VertexTxType, primary_type: str, eip712_type: list[dict]
+    tx: VertexTxType, primary_type: str, eip712_type: list[dict]  # type: ignore
 ):
     computed_eip712_type = get_vertex_eip712_type(tx)
     eip712_primary_type = list(computed_eip712_type.keys())[0]
@@ -165,7 +165,7 @@ def test_build_eip712_domain_type():
 
 
 @pytest.mark.parametrize(
-    "execute, primary_type, msg",
+    "tx, primary_type, msg",
     [
         (
             VertexTxType.PLACE_ORDER,
@@ -263,7 +263,7 @@ def test_build_eip712_domain_type():
     ],
 )
 def test_build_eip712_typed_data(
-    tx: VertexTxType,
+    tx: VertexTxType,  # type: ignore
     primary_type: str,
     msg: dict,
     endpoint_addr: str,
@@ -334,9 +334,9 @@ def test_sign_eip712_typed_data(
 
     signer = Account.from_key(private_keys[0])
 
-    for execute, verifying_contract, msg in to_sign:
+    for tx, verifying_contract, msg in to_sign:
         eip712_typed_data = build_eip712_typed_data(
-            execute, msg, verifying_contract, chain_id
+            tx, msg, verifying_contract, chain_id
         )
         # raises an exception if signing fails
         sign_eip712_typed_data(eip712_typed_data, signer)
