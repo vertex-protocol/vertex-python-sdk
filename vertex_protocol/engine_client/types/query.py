@@ -138,7 +138,15 @@ class QueryMarketPriceParams(VertexBaseModel):
     product_id: int
 
 
-class QueryMaxOrderSizeParams(VertexBaseModel):
+class SpotLeverageSerializerMixin(VertexBaseModel):
+    spot_leverage: Optional[bool]
+
+    @validator("spot_leverage")
+    def spot_leverage_to_str(cls, v: Optional[bool]) -> Optional[str]:
+        return str(v).lower() if v is not None else v
+
+
+class QueryMaxOrderSizeParams(SpotLeverageSerializerMixin):
     """
     Parameters for querying the maximum order size for a specific product and a given sender.
     """
@@ -148,14 +156,13 @@ class QueryMaxOrderSizeParams(VertexBaseModel):
     product_id: int
     price_x18: str
     direction: MaxOrderSizeDirection
-    spot_leverage: Optional[bool]
 
     @validator("direction")
     def direction_to_str(cls, v: MaxOrderSizeDirection) -> str:
         return v.value
 
 
-class QueryMaxWithdrawableParams(VertexBaseModel):
+class QueryMaxWithdrawableParams(SpotLeverageSerializerMixin):
     """
     Parameters for querying the maximum withdrawable amount for a specific product and a given sender.
     """
@@ -163,10 +170,9 @@ class QueryMaxWithdrawableParams(VertexBaseModel):
     type = EngineQueryType.MAX_WITHDRAWABLE.value
     sender: str
     product_id: int
-    spot_leverage: Optional[bool]
 
 
-class QueryMaxLpMintableParams(VertexBaseModel):
+class QueryMaxLpMintableParams(SpotLeverageSerializerMixin):
     """
     Parameters for querying the maximum liquidity that can be minted by a specified sender for a specific product.
     """
@@ -174,7 +180,6 @@ class QueryMaxLpMintableParams(VertexBaseModel):
     type = EngineQueryType.MAX_LP_MINTABLE.value
     sender: str
     product_id: int
-    spot_leverage: Optional[bool]
 
 
 class QueryFeeRatesParams(VertexBaseModel):
