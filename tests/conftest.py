@@ -82,7 +82,7 @@ def engine_client(
 
 @pytest.fixture
 def vertex_client(
-    mock_get: MagicMock,
+    mock_post: MagicMock,
     chain_id: int,
     endpoint_addr: str,
     book_addrs: list[str],
@@ -98,7 +98,7 @@ def vertex_client(
             "chain_id": chain_id,
         },
     }
-    mock_get.return_value = mock_response
+    mock_post.return_value = mock_response
     return create_vertex_client("testing", private_keys[0])
 
 
@@ -274,15 +274,23 @@ def mock_cancel_orders_response(mock_post: MagicMock) -> MagicMock:
 
 
 @pytest.fixture
-def mock_nonces(mock_get: MagicMock) -> MagicMock:
+def mock_nonces(mock_post: MagicMock) -> MagicMock:
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {
         "status": "success",
         "data": {"tx_nonce": 1, "order_nonce": 1},
     }
-    mock_get.return_value = mock_response
-    return mock_get
+    mock_post.return_value = mock_response
+    return mock_post
+
+
+@pytest.fixture
+def mock_tx_nonce():
+    with patch(
+        "vertex_protocol.engine_client.EngineExecuteClient.tx_nonce", return_value=1
+    ) as mock:
+        yield mock
 
 
 @pytest.fixture

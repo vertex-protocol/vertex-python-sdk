@@ -13,7 +13,7 @@ def test_withdraw(
     vertex_client: VertexClient,
     senders: list[str],
     mock_execute_response: MagicMock,
-    mock_nonces: MagicMock,
+    mock_tx_nonce: MagicMock,
 ):
     params = WithdrawCollateralParams(
         sender=senders[0],

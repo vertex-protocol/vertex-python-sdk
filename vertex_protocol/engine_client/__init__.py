@@ -3,7 +3,7 @@ from vertex_protocol.engine_client.execute import EngineExecuteClient
 from vertex_protocol.engine_client.query import EngineQueryClient
 
 
-class EngineClient(EngineQueryClient, EngineExecuteClient):
+class EngineClient(EngineQueryClient, EngineExecuteClient):  # type: ignore
     """
     Client for interacting with the engine service.
 
