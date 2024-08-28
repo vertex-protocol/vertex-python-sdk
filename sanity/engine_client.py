@@ -24,6 +24,7 @@ from vertex_protocol.utils.bytes32 import (
     str_to_hex,
     subaccount_to_bytes32,
     zero_subaccount,
+    subaccount_to_hex,
 )
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
@@ -57,15 +58,19 @@ def run():
     symbols = client.get_symbols(product_type="perp")
     pprint(symbols)
 
+    print("querying BTC-PERP symbol...")
+    btc_perp = client.get_symbols(product_ids=[2])
+    pprint(btc_perp)
+
     print("placing order...")
     product_id = 1
     order = OrderParams(
         sender=SubaccountParams(
             subaccount_owner=client.signer.address, subaccount_name="default"
         ),
-        priceX18=to_x18(20000),
+        priceX18=to_x18(60000),
         amount=to_pow_10(1, 17),
-        expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
+        expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
         nonce=gen_order_nonce(),
     )
     order_digest = client.get_order_digest(order, product_id)
@@ -81,29 +86,34 @@ def run():
         sender=SubaccountParams(
             subaccount_owner=client.signer.address, subaccount_name="default"
         ),
-        priceX18=to_x18(20000),
+        priceX18=to_x18(60000),
         amount=to_pow_10(1, 17),
-        expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
+        expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
         nonce=gen_order_nonce(),
     )
     place_order = PlaceOrderParams(product_id=product_id, order=order, id=100)
     res = client.place_order(place_order)
     print("order with custom id result:", res.json(indent=2))
 
-    print("querying order...")
-    order = client.get_order(product_id, order_digest)
-    print("order found", order.json(indent=2))
+    try:
+        print("querying order...")
+        order = client.get_order(product_id, order_digest)
+        print("order found", order.json(indent=2))
+    except Exception as e:
+        print("order not found:", e)
+
+    sender = subaccount_to_hex(order.sender)
 
     print("querying subaccount info...")
-    subaccount_info = client.get_subaccount_info(order.sender)
+    subaccount_info = client.get_subaccount_info(sender)
     print("subaccount info:", subaccount_info.json(indent=2))
 
     print("querying subaccount open orders...")
-    subaccount_open_orders = client.get_subaccount_open_orders(product_id, order.sender)
+    subaccount_open_orders = client.get_subaccount_open_orders(product_id, sender)
     print("subaccount open orders:", subaccount_open_orders.json(indent=2))
 
     cancel_order = CancelOrdersParams(
-        sender=order.sender, productIds=[product_id], digests=[order_digest]
+        sender=sender, productIds=[product_id], digests=[order_digest]
     )
     res = client.cancel_orders(cancel_order)
     print("cancel orders result:", res.json(indent=2))
@@ -117,7 +127,7 @@ def run():
         print("order not found:", e)
 
     print("querying subaccount open orders (after cancel)...")
-    subaccount_open_orders = client.get_subaccount_open_orders(product_id, order.sender)
+    subaccount_open_orders = client.get_subaccount_open_orders(product_id, sender)
     print("subaccount open orders:", subaccount_open_orders.json(indent=2))
 
     print("querying market liquidity...")
@@ -135,27 +145,27 @@ def run():
     print("querying max order size...")
     max_order_size = client.get_max_order_size(
         QueryMaxOrderSizeParams(
-            sender=order.sender,
+            sender=sender,
             product_id=product_id,
-            price_x18=to_x18(25000),
+            price_x18=to_x18(60000),
             direction="short",
         )
     )
     print("max order size:", max_order_size)
 
     print("querying max withdrawable...")
-    max_withdrawable = client.get_max_withdrawable(product_id, order.sender)
+    max_withdrawable = client.get_max_withdrawable(product_id, sender)
     print("max withdrawable:", max_withdrawable.json(indent=2))
 
     print("querying max lp mintable...")
     max_lp_mintable = client.get_max_lp_mintable(
         product_id=1,
-        sender=order.sender,
+        sender=sender,
     )
     print("max lp mintable:", max_lp_mintable.json(indent=2))
 
     print("querying fee rates...")
-    fee_rates = client.get_fee_rates(sender=order.sender)
+    fee_rates = client.get_fee_rates(sender=sender)
     print("fee rates:", fee_rates.json(indent=2))
 
     print("querying health groups...")
@@ -163,7 +173,7 @@ def run():
     print("health groups:", health_groups.json(indent=2))
 
     print("querying linked signer...")
-    linked_signer = client.get_linked_signer(subaccount=order.sender)
+    linked_signer = client.get_linked_signer(subaccount=sender)
     print("linked signer:", linked_signer.json(indent=2))
 
     print("minting lp...")
@@ -239,10 +249,10 @@ def run():
             sender=SubaccountParams(
                 subaccount_owner=client.signer.address, subaccount_name="default"
             ),
-            priceX18=to_x18(20000),
+            priceX18=to_x18(60000),
             amount=to_pow_10(1, 17),
             expiration=get_expiration_timestamp(
-                OrderType.POST_ONLY, int(time.time()) + 40
+                OrderType.DEFAULT, int(time.time()) + 40
             ),
             nonce=gen_order_nonce(),
         )

@@ -1,6 +1,5 @@
 from typing import Optional
 import requests
-from urllib.parse import urlencode
 
 from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.models import (
@@ -66,7 +65,7 @@ class EngineQueryClient:
         """
         self._opts: EngineClientOpts = EngineClientOpts.parse_obj(opts)
         self.url: str = self._opts.url
-        self.session = requests.Session()
+        self.session = requests.Session()  # type: ignore
 
     def query(self, req: QueryRequest) -> QueryResponse:
         """
@@ -82,7 +81,7 @@ class EngineQueryClient:
             BadStatusCodeException: If the response status code is not 200.
             QueryFailedException: If the query status is not "success".
         """
-        res = self.session.get(f"{self.url}/query?{urlencode(req.dict())}")
+        res = self.session.post(f"{self.url}/query", json=req.dict())
         if res.status_code != 200:
             raise BadStatusCodeException(res.text)
         try:
