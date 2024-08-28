@@ -14,7 +14,7 @@ from vertex_protocol.utils.backend import VertexBackendURL
 
 
 def test_create_vertex_client_context(
-    mock_get: MagicMock,
+    mock_post: MagicMock,
     mock_web3: MagicMock,
     mock_load_abi: MagicMock,
     private_keys: list[str],
@@ -33,7 +33,7 @@ def test_create_vertex_client_context(
             "chain_id": chain_id,
         },
     }
-    mock_get.return_value = mock_response
+    mock_post.return_value = mock_response
 
     full_engine_client_setup = create_vertex_client_context(
         VertexClientContextOpts(
@@ -65,7 +65,7 @@ def test_create_vertex_client_context(
         "status": "failure",
         "data": "invalid request",
     }
-    mock_get.return_value = mock_response
+    mock_post.return_value = mock_response
 
     partial_engine_client_setup = create_vertex_client_context(
         VertexClientContextOpts(
@@ -100,7 +100,7 @@ def test_create_vertex_client_context(
 
 
 def test_create_vertex_client(
-    mock_get: MagicMock,
+    mock_post: MagicMock,
     mock_web3: MagicMock,
     mock_load_abi: MagicMock,
     private_keys: list[str],
@@ -120,7 +120,7 @@ def test_create_vertex_client(
             "chain_id": chain_id,
         },
     }
-    mock_get.return_value = mock_response
+    mock_post.return_value = mock_response
 
     signer = Account.from_key(private_keys[0])
     mainnet_vertex_client = create_vertex_client(VertexClientMode.MAINNET, signer)

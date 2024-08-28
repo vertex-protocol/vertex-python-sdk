@@ -14,7 +14,7 @@ def test_liquidate_subaccount(
     vertex_client: VertexClient,
     senders: list[str],
     mock_execute_response: MagicMock,
-    mock_nonces: MagicMock,
+    mock_tx_nonce: MagicMock,
 ):
     params = LiquidateSubaccountParams(
         sender=senders[0],
@@ -52,7 +52,7 @@ def test_link_signer(
     vertex_client: VertexClient,
     senders: list[str],
     mock_execute_response: MagicMock,
-    mock_nonces: MagicMock,
+    mock_tx_nonce: MagicMock,
 ):
     params = LinkSignerParams(
         sender=senders[0],
