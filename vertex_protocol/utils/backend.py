@@ -16,6 +16,9 @@ class VertexBackendURL(StrEnum):
     SEI_MAINNET_GATEWAY = "https://gateway.sei-prod.vertexprotocol.com/v1"
     SEI_MAINNET_INDEXER = "https://archive.sei-prod.vertexprotocol.com/v1"
 
+    BASE_MAINNET_GATEWAY = "https://gateway.base-prod.vertexprotocol.com/v1"
+    BASE_MAINNET_INDEXER = "https://archive.base-prod.vertexprotocol.com/v1"
+
     SEPOLIA_TESTNET_GATEWAY = "https://gateway.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_INDEXER = "https://archive.sepolia-test.vertexprotocol.com/v1"
 
@@ -27,6 +30,9 @@ class VertexBackendURL(StrEnum):
 
     SEI_TESTNET_GATEWAY = "https://gateway.sei-test.vertexprotocol.com/v1"
     SEI_TESTNET_INDEXER = "https://archive.sei-test.vertexprotocol.com/v1"
+
+    BASE_TESTNET_GATEWAY = "https://gateway.base-test.vertexprotocol.com/v1"
+    BASE_TESTNET_INDEXER = "https://archive.base-test.vertexprotocol.com/v1"
 
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"

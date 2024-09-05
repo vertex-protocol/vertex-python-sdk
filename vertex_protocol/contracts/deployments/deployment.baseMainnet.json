@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://mainnet.base.org",
+  "explorerUrl": "https://basescan.org",
+  "startBlock": 19343662,
+  "deployer": "0xeCe5f68E5faE5cff2F231c185aC4db83d50aBe0c",
+  "quote": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  "querier": "0x57237f44e893468efDD568cA7dE1EA8A57d14c1b",
+  "clearinghouse": "0xE46Cb729F92D287F6459bDA6899434E22eCC48AE",
+  "endpoint": "0x92C2201D48481e2d42772Da02485084A4407Bbe2",
+  "spotEngine": "0xe818be1DA4E53763bC77df904aD1B5A1C5A61626",
+  "perpEngine": "0x5BD184F408932F9E6bA00e44A071bCCb8977fb47",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://sepolia.base.org",
+  "explorerUrl": "https://sepolia-explorer.base.org",
+  "startBlock": 14467784,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xbC47901f4d2C5fc871ae0037Ea05c3F614690781",
+  "querier": "0xFD496f151c60d72DFAfF371e524829565C194D7A",
+  "clearinghouse": "0x0751C5360A418ff3cFe90B7A61199067f3b39ab5",
+  "endpoint": "0x08F44516d84Eb6D0f057b1Dd198B928aa7191AbD",
+  "spotEngine": "0xB61B069d741C98DA3302986BF107aA9083b64133",
+  "perpEngine": "0xA1DbC395Cbaa8c7b74456697C42ADa8F2b08CAbb",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

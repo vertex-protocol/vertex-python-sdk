@@ -14,10 +14,12 @@ class VertexNetwork(StrEnum):
     BLAST_MAINNET = "blastMainnet"
     MANTLE_MAINNET = "mantleMainnet"
     SEI_MAINNET = "seiMainnet"
+    BASE_MAINNET = "baseMainnet"
     ARBITRUM_SEPOLIA = "arbitrumSepolia"
     BLAST_TESTNET = "blastTestnet"
     MANTLE_TESTNET = "mantleTestnet"
     SEI_TESTNET = "seiTestnet"
+    BASE_TESTNET = "baseTestnet"
     HARDHAT = "localhost"
     TESTING = "test"
 
