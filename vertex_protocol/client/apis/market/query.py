@@ -8,6 +8,7 @@ from vertex_protocol.engine_client.types.query import (
     MaxOrderSizeData,
     ProductSymbolsData,
     SubaccountOpenOrdersData,
+    SubaccountMultiProductsOpenOrdersData,
     QueryMaxOrderSizeParams,
 )
 from vertex_protocol.indexer_client.types.query import (
@@ -103,6 +104,28 @@ class MarketQueryAPI(VertexBaseAPI):
             SubaccountOpenOrdersData: A data class object containing information about the open orders of a subaccount.
         """
         return self.context.engine_client.get_subaccount_open_orders(product_id, sender)
+
+    def get_subaccount_multi_products_open_orders(
+        self, product_ids: list[int], sender: str
+    ) -> SubaccountMultiProductsOpenOrdersData:
+        """
+        Queries the off-chain engine to retrieve the status of any open orders for a given subaccount across multiple products.
+
+        This function fetches any open orders that a specific subaccount might have
+        for products product from the off-chain engine. The orders are returned as
+        an SubaccountMultiProductsOpenOrdersData object.
+
+        Args:
+            product_ids (list[int]): List of product ids to fetch open orders for.
+
+            sender (str): The address and subaccount identifier as a bytes32 hex string.
+
+        Returns:
+            SubaccountMultiProductsOpenOrdersData: A data class object containing information about the open orders of a subaccount.
+        """
+        return self.context.engine_client.get_subaccount_multi_products_open_orders(
+            product_ids, sender
+        )
 
     def get_subaccount_historical_orders(
         self, params: IndexerSubaccountHistoricalOrdersParams

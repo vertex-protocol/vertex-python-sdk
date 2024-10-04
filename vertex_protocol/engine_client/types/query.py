@@ -41,6 +41,7 @@ class EngineQueryType(StrEnum):
     MAX_LP_MINTABLE = "max_lp_mintable"
     SUBACCOUNT_INFO = "subaccount_info"
     SUBACCOUNT_ORDERS = "subaccount_orders"
+    ORDERS = "orders"
 
 
 class QueryStatusParams(VertexBaseModel):
@@ -98,6 +99,16 @@ class QuerySubaccountOpenOrdersParams(VertexBaseModel):
 
     type = EngineQueryType.SUBACCOUNT_ORDERS.value
     product_id: int
+    sender: str
+
+
+class QuerySubaccountMultiProductOpenOrdersParams(VertexBaseModel):
+    """
+    Parameters for querying open orders associated with a subaccount for provided products.
+    """
+
+    type = EngineQueryType.ORDERS.value
+    product_ids: list[int]
     sender: str
 
 
@@ -215,6 +226,7 @@ QueryRequest = Union[
     QueryOrderParams,
     QuerySubaccountInfoParams,
     QuerySubaccountOpenOrdersParams,
+    QuerySubaccountMultiProductOpenOrdersParams,
     QueryMarketLiquidityParams,
     QuerySymbolsParams,
     QueryAllProductsParams,
@@ -309,12 +321,30 @@ class SubaccountInfoData(VertexBaseModel):
 
 class SubaccountOpenOrdersData(VertexBaseModel):
     """
-    Data model encapsulating open orders of a subaccount for a specific product.
+        Data model encapsulating open orders of a subaccount for a
+    specific product.
     """
 
     sender: str
+    orders: list[OrderData]
+
+
+class ProductOpenOrdersData(VertexBaseModel):
+    """
+    Data model encapsulating open orders for a product.
+    """
+
     product_id: int
     orders: list[OrderData]
+
+
+class SubaccountMultiProductsOpenOrdersData(VertexBaseModel):
+    """
+    Data model encapsulating open orders of a subaccount across multiple products.
+    """
+
+    sender: str
+    product_orders: list[ProductOpenOrdersData]
 
 
 class MarketLiquidityData(VertexBaseModel):
@@ -417,6 +447,7 @@ QueryResponseData = Union[
     OrderData,
     SubaccountInfoData,
     SubaccountOpenOrdersData,
+    SubaccountMultiProductsOpenOrdersData,
     MarketLiquidityData,
     SymbolsData,
     AllProductsData,

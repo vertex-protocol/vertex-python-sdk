@@ -20,6 +20,7 @@ from vertex_protocol.engine_client.types.query import (
     NoncesData,
     ProductSymbolsData,
     SubaccountOpenOrdersData,
+    SubaccountMultiProductsOpenOrdersData,
     OrderData,
     QueryAllProductsParams,
     QueryContractsParams,
@@ -33,6 +34,7 @@ from vertex_protocol.engine_client.types.query import (
     QueryMaxWithdrawableParams,
     QueryNoncesParams,
     QuerySubaccountOpenOrdersParams,
+    QuerySubaccountMultiProductOpenOrdersParams,
     QueryOrderParams,
     QueryRequest,
     QueryResponse,
@@ -205,6 +207,30 @@ class EngineQueryClient:
                 QuerySubaccountOpenOrdersParams(product_id=product_id, sender=sender)
             ).data,
             SubaccountOpenOrdersData,
+        )
+
+    def get_subaccount_multi_products_open_orders(
+        self, product_ids: list[int], sender: str
+    ) -> SubaccountMultiProductsOpenOrdersData:
+        """
+        Retrieves the open orders for a subaccount on a specific product.
+
+        Args:
+            product_ids (list[int]): List of product ids to fetch open orders for.
+
+            sender (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
+
+        Returns:
+            SubaccountMultiProductsOpenOrdersData: A data object containing the open orders for the
+            specified subaccount on the provided product.
+        """
+        return ensure_data_type(
+            self.query(
+                QuerySubaccountMultiProductOpenOrdersParams(
+                    product_ids=product_ids, sender=sender
+                )
+            ).data,
+            SubaccountMultiProductsOpenOrdersData,
         )
 
     def get_market_liquidity(self, product_id: int, depth: int) -> MarketLiquidityData:
