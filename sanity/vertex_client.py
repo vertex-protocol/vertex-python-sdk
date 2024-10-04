@@ -214,6 +214,9 @@ def run():
         )
         print("order result:", res.json(indent=2))
 
+    res = client.market.get_subaccount_multi_products_open_orders([1, 2], sender)
+    print("querying multi-products open orders", res.json(indent=2))
+
     print("cancelling product orders...")
     res = client.market.cancel_product_orders({"productIds": [1, 2], "sender": sender})
     print("cancel product orders results:", res.json(indent=2))
