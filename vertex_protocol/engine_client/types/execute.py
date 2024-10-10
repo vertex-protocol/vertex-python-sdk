@@ -649,6 +649,8 @@ class ExecuteResponse(VertexBaseModel):
         request_type (Optional[str]): Type of the request.
 
         req (Optional[dict]): The original request that was executed.
+
+        id (Optional[id]): An optional client id provided when placing an order
     """
 
     status: ResponseStatus
@@ -658,6 +660,7 @@ class ExecuteResponse(VertexBaseModel):
     error: Optional[str]
     request_type: Optional[str]
     req: Optional[dict]
+    id: Optional[int]
 
 
 def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
