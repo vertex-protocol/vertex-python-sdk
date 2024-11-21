@@ -14,4 +14,8 @@ def millis_to_seconds(millis: int) -> int:
 
 
 def now_in_seconds() -> int:
-    return millis_to_seconds(int(time.time() * 1000))
+    return int(time.time())
+
+
+def now_in_millis(padding: int = 0) -> int:
+    return (now_in_seconds() + padding) * 1000
