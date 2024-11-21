@@ -12,10 +12,13 @@ from vertex_protocol.indexer_client.types.models import (
     IndexerMarketMaker,
     IndexerMatch,
     IndexerOraclePrice,
+    IndexerPerpContractInfo,
     IndexerProduct,
     IndexerMarketSnapshot,
     IndexerSubaccount,
+    IndexerTickerInfo,
     IndexerTokenReward,
+    IndexerTradeInfo,
     IndexerTx,
     IndexerMerkleProof,
     IndexerPayment,
@@ -804,3 +807,10 @@ def to_indexer_request(params: IndexerParams) -> IndexerRequest:
 
     RequestClass, field_name = indexer_request_mapping[type(params)]
     return RequestClass(**{field_name: params})
+
+
+IndexerTickersData = Dict[str, IndexerTickerInfo]
+
+IndexerPerpContractsData = Dict[str, IndexerPerpContractInfo]
+
+IndexerHistoricalTradesData = list[IndexerTradeInfo]

@@ -62,6 +62,26 @@ def run():
     btc_perp = client.get_symbols(product_ids=[2])
     pprint(btc_perp)
 
+    print("querying assets...")
+    assets = client.get_assets()
+    pprint(assets)
+
+    print("querying spot market pairs...")
+    spot_pairs = client.get_pairs("spot")
+    pprint(spot_pairs)
+
+    print("querying perp market pairs...")
+    perp_pairs = client.get_pairs("perp")
+    pprint(perp_pairs)
+
+    print("querying spots apr...")
+    spots_apr = client.get_spots_apr()
+    pprint(spots_apr)
+
+    print("querying orderbook for ETH-PERP pair...")
+    eth_perp_book = client.get_orderbook("ETH-PERP_USDC", 10)
+    pprint(eth_perp_book)
+
     order_price = 100_000
 
     print("placing order...")

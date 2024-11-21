@@ -112,4 +112,11 @@ __all__ = [
     "IndexerInterestAndFundingParams",
     "IndexerInterestAndFundingRequest",
     "IndexerInterestAndFundingData",
+    "IndexerTickerInfo",
+    "IndexerPerpContractInfo",
+    "IndexerTradeInfo",
+    "VrtxTokenQueryType",
+    "IndexerTickersData",
+    "IndexerPerpContractsData",
+    "IndexerHistoricalTradesData",
 ]

@@ -2,6 +2,7 @@ from typing import Optional, Union
 import requests
 from functools import singledispatchmethod
 from vertex_protocol.indexer_client.types import IndexerClientOpts
+from vertex_protocol.indexer_client.types.models import MarketType, VrtxTokenQueryType
 from vertex_protocol.indexer_client.types.query import (
     IndexerCandlesticksParams,
     IndexerCandlesticksData,
@@ -48,6 +49,9 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerMerkleProofsData,
     IndexerInterestAndFundingParams,
     IndexerInterestAndFundingData,
+    IndexerTickersData,
+    IndexerPerpContractsData,
+    IndexerHistoricalTradesData,
     to_indexer_request,
 )
 from vertex_protocol.utils.model import (
@@ -75,6 +79,7 @@ class IndexerQueryClient:
         """
         self._opts = IndexerClientOpts.parse_obj(opts)
         self.url = self._opts.url
+        self.url_v2: str = self.url.replace("/v1", "") + "/v2"
         self.session = requests.Session()
 
     @singledispatchmethod
@@ -110,6 +115,12 @@ class IndexerQueryClient:
         except Exception:
             raise Exception(res.text)
         return indexer_res
+
+    def _query_v2(self, url):
+        res = self.session.get(url)
+        if res.status_code != 200:
+            raise Exception(res.text)
+        return res.json()
 
     def get_subaccount_historical_orders(
         self, params: IndexerSubaccountHistoricalOrdersParams
@@ -426,4 +437,30 @@ class IndexerQueryClient:
                 params,
             ).data,
             IndexerInterestAndFundingData,
+        )
+
+    def get_tickers(
+        self, market_type: Optional[MarketType] = None
+    ) -> IndexerTickersData:
+        url = f"{self.url_v2}/tickers"
+        if market_type is not None:
+            url += f"?market={str(market_type)}"
+        return ensure_data_type(self._query_v2(url), dict)
+
+    def get_perp_contracts_info(self) -> IndexerPerpContractsData:
+        return ensure_data_type(self._query_v2(f"{self.url_v2}/contracts"), dict)
+
+    def get_historical_trades(
+        self, ticker_id: str, limit: Optional[int], max_trade_id: Optional[int] = None
+    ) -> IndexerHistoricalTradesData:
+        url = f"{self.url_v2}/trades?ticker_id={ticker_id}"
+        if limit is not None:
+            url += f"&limit={limit}"
+        if max_trade_id is not None:
+            url += f"&max_trade_id={max_trade_id}"
+        return ensure_data_type(self._query_v2(url), list)
+
+    def get_vrtx_token_info(self, query_type: VrtxTokenQueryType) -> float:
+        return ensure_data_type(
+            self._query_v2(f"{self.url_v2}/vrtx?q={str(query_type)}"), float
         )

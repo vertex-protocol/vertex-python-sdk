@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 from typing import Annotated
 from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
@@ -195,3 +195,42 @@ class SubaccountPosition(VertexBaseModel):
 
 # (price, amount)
 MarketLiquidity = Annotated[list, conlist(str, min_items=2, max_items=2)]
+
+
+class Asset(VertexBaseModel):
+    product_id: int
+    ticker_id: Optional[str]
+    market_type: Optional[str]
+    name: str
+    symbol: str
+    maker_fee: Optional[float]
+    taker_fee: Optional[float]
+    can_withdraw: bool
+    can_deposit: bool
+
+
+class MarketPair(VertexBaseModel):
+    ticker_id: str
+    base: str
+    quote: str
+
+
+class SpotApr(VertexBaseModel):
+    name: str
+    symbol: str
+    product_id: int
+    deposit_apr: float
+    borrow_apr: float
+    tvl: float
+
+
+class Orderbook(VertexBaseModel):
+    ticker_id: str
+    timestamp: int
+    bids: list[MarketLiquidity]
+    asks: list[MarketLiquidity]
+
+
+class MarketType(StrEnum):
+    SPOT = "spot"
+    PERP = "perp"

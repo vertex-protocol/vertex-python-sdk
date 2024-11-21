@@ -196,4 +196,11 @@ __all__ = [
     "MaxOrderSizeDirection",
     "MarketLiquidity",
     "StreamAuthenticationParams",
+    "Asset",
+    "MarketPair",
+    "SpotApr",
+    "Orderbook",
+    "AssetsData",
+    "MarketPairsData",
+    "SpotsAprData",
 ]
