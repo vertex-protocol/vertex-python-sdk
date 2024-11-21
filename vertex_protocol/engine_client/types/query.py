@@ -4,12 +4,15 @@ from pydantic import validator
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,
+    Asset,
     BurnLpTx,
     EngineStatus,
+    MarketPair,
     MaxOrderSizeDirection,
     MintLpTx,
     ProductSymbol,
     ResponseStatus,
+    SpotApr,
     SpotProduct,
     SubaccountHealth,
     SpotProductBalance,
@@ -483,3 +486,10 @@ class QueryResponse(VertexBaseModel):
     error: Optional[str]
     error_code: Optional[int]
     request_type: Optional[str]
+
+
+AssetsData = list[Asset]
+
+MarketPairsData = list[MarketPair]
+
+SpotsAprData = list[SpotApr]

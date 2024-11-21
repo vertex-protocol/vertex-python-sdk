@@ -3,6 +3,8 @@ import requests
 
 from vertex_protocol.engine_client import EngineClientOpts
 from vertex_protocol.engine_client.types.models import (
+    MarketType,
+    Orderbook,
     ResponseStatus,
     SubaccountPosition,
 )
@@ -45,6 +47,9 @@ from vertex_protocol.engine_client.types.query import (
     SubaccountInfoData,
     SymbolsData,
     QuerySymbolsParams,
+    AssetsData,
+    MarketPairsData,
+    SpotsAprData,
 )
 from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
@@ -67,6 +72,7 @@ class EngineQueryClient:
         """
         self._opts: EngineClientOpts = EngineClientOpts.parse_obj(opts)
         self.url: str = self._opts.url
+        self.url_v2: str = self.url.replace("/v1", "") + "/v2"
         self.session = requests.Session()  # type: ignore
 
     def query(self, req: QueryRequest) -> QueryResponse:
@@ -428,3 +434,25 @@ class EngineQueryClient:
         except Exception as e:
             raise Exception(f"Invalid product id provided {product_id}. Error: {e}")
         return SubaccountPosition(balance=balance, product=product)
+
+    def get_assets(self) -> AssetsData:
+        return ensure_data_type(self.session.get(f"{self.url_v2}/assets").json(), list)
+
+    def get_pairs(self, market_type: Optional[MarketType] = None) -> MarketPairsData:
+        url = f"{self.url_v2}/pairs"
+        if market_type is not None:
+            url += f"?market={str(market_type)}"
+        return ensure_data_type(self.session.get(url).json(), list)
+
+    def get_spots_apr(self) -> SpotsAprData:
+        return ensure_data_type(self.session.get(f"{self.url_v2}/apr").json(), list)
+
+    def get_orderbook(self, ticker_id: str, depth: int) -> Orderbook:
+        return ensure_data_type(
+            Orderbook.parse_obj(
+                self.session.get(
+                    f"{self.url_v2}/orderbook?ticker_id={ticker_id}&depth={depth}"
+                ).json()
+            ),
+            Orderbook,
+        )
