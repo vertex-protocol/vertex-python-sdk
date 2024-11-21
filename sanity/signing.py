@@ -18,6 +18,7 @@ from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
 from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
+from vertex_protocol.utils.time import now_in_millis
 
 
 def run():
@@ -35,7 +36,7 @@ def run():
         tx=VertexTxType.AUTHENTICATE_STREAM,
         msg={
             "sender": subaccount_to_bytes32(subaccount),
-            "expiration": 13835058056999227925,
+            "expiration": now_in_millis(90),
         },
         verifying_contract=client.context.contracts.endpoint.address,
         chain_id=client.context.engine_client.chain_id,
