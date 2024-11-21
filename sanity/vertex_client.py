@@ -73,6 +73,8 @@ def run():
         )
         time.sleep(1)
 
+    order_price = 95_000
+
     owner = client.context.engine_client.signer.address
     print("placing order...")
     product_id = 1
@@ -81,7 +83,7 @@ def run():
             subaccount_owner=owner,
             subaccount_name="default",
         ),
-        priceX18=to_x18(55000),
+        priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
         nonce=gen_order_nonce(),
@@ -134,7 +136,7 @@ def run():
             subaccount_owner=owner,
             subaccount_name="default",
         ),
-        priceX18=to_x18(55000),
+        priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
         nonce=gen_order_nonce(),
@@ -158,7 +160,7 @@ def run():
             subaccount_owner=owner,
             subaccount_name="default",
         ),
-        priceX18=to_x18(65000),
+        priceX18=to_x18(order_price + 10_000),
         amount=-to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 40),
         nonce=gen_order_nonce(),
@@ -180,7 +182,7 @@ def run():
             subaccount_owner=owner,
             subaccount_name="default",
         ),
-        priceX18=to_x18(55000),
+        priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.POST_ONLY, int(time.time()) + 60),
         nonce=gen_order_nonce(),
@@ -372,7 +374,14 @@ def run():
         ),
         productId=3,
         amount=to_x18(1),
-        nonce=client.context.engine_client.tx_nonce(),
+        nonce=client.context.engine_client.tx_nonce(
+            subaccount_to_hex(
+                SubaccountParams(
+                    subaccount_owner=client.context.engine_client.signer.address,
+                    subaccount_name="default",
+                )
+            )
+        ),
     )
     res = client.market.burn_lp(burn_lp_params)
     print("burn lp result:", res.json(indent=2))
