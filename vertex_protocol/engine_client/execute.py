@@ -99,17 +99,21 @@ class EngineExecuteClient:
         """
         if params.nonce is not None:
             return params
-        params.nonce = self.order_nonce() if use_order_nonce else self.tx_nonce()
+        params.nonce = (
+            self.order_nonce()
+            if use_order_nonce
+            else self.tx_nonce(subaccount_to_hex(params.sender))
+        )
         return params
 
-    def tx_nonce(self) -> int:
+    def tx_nonce(self, sender: str) -> int:
         """
         Get the transaction nonce. Used to perform executes such as `withdraw_collateral`.
 
         Returns:
             int: The transaction nonce.
         """
-        return int(self._querier.get_nonces(self.signer.address).tx_nonce)
+        return int(self._querier.get_nonces(sender).tx_nonce)
 
     def order_nonce(self, recv_time_ms: Optional[int] = None) -> int:
         """
