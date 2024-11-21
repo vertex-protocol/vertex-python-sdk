@@ -62,13 +62,15 @@ def run():
     btc_perp = client.get_symbols(product_ids=[2])
     pprint(btc_perp)
 
+    order_price = 100_000
+
     print("placing order...")
     product_id = 1
     order = OrderParams(
         sender=SubaccountParams(
             subaccount_owner=client.signer.address, subaccount_name="default"
         ),
-        priceX18=to_x18(60000),
+        priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
         nonce=gen_order_nonce(),
@@ -86,7 +88,7 @@ def run():
         sender=SubaccountParams(
             subaccount_owner=client.signer.address, subaccount_name="default"
         ),
-        priceX18=to_x18(60000),
+        priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
         nonce=gen_order_nonce(),
@@ -147,7 +149,7 @@ def run():
         QueryMaxOrderSizeParams(
             sender=sender,
             product_id=product_id,
-            price_x18=to_x18(60000),
+            price_x18=to_x18(order_price),
             direction="short",
         )
     )
@@ -183,8 +185,8 @@ def run():
         ),
         productId=3,
         amountBase=to_x18(1),
-        quoteAmountLow=to_x18(1000),
-        quoteAmountHigh=to_x18(2000),
+        quoteAmountLow=to_x18(2000),
+        quoteAmountHigh=to_x18(4000),
     )
     res = client.mint_lp(mint_lp_params)
     print("mint lp results:", res.json(indent=2))
@@ -196,7 +198,13 @@ def run():
         ),
         productId=3,
         amount=to_x18(1),
-        nonce=client.tx_nonce(),
+        nonce=client.tx_nonce(
+            subaccount_to_hex(
+                SubaccountParams(
+                    subaccount_owner=client.signer.address, subaccount_name="default"
+                )
+            )
+        ),
     )
     res = client.burn_lp(burn_lp_params)
     print("burn lp result:", res.json(indent=2))
@@ -249,7 +257,7 @@ def run():
             sender=SubaccountParams(
                 subaccount_owner=client.signer.address, subaccount_name="default"
             ),
-            priceX18=to_x18(60000),
+            priceX18=to_x18(order_price),
             amount=to_pow_10(1, 17),
             expiration=get_expiration_timestamp(
                 OrderType.DEFAULT, int(time.time()) + 40

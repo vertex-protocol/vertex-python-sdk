@@ -113,7 +113,7 @@ class EngineExecuteClient:
         Returns:
             int: The transaction nonce.
         """
-        return int(self._querier.get_nonces(sender).tx_nonce)
+        return int(self._querier.get_nonces(sender[:42]).tx_nonce)
 
     def order_nonce(self, recv_time_ms: Optional[int] = None) -> int:
         """
