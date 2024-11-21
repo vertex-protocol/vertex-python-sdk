@@ -310,3 +310,47 @@ class IndexerPayment(VertexBaseModel):
     balance_amount: str
     rate_x18: str
     oracle_price_x18: str
+
+
+class IndexerTickerInfo(VertexBaseModel):
+    ticker_id: str
+    base_currency: str
+    quote_currency: str
+    last_price: float
+    base_volume: float
+    quote_volume: float
+    price_change_percent_24h: float
+
+
+class IndexerPerpContractInfo(IndexerTickerInfo):
+    product_type: str
+    contract_price: float
+    contract_price_currency: str
+    open_interest: float
+    open_interest_usd: float
+    index_price: float
+    mark_price: float
+    funding_rate: float
+    next_funding_rate_timestamp: int
+
+
+class IndexerTradeInfo(VertexBaseModel):
+    ticker_id: str
+    # submission_idx
+    trade_id: int
+    price: float
+    base_filled: float
+    quote_filled: float
+    timestamp: int
+    # side
+    trade_type: str
+
+
+class MarketType(StrEnum):
+    SPOT = "spot"
+    PERP = "perp"
+
+
+class VrtxTokenQueryType(StrEnum):
+    TOTAL_SUPPLY = "total_supply"
+    CIRCULATING_SUPPLY = "circulating_supply"

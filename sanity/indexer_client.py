@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 
 from eth_account import Account
 from sanity import INDEXER_BACKEND_URL, SIGNER_PRIVATE_KEY
@@ -22,6 +23,30 @@ from vertex_protocol.utils.subaccount import SubaccountParams
 def run():
     print("setting up indexer client...")
     client = IndexerClient(opts={"url": INDEXER_BACKEND_URL})
+
+    print("querying spot tickers...")
+    spot_tickers = client.get_tickers("spot")
+    pprint(spot_tickers)
+
+    print("querying perp tickers...")
+    perp_tickers = client.get_tickers("perp")
+    pprint(perp_tickers)
+
+    print("querying perp contracts info...")
+    perp_contracts = client.get_perp_contracts_info()
+    pprint(perp_contracts)
+
+    print("querying ETH-PERP historical trades...")
+    eth_perp_trades = client.get_historical_trades("ETH-PERP_USDC", 2)
+    pprint(eth_perp_trades)
+
+    print("querying VRTX token total supply...")
+    vrtx_total_supply = client.get_vrtx_token_info("total_supply")
+    pprint(vrtx_total_supply)
+
+    print("querying VRTX token circulating supply...")
+    vrtx_circulating_supply = client.get_vrtx_token_info("circulating_supply")
+    pprint(vrtx_circulating_supply)
 
     owner = Account.from_key(SIGNER_PRIVATE_KEY).address
     subaccount = subaccount_to_hex(

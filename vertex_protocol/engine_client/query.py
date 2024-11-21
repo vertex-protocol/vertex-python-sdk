@@ -100,6 +100,12 @@ class EngineQueryClient:
             raise QueryFailedException(res.text)
         return query_res
 
+    def _query_v2(self, url):
+        res = self.session.get(url)
+        if res.status_code != 200:
+            raise Exception(res.text)
+        return res.json()
+
     def get_product_symbols(self) -> ProductSymbolsData:
         """
         Retrieves symbols for all available products.
@@ -436,23 +442,23 @@ class EngineQueryClient:
         return SubaccountPosition(balance=balance, product=product)
 
     def get_assets(self) -> AssetsData:
-        return ensure_data_type(self.session.get(f"{self.url_v2}/assets").json(), list)
+        return ensure_data_type(self._query_v2(f"{self.url_v2}/assets"), list)
 
     def get_pairs(self, market_type: Optional[MarketType] = None) -> MarketPairsData:
         url = f"{self.url_v2}/pairs"
         if market_type is not None:
             url += f"?market={str(market_type)}"
-        return ensure_data_type(self.session.get(url).json(), list)
+        return ensure_data_type(self._query_v2(url), list)
 
     def get_spots_apr(self) -> SpotsAprData:
-        return ensure_data_type(self.session.get(f"{self.url_v2}/apr").json(), list)
+        return ensure_data_type(self._query_v2(f"{self.url_v2}/apr"), list)
 
     def get_orderbook(self, ticker_id: str, depth: int) -> Orderbook:
         return ensure_data_type(
             Orderbook.parse_obj(
-                self.session.get(
+                self._query_v2(
                     f"{self.url_v2}/orderbook?ticker_id={ticker_id}&depth={depth}"
-                ).json()
+                )
             ),
             Orderbook,
         )
