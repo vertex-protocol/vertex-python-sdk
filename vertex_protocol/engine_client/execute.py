@@ -1,4 +1,3 @@
-from copy import deepcopy
 import time
 import requests
 from functools import singledispatchmethod
@@ -15,7 +14,6 @@ from vertex_protocol.engine_client.types import (
     EngineClientOpts,
 )
 from vertex_protocol.engine_client.types.execute import (
-    BaseParams,
     BurnLpParams,
     CancelAndPlaceParams,
     CancelOrdersParams,
@@ -69,44 +67,6 @@ class EngineExecuteClient(VertexBaseExecute):
         self.url: str = self._opts.url
         self.session = requests.Session()
 
-    def _inject_owner_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
-        """
-        Inject the owner if needed.
-
-        Args:
-            params (Type[BaseParams]): The parameters.
-
-        Returns:
-            Type[BaseParams]: The parameters with the owner injected if needed.
-        """
-        if isinstance(params.sender, SubaccountParams):
-            params.sender.subaccount_owner = (
-                params.sender.subaccount_owner or self.signer.address
-            )
-            params.sender = params.serialize_sender(params.sender)
-        return params
-
-    def _inject_nonce_if_needed(
-        self, params: Type[BaseParams], use_order_nonce: bool
-    ) -> Type[BaseParams]:
-        """
-        Inject the nonce if needed.
-
-        Args:
-            params (Type[BaseParams]): The parameters.
-
-        Returns:
-            Type[BaseParams]: The parameters with the nonce injected if needed.
-        """
-        if params.nonce is not None:
-            return params
-        params.nonce = (
-            self.order_nonce()
-            if use_order_nonce
-            else self.tx_nonce(subaccount_to_hex(params.sender))
-        )
-        return params
-
     def tx_nonce(self, sender: str) -> int:
         """
         Get the transaction nonce. Used to perform executes such as `withdraw_collateral`.
@@ -115,21 +75,6 @@ class EngineExecuteClient(VertexBaseExecute):
             int: The transaction nonce.
         """
         return int(self._querier.get_nonces(sender[:42]).tx_nonce)
-
-    def prepare_execute_params(self, params, use_order_nonce: bool):
-        """
-        Prepares the parameters for execution by ensuring that both owner and nonce are correctly set.
-
-        Args:
-            params (Type[BaseParams]): The original parameters.
-
-        Returns:
-            Type[BaseParams]: A copy of the original parameters with owner and nonce injected if needed.
-        """
-        params = deepcopy(params)
-        params = self._inject_owner_if_needed(params)
-        params = self._inject_nonce_if_needed(params, use_order_nonce)
-        return params
 
     @singledispatchmethod
     def execute(self, params: Union[ExecuteParams, ExecuteRequest]) -> ExecuteResponse:
@@ -205,108 +150,12 @@ class EngineExecuteClient(VertexBaseExecute):
             self.chain_id,
         )
 
-    def _sign(
-        self, execute: VertexExecuteType, msg: dict, product_id: Optional[int] = None
-    ) -> str:
-        """
-        Internal method to create an EIP-712 signature for the given operation type and message.
-
-        Args:
-            execute (VertexExecuteType): The Vertex execute type to sign.
-
-            msg (dict): The message to be signed.
-
-            product_id (int, optional): Required for 'PLACE_ORDER' operation, specifying the product ID.
-
-        Returns:
-            str: The generated EIP-712 signature.
-
-        Raises:
-            ValueError: If the operation type is 'PLACE_ORDER' and no product_id is provided.
-
-        Notes:
-            The contract used for verification varies based on the operation type:
-                - For 'PLACE_ORDER', it's derived from the book address associated with the product_id.
-                - For other operations, it's the endpoint address.
-        """
-        is_place_order = execute == VertexExecuteType.PLACE_ORDER
-        if is_place_order and product_id is None:
-            raise ValueError("Missing `product_id` to sign place_order execute")
-        verifying_contract = (
-            self.book_addr(product_id)
-            if is_place_order and product_id
-            else self.endpoint_addr
-        )
-        return self.sign(
-            execute, msg, verifying_contract, self.chain_id, self.linked_signer
-        )
-
-    def build_digest(
-        self,
-        execute: VertexExecuteType,
-        msg: dict,
-        verifying_contract: str,
-        chain_id: int,
-    ) -> str:
-        """
-        Build an EIP-712 compliant digest from given parameters.
-
-        Must provide the same input to build an EIP-712 typed data as the one provided for signing via `.sign(...)`
-
-        Args:
-            execute (VertexExecuteType): The Vertex execute type to build digest for.
-
-            msg (dict): The EIP712 message.
-
-            verifying_contract (str): The contract used for verification.
-
-            chain_id (int): The network chain ID.
-
-        Returns:
-            str: The digest computed from the provided parameters.
-        """
-        return get_eip712_typed_data_digest(
-            build_eip712_typed_data(execute, msg, verifying_contract, chain_id)
-        )
-
     def _assert_book_not_empty(
         self, bids: list[MarketLiquidity], asks: list[MarketLiquidity], is_bid: bool
     ):
         book_is_empty = (is_bid and len(bids) == 0) or (not is_bid and len(asks) == 0)
         if book_is_empty:
             raise Exception("Orderbook is empty.")
-
-    def sign(
-        self,
-        execute: VertexExecuteType,
-        msg: dict,
-        verifying_contract: str,
-        chain_id: int,
-        signer: LocalAccount,
-    ) -> str:
-        """
-        Signs the EIP-712 typed data using the provided signer account.
-
-        Args:
-            execute (VertexExecuteType): The type of operation.
-
-            msg (dict): The message to be signed.
-
-            verifying_contract (str): The contract used for verification.
-
-            chain_id (int): The network chain ID.
-
-            signer (LocalAccount): The account used to sign the data.
-
-        Returns:
-            str: The generated EIP-712 signature.
-        """
-        return sign_eip712_typed_data(
-            typed_data=build_eip712_typed_data(
-                execute, msg, verifying_contract, chain_id
-            ),
-            signer=signer,
-        )
 
     def place_order(self, params: PlaceOrderParams) -> ExecuteResponse:
         """
