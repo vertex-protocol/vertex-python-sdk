@@ -2,7 +2,13 @@ from typing import Optional, Type, Union
 from pydantic import validator
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
-from vertex_protocol.utils.execute import BaseParams, BaseParamsSigned, SignatureParams
+from vertex_protocol.utils.execute import (
+    BaseParams,
+    BaseParamsSigned,
+    MarketOrderParams,
+    OrderParams,
+    SignatureParams,
+)
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
@@ -14,40 +20,6 @@ from vertex_protocol.engine_client.types.query import OrderData
 
 
 Digest = Union[str, bytes]
-
-
-class MarketOrderParams(BaseParams):
-    """
-    Class for defining the parameters of a market order.
-
-    Attributes:
-        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
-
-        expiration (int): The unix timestamp at which the order will expire.
-
-        nonce (Optional[int]): A unique number used to prevent replay attacks.
-    """
-
-    amount: int
-    nonce: Optional[int]
-
-
-class OrderParams(MarketOrderParams):
-    """
-    Class for defining the parameters of an order.
-
-    Attributes:
-        priceX18 (int): The price of the order with a precision of 18 decimal places.
-
-        expiration (int): The unix timestamp at which the order will expire.
-
-        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
-
-        nonce (Optional[int]): A unique number used to prevent replay attacks.
-    """
-
-    priceX18: int
-    expiration: int
 
 
 class PlaceOrderParams(SignatureParams):

@@ -26,6 +26,7 @@ class TriggerExecuteClient(VertexBaseExecute):
         self._opts: TriggerClientOpts = TriggerClientOpts.parse_obj(opts)
         self.url: str = self._opts.url
         self.session = requests.Session()
+        self.is_trigger = True
 
     @singledispatchmethod
     def execute(

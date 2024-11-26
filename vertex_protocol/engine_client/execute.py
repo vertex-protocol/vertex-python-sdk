@@ -2,13 +2,7 @@ import time
 import requests
 from functools import singledispatchmethod
 
-from typing import Optional, Type, Union
-from eth_account.signers.local import LocalAccount
-from vertex_protocol.contracts.eip712.sign import (
-    get_eip712_typed_data_digest,
-    sign_eip712_typed_data,
-    build_eip712_typed_data,
-)
+from typing import Optional, Union
 from vertex_protocol.engine_client.query import EngineQueryClient
 from vertex_protocol.engine_client.types import (
     EngineClientOpts,
@@ -130,25 +124,6 @@ class EngineExecuteClient(VertexBaseExecute):
         if execute_res.status != "success":
             raise ExecuteFailedException(res.text)
         return execute_res
-
-    def get_order_digest(self, order: OrderParams, product_id: int) -> str:
-        """
-        Generates the order digest for a given order and product ID.
-
-        Args:
-            order (OrderParams): The order parameters.
-
-            product_id (int): The ID of the product.
-
-        Returns:
-            str: The generated order digest.
-        """
-        return self.build_digest(
-            VertexExecuteType.PLACE_ORDER,
-            order.dict(),
-            self.book_addr(product_id),
-            self.chain_id,
-        )
 
     def _assert_book_not_empty(
         self, bids: list[MarketLiquidity], asks: list[MarketLiquidity], is_bid: bool

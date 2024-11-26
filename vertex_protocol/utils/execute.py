@@ -71,9 +71,44 @@ class BaseParamsSigned(BaseParams, SignatureParams):
     pass
 
 
+class MarketOrderParams(BaseParams):
+    """
+    Class for defining the parameters of a market order.
+
+    Attributes:
+        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
+
+        expiration (int): The unix timestamp at which the order will expire.
+
+        nonce (Optional[int]): A unique number used to prevent replay attacks.
+    """
+
+    amount: int
+    nonce: Optional[int]
+
+
+class OrderParams(MarketOrderParams):
+    """
+    Class for defining the parameters of an order.
+
+    Attributes:
+        priceX18 (int): The price of the order with a precision of 18 decimal places.
+
+        expiration (int): The unix timestamp at which the order will expire.
+
+        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
+
+        nonce (Optional[int]): A unique number used to prevent replay attacks.
+    """
+
+    priceX18: int
+    expiration: int
+
+
 class VertexBaseExecute:
     def __init__(self, opts: VertexClientOpts):
         self._opts = opts
+        self.is_trigger = False
 
     @abstractmethod
     def tx_nonce(self, _: str) -> int:
@@ -167,7 +202,7 @@ class VertexBaseExecute:
         Returns:
             int: The generated order nonce.
         """
-        return gen_order_nonce(recv_time_ms)
+        return gen_order_nonce(recv_time_ms, is_trigger_order=self.is_trigger)
 
     def _inject_owner_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
         """
@@ -316,4 +351,23 @@ class VertexBaseExecute:
                 execute, msg, verifying_contract, chain_id
             ),
             signer=signer,
+        )
+
+    def get_order_digest(self, order: OrderParams, product_id: int) -> str:
+        """
+        Generates the order digest for a given order and product ID.
+
+        Args:
+            order (OrderParams): The order parameters.
+
+            product_id (int): The ID of the product.
+
+        Returns:
+            str: The generated order digest.
+        """
+        return self.build_digest(
+            VertexExecuteType.PLACE_ORDER,
+            order.dict(),
+            self.book_addr(product_id),
+            self.chain_id,
         )

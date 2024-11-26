@@ -1,0 +1,55 @@
+import time
+from sanity import ENGINE_BACKEND_URL, SIGNER_PRIVATE_KEY, TRIGGER_BACKEND_URL
+from vertex_protocol.engine_client import EngineClient
+from vertex_protocol.engine_client.types import EngineClientOpts
+from vertex_protocol.engine_client.types.execute import OrderParams
+from vertex_protocol.trigger_client import TriggerClient
+from vertex_protocol.trigger_client.types import TriggerClientOpts
+from vertex_protocol.trigger_client.types.execute import (
+    PlaceTriggerOrderParams,
+    PriceAboveTrigger,
+)
+from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
+from vertex_protocol.utils.math import to_pow_10, to_x18
+from vertex_protocol.utils.nonce import gen_order_nonce
+from vertex_protocol.utils.subaccount import SubaccountParams
+
+
+def run():
+    print("setting up trigger client...")
+    client = TriggerClient(
+        opts=TriggerClientOpts(url=TRIGGER_BACKEND_URL, signer=SIGNER_PRIVATE_KEY)
+    )
+
+    engine_client = EngineClient(
+        opts=EngineClientOpts(url=ENGINE_BACKEND_URL, signer=SIGNER_PRIVATE_KEY)
+    )
+
+    contracts_data = engine_client.get_contracts()
+    client.endpoint_addr = contracts_data.endpoint_addr
+    client.chain_id = contracts_data.chain_id
+    client.book_addrs = contracts_data.book_addrs
+
+    print("placing trigger order...")
+    order_price = 100_000
+
+    product_id = 1
+    order = OrderParams(
+        sender=SubaccountParams(
+            subaccount_owner=client.signer.address, subaccount_name="default"
+        ),
+        priceX18=to_x18(order_price),
+        amount=to_pow_10(1, 17),
+        expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
+        nonce=client.order_nonce(),
+    )
+    order_digest = client.get_order_digest(order, product_id)
+    print("order digest:", order_digest)
+
+    place_order = PlaceTriggerOrderParams(
+        product_id=product_id,
+        order=order,
+        trigger=PriceAboveTrigger(price_above=to_x18(120_000)),
+    )
+    res = client.place_trigger_order(place_order)
+    print("trigger order result:", res.json(indent=2))
