@@ -4,7 +4,7 @@ from vertex_protocol.utils.backend import VertexClientOpts
 from vertex_protocol.utils.nonce import gen_order_nonce
 
 
-class BaseExecuteClient:
+class VertexBaseExecute:
     def __init__(self, opts: VertexClientOpts):
         self._opts = opts
 

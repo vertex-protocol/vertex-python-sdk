@@ -44,10 +44,10 @@ from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import mul_x18, round_x18, to_x18
 from vertex_protocol.utils.model import VertexBaseModel, is_instance_of_union
 from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
-from vertex_protocol.utils.execute import BaseExecuteClient
+from vertex_protocol.utils.execute import VertexBaseExecute
 
 
-class EngineExecuteClient(BaseExecuteClient):
+class EngineExecuteClient(VertexBaseExecute):
     """
     Client class for executing operations against the off-chain engine.
     """
