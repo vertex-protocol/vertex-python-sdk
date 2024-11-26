@@ -140,7 +140,12 @@ def create_vertex_client(
         VertexClient: The created VertexClient instance.
     """
     logging.info(f"Initializing default {mode} context")
-    engine_endpoint_url, indexer_endpoint_url, network_name = client_mode_to_setup(mode)
+    (
+        engine_endpoint_url,
+        indexer_endpoint_url,
+        trigger_endpoint_url,
+        network_name,
+    ) = client_mode_to_setup(mode)
     try:
         network = VertexNetwork(network_name)
         deployment = load_deployment(network)
@@ -176,6 +181,9 @@ def create_vertex_client(
         indexer_endpoint_url = (
             parsed_context_opts.indexer_endpoint_url or indexer_endpoint_url
         )
+        trigger_endpoint_url = (
+            parsed_context_opts.trigger_endpoint_url or trigger_endpoint_url
+        )
         rpc_node_url = parsed_context_opts.rpc_node_url or rpc_node_url
         contracts_context = parsed_context_opts.contracts_context or contracts_context
 
@@ -184,6 +192,7 @@ def create_vertex_client(
             rpc_node_url=rpc_node_url,
             engine_endpoint_url=parse_obj_as(AnyUrl, engine_endpoint_url),
             indexer_endpoint_url=parse_obj_as(AnyUrl, indexer_endpoint_url),
+            trigger_endpoint_url=parse_obj_as(AnyUrl, trigger_endpoint_url),
             contracts_context=contracts_context,
         ),
         signer,
@@ -193,67 +202,79 @@ def create_vertex_client(
 
 def client_mode_to_setup(
     client_mode: VertexClientMode,
-) -> tuple[str, str, str]:
+) -> tuple[str, str, str, str]:
     try:
         return {
             VertexClientMode.MAINNET: (
                 VertexBackendURL.MAINNET_GATEWAY.value,
                 VertexBackendURL.MAINNET_INDEXER.value,
+                VertexBackendURL.MAINNET_TRIGGER.value,
                 VertexNetwork.ARBITRUM_ONE.value,
             ),
             VertexClientMode.BLAST_MAINNET: (
                 VertexBackendURL.BLAST_MAINNET_GATEWAY.value,
                 VertexBackendURL.BLAST_MAINNET_INDEXER.value,
+                VertexBackendURL.BLAST_MAINNET_TRIGGER.value,
                 VertexNetwork.BLAST_MAINNET.value,
             ),
             VertexClientMode.MANTLE_MAINNET: (
                 VertexBackendURL.MANTLE_MAINNET_GATEWAY.value,
                 VertexBackendURL.MANTLE_MAINNET_INDEXER.value,
+                VertexBackendURL.MANTLE_MAINNET_TRIGGER.value,
                 VertexNetwork.MANTLE_MAINNET.value,
             ),
             VertexClientMode.SEI_MAINNET: (
                 VertexBackendURL.SEI_MAINNET_GATEWAY.value,
                 VertexBackendURL.SEI_MAINNET_INDEXER.value,
+                VertexBackendURL.SEI_MAINNET_TRIGGER.value,
                 VertexNetwork.SEI_MAINNET.value,
             ),
             VertexClientMode.BASE_MAINNET: (
                 VertexBackendURL.BASE_MAINNET_GATEWAY.value,
                 VertexBackendURL.BASE_MAINNET_INDEXER.value,
+                VertexBackendURL.BASE_MAINNET_TRIGGER.value,
                 VertexNetwork.BASE_MAINNET.value,
             ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
                 VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
+                VertexBackendURL.SEPOLIA_TESTNET_TRIGGER.value,
                 VertexNetwork.ARBITRUM_SEPOLIA.value,
             ),
             VertexClientMode.BLAST_TESTNET: (
                 VertexBackendURL.BLAST_TESTNET_GATEWAY.value,
                 VertexBackendURL.BLAST_TESTNET_INDEXER.value,
+                VertexBackendURL.BLAST_TESTNET_TRIGGER.value,
                 VertexNetwork.BLAST_TESTNET.value,
             ),
             VertexClientMode.MANTLE_TESTNET: (
                 VertexBackendURL.MANTLE_TESTNET_GATEWAY.value,
                 VertexBackendURL.MANTLE_TESTNET_INDEXER.value,
+                VertexBackendURL.MANTLE_TESTNET_TRIGGER.value,
                 VertexNetwork.MANTLE_TESTNET.value,
             ),
             VertexClientMode.SEI_TESTNET: (
                 VertexBackendURL.SEI_TESTNET_GATEWAY.value,
                 VertexBackendURL.SEI_TESTNET_INDEXER.value,
+                VertexBackendURL.SEI_TESTNET_TRIGGER.value,
                 VertexNetwork.SEI_TESTNET.value,
             ),
             VertexClientMode.BASE_TESTNET: (
                 VertexBackendURL.BASE_TESTNET_GATEWAY.value,
                 VertexBackendURL.BASE_TESTNET_INDEXER.value,
+                VertexBackendURL.BASE_TESTNET_TRIGGER.value,
                 VertexNetwork.BASE_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
+                VertexBackendURL.DEVNET_TRIGGER.value,
                 VertexNetwork.HARDHAT.value,
             ),
             VertexClientMode.TESTING: (
                 VertexBackendURL.DEVNET_GATEWAY.value,
                 VertexBackendURL.DEVNET_INDEXER.value,
+                VertexBackendURL.DEVNET_TRIGGER.value,
                 VertexNetwork.TESTING.value,
             ),
         }[client_mode]
