@@ -283,3 +283,6 @@ class MarketQueryAPI(VertexBaseAPI):
             IndexerMarketSnapshotsData: The market snapshot data corresponding to the provided parameters.
         """
         return self.context.indexer_client.get_market_snapshots(params)
+
+    def get_trigger_orders(params):
+        raise NotImplementedError

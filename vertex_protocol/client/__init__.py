@@ -12,8 +12,7 @@ from vertex_protocol.client.context import (
 from vertex_protocol.contracts import VertexContractsContext
 from vertex_protocol.contracts.loader import load_deployment
 from vertex_protocol.contracts.types import VertexNetwork
-from vertex_protocol.engine_client.types import Signer
-from vertex_protocol.utils.backend import VertexBackendURL
+from vertex_protocol.utils.backend import VertexBackendURL, Signer
 from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.client.context import *
 

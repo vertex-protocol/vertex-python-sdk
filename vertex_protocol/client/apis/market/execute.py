@@ -149,3 +149,12 @@ class MarketExecuteAPI(VertexBaseAPI):
             Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.close_position(subaccount, product_id)
+
+    def place_trigger_order(params) -> ExecuteResponse:
+        raise NotImplementedError
+
+    def cancel_trigger_orders(params) -> ExecuteResponse:
+        raise NotImplementedError
+
+    def cancel_trigger_product_orders(params) -> ExecuteResponse:
+        raise NotImplementedError
