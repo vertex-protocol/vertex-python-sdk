@@ -27,6 +27,9 @@ class TriggerExecuteClient(VertexBaseExecute):
         self.url: str = self._opts.url
         self.session = requests.Session()
 
+    def tx_nonce(self, _: str) -> int:
+        raise NotImplementedError
+
     @singledispatchmethod
     def execute(
         self, params: Union[TriggerExecuteParams, TriggerExecuteRequest]
