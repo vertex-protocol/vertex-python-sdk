@@ -108,7 +108,6 @@ class OrderParams(MarketOrderParams):
 class VertexBaseExecute:
     def __init__(self, opts: VertexClientOpts):
         self._opts = opts
-        self.is_trigger = False
 
     @abstractmethod
     def tx_nonce(self, _: str) -> int:
@@ -192,7 +191,9 @@ class VertexBaseExecute:
             raise ValueError(f"Invalid product_id {product_id} provided.")
         return self.book_addrs[product_id]
 
-    def order_nonce(self, recv_time_ms: Optional[int] = None) -> int:
+    def order_nonce(
+        self, recv_time_ms: Optional[int] = None, is_trigger_order: bool = False
+    ) -> int:
         """
         Generate the order nonce. Used for oder placements and cancellations.
 
@@ -202,7 +203,7 @@ class VertexBaseExecute:
         Returns:
             int: The generated order nonce.
         """
-        return gen_order_nonce(recv_time_ms, is_trigger_order=self.is_trigger)
+        return gen_order_nonce(recv_time_ms, is_trigger_order=is_trigger_order)
 
     def _inject_owner_if_needed(self, params: Type[BaseParams]) -> Type[BaseParams]:
         """
@@ -222,7 +223,10 @@ class VertexBaseExecute:
         return params
 
     def _inject_nonce_if_needed(
-        self, params: Type[BaseParams], use_order_nonce: bool
+        self,
+        params: Type[BaseParams],
+        use_order_nonce: bool,
+        is_trigger_order: bool = False,
     ) -> Type[BaseParams]:
         """
         Inject the nonce if needed.
@@ -236,13 +240,15 @@ class VertexBaseExecute:
         if params.nonce is not None:
             return params
         params.nonce = (
-            self.order_nonce()
+            self.order_nonce(is_trigger_order=is_trigger_order)
             if use_order_nonce
             else self.tx_nonce(subaccount_to_hex(params.sender))
         )
         return params
 
-    def prepare_execute_params(self, params, use_order_nonce: bool):
+    def prepare_execute_params(
+        self, params, use_order_nonce: bool, is_trigger_order: bool = False
+    ):
         """
         Prepares the parameters for execution by ensuring that both owner and nonce are correctly set.
 
@@ -254,7 +260,7 @@ class VertexBaseExecute:
         """
         params = deepcopy(params)
         params = self._inject_owner_if_needed(params)
-        params = self._inject_nonce_if_needed(params, use_order_nonce)
+        params = self._inject_nonce_if_needed(params, use_order_nonce, is_trigger_order)
         return params
 
     def _sign(

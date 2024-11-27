@@ -26,7 +26,6 @@ class TriggerExecuteClient(VertexBaseExecute):
         self._opts: TriggerClientOpts = TriggerClientOpts.parse_obj(opts)
         self.url: str = self._opts.url
         self.session = requests.Session()
-        self.is_trigger = True
 
     @singledispatchmethod
     def execute(
@@ -87,7 +86,7 @@ class TriggerExecuteClient(VertexBaseExecute):
 
     def place_trigger_order(self, params: PlaceTriggerOrderParams) -> ExecuteResponse:
         params = PlaceTriggerOrderParams.parse_obj(params)
-        params.order = self.prepare_execute_params(params.order, True)
+        params.order = self.prepare_execute_params(params.order, True, True)
         params.signature = params.signature or self._sign(
             VertexExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
         )

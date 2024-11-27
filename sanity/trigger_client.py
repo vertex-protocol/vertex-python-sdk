@@ -7,11 +7,12 @@ from vertex_protocol.trigger_client import TriggerClient
 from vertex_protocol.trigger_client.types import TriggerClientOpts
 from vertex_protocol.trigger_client.types.execute import (
     PlaceTriggerOrderParams,
+    CancelTriggerOrdersParams,
     PriceAboveTrigger,
 )
+from vertex_protocol.utils.bytes32 import subaccount_to_hex
 from vertex_protocol.utils.expiration import OrderType, get_expiration_timestamp
 from vertex_protocol.utils.math import to_pow_10, to_x18
-from vertex_protocol.utils.nonce import gen_order_nonce
 from vertex_protocol.utils.subaccount import SubaccountParams
 
 
@@ -41,7 +42,7 @@ def run():
         priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
         expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
-        nonce=client.order_nonce(),
+        nonce=client.order_nonce(is_trigger_order=True),
     )
     order_digest = client.get_order_digest(order, product_id)
     print("order digest:", order_digest)
@@ -53,3 +54,11 @@ def run():
     )
     res = client.place_trigger_order(place_order)
     print("trigger order result:", res.json(indent=2))
+
+    sender = subaccount_to_hex(order.sender)
+
+    cancel_orders = CancelTriggerOrdersParams(
+        sender=sender, productIds=[product_id], digests=[order_digest]
+    )
+    res = client.cancel_trigger_orders(cancel_orders)
+    print("cancel trigger order result:", res.json(indent=2))
