@@ -7,6 +7,8 @@ from vertex_protocol.contracts import VertexContractsContext
 from vertex_protocol.engine_client import EngineClient
 from vertex_protocol.engine_client.types import EngineClientOpts
 
+from vertex_protocol.trigger_client import TriggerClient
+from vertex_protocol.trigger_client.types import TriggerClientOpts
 from vertex_protocol.utils.bytes32 import hex_to_bytes32
 
 
@@ -70,6 +72,26 @@ def engine_client(
 ) -> EngineClient:
     return EngineClient(
         opts=EngineClientOpts(
+            url=url,
+            chain_id=chain_id,
+            endpoint_addr=endpoint_addr,
+            book_addrs=book_addrs,
+            signer=Account.from_key(private_keys[0]),
+            linked_signer=Account.from_key(private_keys[1]),
+        )
+    )
+
+
+@pytest.fixture
+def trigger_client(
+    url: str,
+    chain_id: int,
+    endpoint_addr: str,
+    book_addrs: list[str],
+    private_keys: list[str],
+) -> TriggerClient:
+    return TriggerClient(
+        opts=TriggerClientOpts(
             url=url,
             chain_id=chain_id,
             endpoint_addr=endpoint_addr,
@@ -194,6 +216,14 @@ def authenticate_stream_params(senders: list[str]) -> dict:
     return {
         "sender": hex_to_bytes32(senders[0]),
         "expiration": 4611687701117784255,
+    }
+
+
+@pytest.fixture
+def list_trigger_orders_params(senders: list[str]) -> dict:
+    return {
+        "sender": hex_to_bytes32(senders[0]),
+        "recvTime": 4611687701117784255,
     }
 
 

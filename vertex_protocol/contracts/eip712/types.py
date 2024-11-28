@@ -135,4 +135,10 @@ def get_vertex_eip712_type(tx: VertexTxType) -> dict:
                 {"name": "expiration", "type": "uint64"},
             ]
         },
+        VertexTxType.LIST_TRIGGER_ORDERS: {
+            "ListTriggerOrders": [
+                {"name": "sender", "type": "bytes32"},
+                {"name": "recvTime", "type": "uint64"},
+            ]
+        },
     }[tx]

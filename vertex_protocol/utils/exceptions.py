@@ -47,3 +47,12 @@ class InvalidVrtxClaimParams(Exception):
     ):
         self.message = message
         super().__init__(self.message)
+
+
+class MissingTriggerClient(Exception):
+    def __init__(
+        self,
+        message="Trigger client not initialized.",
+    ):
+        self.message = message
+        super().__init__(self.message)

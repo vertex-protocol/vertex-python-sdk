@@ -2,107 +2,23 @@ from typing import Optional, Type, Union
 from pydantic import validator
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
+from vertex_protocol.utils.execute import (
+    BaseParamsSigned,
+    MarketOrderParams,
+    OrderParams,
+    SignatureParams,
+)
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,
     hex_to_bytes32,
     subaccount_to_bytes32,
 )
-from vertex_protocol.utils.nonce import gen_order_nonce
-from vertex_protocol.utils.subaccount import Subaccount, SubaccountParams
+from vertex_protocol.utils.subaccount import Subaccount
 from vertex_protocol.engine_client.types.query import OrderData
 
 
 Digest = Union[str, bytes]
-
-
-class BaseParams(VertexBaseModel):
-    """
-    Base class for defining request parameters to be sent to the Vertex API.
-
-    Attributes:
-        sender (Subaccount): The sender's subaccount identifier.
-        nonce (Optional[int]): An optional nonce for the request.
-
-    Note:
-        - The sender attribute is validated and serialized to bytes32 format before sending the request.
-    """
-
-    sender: Subaccount
-    nonce: Optional[int]
-
-    class Config:
-        validate_assignment = True
-
-    @validator("sender")
-    def serialize_sender(cls, v: Subaccount) -> Union[bytes, Subaccount]:
-        """
-        Validates and serializes the sender to bytes32 format.
-
-        Args:
-            v (Subaccount): The sender's subaccount identifier.
-
-        Returns:
-            (bytes|Subaccount): The serialized sender in bytes32 format or the original Subaccount if it cannot be converted to bytes32.
-        """
-        try:
-            return subaccount_to_bytes32(v)
-        except ValueError:
-            return v
-
-
-class SignatureParams(VertexBaseModel):
-    """
-    Class for defining signature parameters in a request sent to the Vertex API.
-
-    Attributes:
-        signature (Optional[str]): An optional string representing the signature for the request.
-    """
-
-    signature: Optional[str]
-
-
-class BaseParamsSigned(BaseParams, SignatureParams):
-    """
-    Class that combines the base parameters and signature parameters for a signed request
-    to the Vertex API. Inherits attributes from BaseParams and SignatureParams.
-    """
-
-    pass
-
-
-class MarketOrderParams(BaseParams):
-    """
-    Class for defining the parameters of a market order.
-
-    Attributes:
-        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
-
-        expiration (int): The unix timestamp at which the order will expire.
-
-        nonce (Optional[int]): A unique number used to prevent replay attacks.
-    """
-
-    amount: int
-    nonce: Optional[int]
-
-
-class OrderParams(MarketOrderParams):
-    """
-    Class for defining the parameters of an order.
-
-    Attributes:
-        priceX18 (int): The price of the order with a precision of 18 decimal places.
-
-        expiration (int): The unix timestamp at which the order will expire.
-
-        amount (int): The amount of the asset to be bought or sold in the order. Positive for a `long` position and negative for a `short`.
-
-        nonce (Optional[int]): A unique number used to prevent replay attacks.
-    """
-
-    priceX18: int
-    expiration: int
 
 
 class PlaceOrderParams(SignatureParams):

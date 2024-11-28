@@ -143,6 +143,14 @@ def test_build_eip712_domain(endpoint_addr: str, book_addrs: list[str], chain_id
                 {"name": "expiration", "type": "uint64"},
             ],
         ),
+        (
+            VertexTxType.LIST_TRIGGER_ORDERS,
+            "ListTriggerOrders",
+            [
+                {"name": "sender", "type": "bytes32"},
+                {"name": "recvTime", "type": "uint64"},
+            ],
+        ),
     ],
 )
 def test_build_eip712_types(
@@ -260,6 +268,14 @@ def test_build_eip712_domain_type():
                 "expiration": 4611687701117784255,
             },
         ),
+        (
+            VertexTxType.LIST_TRIGGER_ORDERS,
+            "ListTriggerOrders",
+            {
+                "sender": "0x841fe4876763357975d60da128d8a54bb045d76a64656661756c740000000000",
+                "recvTime": 4611687701117784255,
+            },
+        ),
     ],
 )
 def test_build_eip712_typed_data(
@@ -307,6 +323,7 @@ def test_sign_eip712_typed_data(
     burn_lp_params: dict,
     link_signer_params: dict,
     authenticate_stream_params: dict,
+    list_trigger_orders_params: dict,
 ):
     to_sign = [
         (VertexTxType.PLACE_ORDER, book_addrs[1], order_params),
@@ -330,6 +347,7 @@ def test_sign_eip712_typed_data(
         (VertexTxType.BURN_LP, endpoint_addr, burn_lp_params),
         (VertexTxType.LINK_SIGNER, endpoint_addr, link_signer_params),
         (VertexTxType.AUTHENTICATE_STREAM, endpoint_addr, authenticate_stream_params),
+        (VertexTxType.LIST_TRIGGER_ORDERS, endpoint_addr, list_trigger_orders_params),
     ]
 
     signer = Account.from_key(private_keys[0])

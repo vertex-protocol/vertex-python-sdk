@@ -8,6 +8,7 @@ from vertex_protocol.utils.exceptions import *
 
 __all__ = [
     "VertexBackendURL",
+    "VertexClientOpts",
     "SubaccountParams",
     "Subaccount",
     "subaccount_to_bytes32",

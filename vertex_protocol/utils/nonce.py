@@ -4,7 +4,9 @@ import random
 
 
 def gen_order_nonce(
-    recv_time_ms: Optional[int] = None, random_int: Optional[int] = None
+    recv_time_ms: Optional[int] = None,
+    random_int: Optional[int] = None,
+    is_trigger_order: bool = False,
 ) -> int:
     """
     Generates an order nonce based on a received timestamp and a random integer.
@@ -24,4 +26,8 @@ def gen_order_nonce(
     if random_int is None:
         random_int = random.randint(0, 999)
 
-    return (recv_time_ms << 20) + random_int
+    nonce = (recv_time_ms << 20) + random_int
+
+    if is_trigger_order:
+        nonce = nonce | (1 << 63)
+    return nonce
