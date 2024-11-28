@@ -9,6 +9,12 @@ from vertex_protocol.engine_client.types.execute import (
     PlaceOrderParams,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
+from vertex_protocol.trigger_client.types.execute import (
+    PlaceTriggerOrderParams,
+    CancelTriggerOrdersParams,
+    CancelProductTriggerOrdersParams,
+)
+from vertex_protocol.utils.exceptions import MissingTriggerClient
 from vertex_protocol.utils.subaccount import Subaccount
 
 
@@ -150,11 +156,21 @@ class MarketExecuteAPI(VertexBaseAPI):
         """
         return self.context.engine_client.close_position(subaccount, product_id)
 
-    def place_trigger_order(params) -> ExecuteResponse:
-        raise NotImplementedError
+    def place_trigger_order(self, params: PlaceTriggerOrderParams) -> ExecuteResponse:
+        if self.context.trigger_client is None:
+            raise MissingTriggerClient()
+        return self.context.trigger_client.place_trigger_order(params)
 
-    def cancel_trigger_orders(params) -> ExecuteResponse:
-        raise NotImplementedError
+    def cancel_trigger_orders(
+        self, params: CancelTriggerOrdersParams
+    ) -> ExecuteResponse:
+        if self.context.trigger_client is None:
+            raise MissingTriggerClient()
+        return self.context.trigger_client.cancel_trigger_orders(params)
 
-    def cancel_trigger_product_orders(params) -> ExecuteResponse:
-        raise NotImplementedError
+    def cancel_trigger_product_orders(
+        self, params: CancelProductTriggerOrdersParams
+    ) -> ExecuteResponse:
+        if self.context.trigger_client is None:
+            raise MissingTriggerClient()
+        return self.context.trigger_client.cancel_product_trigger_orders(params)

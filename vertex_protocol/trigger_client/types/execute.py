@@ -10,27 +10,7 @@ from vertex_protocol.engine_client.types.execute import (
     CancelOrdersRequest,
     CancelProductOrdersRequest,
 )
-
-
-class PriceAboveTrigger(VertexBaseModel):
-    price_above: str
-
-
-class PriceBelowTrigger(VertexBaseModel):
-    price_below: str
-
-
-class LastPriceAboveTrigger(VertexBaseModel):
-    last_price_above: str
-
-
-class LastPriceBelowTrigger(VertexBaseModel):
-    last_price_below: str
-
-
-TriggerCriteria = Union[
-    PriceAboveTrigger, PriceBelowTrigger, LastPriceAboveTrigger, LastPriceBelowTrigger
-]
+from vertex_protocol.trigger_client.types.models import TriggerCriteria
 
 
 class PlaceTriggerOrderParams(PlaceOrderParams):

@@ -146,5 +146,6 @@ VertexTxType = StrEnum(
             name: member.value for name, member in VertexExecuteType.__members__.items()
         },
         **{"AUTHENTICATE_STREAM": "authenticate"},
+        **{"LIST_TRIGGER_ORDERS": "list_trigger_orders"},
     },
 )  # type: ignore

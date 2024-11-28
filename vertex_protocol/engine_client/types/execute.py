@@ -3,7 +3,6 @@ from pydantic import validator
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.utils.execute import (
-    BaseParams,
     BaseParamsSigned,
     MarketOrderParams,
     OrderParams,

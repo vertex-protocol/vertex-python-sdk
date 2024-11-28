@@ -13,9 +13,11 @@ from vertex_protocol.trigger_client import TriggerClient
 from vertex_protocol.trigger_client.types.execute import (
     PlaceTriggerOrderParams,
     PlaceTriggerOrderRequest,
+    to_trigger_execute_request,
+)
+from vertex_protocol.trigger_client.types.models import (
     PriceAboveTrigger,
     PriceBelowTrigger,
-    to_trigger_execute_request,
 )
 from vertex_protocol.utils.bytes32 import (
     bytes32_to_hex,

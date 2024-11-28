@@ -23,6 +23,11 @@ from vertex_protocol.indexer_client.types.query import (
     IndexerMarketSnapshotsParams,
     IndexerMarketSnapshotsData,
 )
+from vertex_protocol.trigger_client.types.query import (
+    ListTriggerOrdersParams,
+    TriggerQueryResponse,
+)
+from vertex_protocol.utils.exceptions import MissingTriggerClient
 
 
 class MarketQueryAPI(VertexBaseAPI):
@@ -284,5 +289,9 @@ class MarketQueryAPI(VertexBaseAPI):
         """
         return self.context.indexer_client.get_market_snapshots(params)
 
-    def get_trigger_orders(params):
-        raise NotImplementedError
+    def get_trigger_orders(
+        self, params: ListTriggerOrdersParams
+    ) -> TriggerQueryResponse:
+        if self.context.trigger_client is None:
+            raise MissingTriggerClient()
+        return self.context.trigger_client.list_trigger_orders(params)

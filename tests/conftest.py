@@ -220,6 +220,14 @@ def authenticate_stream_params(senders: list[str]) -> dict:
 
 
 @pytest.fixture
+def list_trigger_orders_params(senders: list[str]) -> dict:
+    return {
+        "sender": hex_to_bytes32(senders[0]),
+        "recvTime": 4611687701117784255,
+    }
+
+
+@pytest.fixture
 def mock_post() -> MagicMock:
     with patch.object(requests.Session, "post") as mock_post:
         yield mock_post
