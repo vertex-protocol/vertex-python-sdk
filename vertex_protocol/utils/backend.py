@@ -28,6 +28,10 @@ class VertexBackendURL(StrEnum):
     BASE_MAINNET_INDEXER = "https://archive.base-prod.vertexprotocol.com/v1"
     BASE_MAINNET_TRIGGER = "https://trigger.base-prod.vertexprotocol.com/v1"
 
+    SONIC_MAINNET_GATEWAY = "https://gateway.sonic-prod.vertexprotocol.com/v1"
+    SONIC_MAINNET_INDEXER = "https://archive.sonic-prod.vertexprotocol.com/v1"
+    SONIC_MAINNET_TRIGGER = "https://trigger.sonic-prod.vertexprotocol.com/v1"
+
     SEPOLIA_TESTNET_GATEWAY = "https://gateway.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_INDEXER = "https://archive.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_TRIGGER = "https://trigger.sepolia-test.vertexprotocol.com/v1"
@@ -47,6 +51,10 @@ class VertexBackendURL(StrEnum):
     BASE_TESTNET_GATEWAY = "https://gateway.base-test.vertexprotocol.com/v1"
     BASE_TESTNET_INDEXER = "https://archive.base-test.vertexprotocol.com/v1"
     BASE_TESTNET_TRIGGER = "https://trigger.base-test.vertexprotocol.com/v1"
+
+    SONIC_TESTNET_GATEWAY = "https://gateway.sonic-test.vertexprotocol.com/v1"
+    SONIC_TESTNET_INDEXER = "https://archive.sonic-test.vertexprotocol.com/v1"
+    SONIC_TESTNET_TRIGGER = "https://trigger.sonic-test.vertexprotocol.com/v1"
 
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"
