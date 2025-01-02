@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://rpc.soniclabs.com",
+  "explorerUrl": "https://sonicscan.org",
+  "startBlock": 596514,
+  "deployer": "0xc88E9A634bC1D3Ee499317aF16e5Ccbe3C9ca490",
+  "quote": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+  "querier": "0xcC7895C391041231BfB5837A6923A4A26586d14f",
+  "clearinghouse": "0x447c9aEe069F6A13007eb9D2d2a4Bb4Ad92AB721",
+  "endpoint": "0x2f5F835d778eBE8c28fC743E50EB9a68Ca93c2Fa",
+  "spotEngine": "0xEa555556ab1973973e4f9d3378277Ab156de783d",
+  "perpEngine": "0x9100770dE5268B969e540650D003D909d5012826",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

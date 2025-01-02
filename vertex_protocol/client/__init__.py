@@ -34,6 +34,8 @@ class VertexClientMode(StrEnum):
 
         BASE_MAINNET: For operating in Vertex's mainnet environment deployed on Base Mainnet.
 
+        SONIC_MAINNET: For operating in Vertex's mainnet environment deployed on Sonic Mainnet.
+
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
         BLAST_TESTNET: For operating in Vertex's testnet environment deployed on Blast Testnet.
@@ -43,6 +45,8 @@ class VertexClientMode(StrEnum):
         SEI_TESTNET: For operating in Vertex's testnet environment deployed on Sei Testnet.
 
         BASE_TESTNET: For operating in Vertex's testnet environment deployed on Base Testnet.
+
+        SONIC_TESTNET: For operating in Vertex's mainnet environment deployed on Sonic Testnet.
 
         DEVNET: For local development.
 
@@ -54,11 +58,13 @@ class VertexClientMode(StrEnum):
     MANTLE_MAINNET = "mantle-mainnet"
     SEI_MAINNET = "sei-mainnet"
     BASE_MAINNET = "base-mainnet"
+    SONIC_MAINNET = "sonic-mainnet"
     SEPOLIA_TESTNET = "sepolia-testnet"
     BLAST_TESTNET = "blast-testnet"
     MANTLE_TESTNET = "mantle-testnet"
     SEI_TESTNET = "sei-testnet"
     BASE_TESTNET = "base-testnet"
+    SONIC_TESTNET = "sonic-testnet"
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -235,6 +241,12 @@ def client_mode_to_setup(
                 VertexBackendURL.BASE_MAINNET_TRIGGER.value,
                 VertexNetwork.BASE_MAINNET.value,
             ),
+            VertexClientMode.SONIC_MAINNET: (
+                VertexBackendURL.SONIC_MAINNET_GATEWAY.value,
+                VertexBackendURL.SONIC_MAINNET_INDEXER.value,
+                VertexBackendURL.SONIC_MAINNET_TRIGGER.value,
+                VertexNetwork.SONIC_MAINNET.value,
+            ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
                 VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
@@ -264,6 +276,12 @@ def client_mode_to_setup(
                 VertexBackendURL.BASE_TESTNET_INDEXER.value,
                 VertexBackendURL.BASE_TESTNET_TRIGGER.value,
                 VertexNetwork.BASE_TESTNET.value,
+            ),
+            VertexClientMode.SONIC_TESTNET: (
+                VertexBackendURL.SONIC_TESTNET_GATEWAY.value,
+                VertexBackendURL.SONIC_TESTNET_INDEXER.value,
+                VertexBackendURL.SONIC_TESTNET_TRIGGER.value,
+                VertexNetwork.SONIC_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,
