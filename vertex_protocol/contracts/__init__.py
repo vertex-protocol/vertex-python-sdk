@@ -1,6 +1,6 @@
 import os
 from typing import Optional
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 from web3 import Web3
 from web3.types import TxParams
 from web3.contract import Contract

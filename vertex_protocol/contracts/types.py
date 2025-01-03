@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import AnyUrl, Field
+from pydantic.v1 import AnyUrl, Field
 from vertex_protocol.utils.enum import StrEnum
 
 from vertex_protocol.utils.model import VertexBaseModel

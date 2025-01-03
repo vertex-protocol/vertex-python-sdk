@@ -1,5 +1,5 @@
 from typing import Union
-from pydantic import validator
+from pydantic.v1 import validator
 from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.utils.bytes32 import bytes32_to_hex
 from vertex_protocol.utils.model import VertexBaseModel

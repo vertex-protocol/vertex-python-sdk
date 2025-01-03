@@ -1,7 +1,7 @@
 from eth_account import Account
 from vertex_protocol.engine_client import EngineClient, EngineClientOpts
 from eth_account.signers.local import LocalAccount
-from pydantic import ValidationError
+from pydantic.v1 import ValidationError
 import pytest
 
 

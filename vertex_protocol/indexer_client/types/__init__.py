@@ -1,4 +1,4 @@
-from pydantic import BaseModel, AnyUrl, validator
+from pydantic.v1 import BaseModel, AnyUrl, validator
 from vertex_protocol.indexer_client.types.models import *
 from vertex_protocol.indexer_client.types.query import *
 

@@ -16,7 +16,7 @@ from vertex_protocol.utils.backend import VertexBackendURL, Signer
 from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.client.context import *
 
-from pydantic import parse_obj_as
+from pydantic.v1 import parse_obj_as
 
 
 class VertexClientMode(StrEnum):

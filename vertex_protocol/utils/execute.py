@@ -2,7 +2,7 @@ from abc import abstractmethod
 from copy import deepcopy
 from typing import Optional, Type, Union
 from eth_account.signers.local import LocalAccount
-from pydantic import validator
+from pydantic.v1 import validator
 from vertex_protocol.contracts.eip712.sign import (
     build_eip712_typed_data,
     get_eip712_typed_data_digest,
