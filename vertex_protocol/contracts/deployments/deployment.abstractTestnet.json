@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://api.testnet.abs.xyz",
+  "explorerUrl": "https://explorer.testnet.abs.xyz",
+  "startBlock": 3899928,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xbf9ac1Bff961F513fc26ba2734cB0aB371FD27e7",
+  "querier": "0xfE8942db6a40dF41e5EFec71Db248199D1452d60",
+  "clearinghouse": "0x96d143992dfEAd13502a68BfE714c7712bA659bA",
+  "endpoint": "0x597c7D7b33a8b0A73e929BA97814d8b35910D98E",
+  "spotEngine": "0x9b1232D7AdC1879c69892A0454c6Fee9DfdC1805",
+  "perpEngine": "0x90520E2159078C2BcF1dD653568951E0ea0767CB",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

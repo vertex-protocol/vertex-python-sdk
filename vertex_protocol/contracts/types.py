@@ -10,18 +10,25 @@ class VertexNetwork(StrEnum):
     Enumeration representing various network environments for the Vertex protocol.
     """
 
+    # mainnet
     ARBITRUM_ONE = "arbitrumOne"
     BLAST_MAINNET = "blastMainnet"
     MANTLE_MAINNET = "mantleMainnet"
     SEI_MAINNET = "seiMainnet"
     BASE_MAINNET = "baseMainnet"
     SONIC_MAINNET = "sonicMainnet"
+    ABSTRACT_MAINNET = "abstractMainnet"
+
+    # testnet
     ARBITRUM_SEPOLIA = "arbitrumSepolia"
     BLAST_TESTNET = "blastTestnet"
     MANTLE_TESTNET = "mantleTestnet"
     SEI_TESTNET = "seiTestnet"
     BASE_TESTNET = "baseTestnet"
     SONIC_TESTNET = "sonicTestnet"
+    ABSTRACT_TESTNET = "abstractTestnet"
+
+    # dev
     HARDHAT = "localhost"
     TESTING = "test"
 

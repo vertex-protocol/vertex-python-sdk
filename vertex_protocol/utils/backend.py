@@ -8,6 +8,7 @@ from pydantic import BaseModel, AnyUrl, validator, root_validator
 class VertexBackendURL(StrEnum):
     """Enum representing different Vertex backend URLs."""
 
+    # mainnet
     MAINNET_GATEWAY = "https://gateway.prod.vertexprotocol.com/v1"
     MAINNET_INDEXER = "https://archive.prod.vertexprotocol.com/v1"
     MAINNET_TRIGGER = "https://trigger.prod.vertexprotocol.com/v1"
@@ -32,6 +33,11 @@ class VertexBackendURL(StrEnum):
     SONIC_MAINNET_INDEXER = "https://archive.sonic-prod.vertexprotocol.com/v1"
     SONIC_MAINNET_TRIGGER = "https://trigger.sonic-prod.vertexprotocol.com/v1"
 
+    ABSTRACT_MAINNET_GATEWAY = "https://gateway.abstract-prod.vertexprotocol.com/v1"
+    ABSTRACT_MAINNET_INDEXER = "https://archive.abstract-prod.vertexprotocol.com/v1"
+    ABSTRACT_MAINNET_TRIGGER = "https://trigger.abstract-prod.vertexprotocol.com/v1"
+
+    # testnet
     SEPOLIA_TESTNET_GATEWAY = "https://gateway.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_INDEXER = "https://archive.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_TRIGGER = "https://trigger.sepolia-test.vertexprotocol.com/v1"
@@ -56,6 +62,11 @@ class VertexBackendURL(StrEnum):
     SONIC_TESTNET_INDEXER = "https://archive.sonic-test.vertexprotocol.com/v1"
     SONIC_TESTNET_TRIGGER = "https://trigger.sonic-test.vertexprotocol.com/v1"
 
+    ABSTRACT_TESTNET_GATEWAY = "https://gateway.abstract-test.vertexprotocol.com/v1"
+    ABSTRACT_TESTNET_INDEXER = "https://archive.abstract-test.vertexprotocol.com/v1"
+    ABSTRACT_TESTNET_TRIGGER = "https://trigger.abstract-test.vertexprotocol.com/v1"
+
+    # dev
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"
     DEVNET_TRIGGER = "http://localhost:8080"
