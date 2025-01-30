@@ -36,6 +36,8 @@ class VertexClientMode(StrEnum):
 
         SONIC_MAINNET: For operating in Vertex's mainnet environment deployed on Sonic Mainnet.
 
+        ABSTRACT_MAINNET: For operating in Vertex's mainnet environment deployed on Abstract Mainnet.
+
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
 
         BLAST_TESTNET: For operating in Vertex's testnet environment deployed on Blast Testnet.
@@ -46,25 +48,34 @@ class VertexClientMode(StrEnum):
 
         BASE_TESTNET: For operating in Vertex's testnet environment deployed on Base Testnet.
 
-        SONIC_TESTNET: For operating in Vertex's mainnet environment deployed on Sonic Testnet.
+        SONIC_TESTNET: For operating in Vertex's testnet environment deployed on Sonic Testnet.
+
+        ABSTRACT_TESTNET: For operating in Vertex's testnet environment deployed on Abstract Testnet.
 
         DEVNET: For local development.
 
         TESTING: For running tests.
     """
 
+    # mainnet
     MAINNET = "mainnet"
     BLAST_MAINNET = "blast-mainnet"
     MANTLE_MAINNET = "mantle-mainnet"
     SEI_MAINNET = "sei-mainnet"
     BASE_MAINNET = "base-mainnet"
     SONIC_MAINNET = "sonic-mainnet"
+    ABSTRACT_MAINNET = "abstract-mainnet"
+
+    # testnet
     SEPOLIA_TESTNET = "sepolia-testnet"
     BLAST_TESTNET = "blast-testnet"
     MANTLE_TESTNET = "mantle-testnet"
     SEI_TESTNET = "sei-testnet"
     BASE_TESTNET = "base-testnet"
     SONIC_TESTNET = "sonic-testnet"
+    ABSTRACT_TESTNET = "abstract-testnet"
+
+    # dev
     DEVNET = "devnet"
     TESTING = "testing"
 
@@ -247,6 +258,12 @@ def client_mode_to_setup(
                 VertexBackendURL.SONIC_MAINNET_TRIGGER.value,
                 VertexNetwork.SONIC_MAINNET.value,
             ),
+            VertexClientMode.ABSTRACT_MAINNET: (
+                VertexBackendURL.ABSTRACT_MAINNET_GATEWAY.value,
+                VertexBackendURL.ABSTRACT_MAINNET_INDEXER.value,
+                VertexBackendURL.ABSTRACT_MAINNET_TRIGGER.value,
+                VertexNetwork.ABSTRACT_MAINNET.value,
+            ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
                 VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
@@ -282,6 +299,12 @@ def client_mode_to_setup(
                 VertexBackendURL.SONIC_TESTNET_INDEXER.value,
                 VertexBackendURL.SONIC_TESTNET_TRIGGER.value,
                 VertexNetwork.SONIC_TESTNET.value,
+            ),
+            VertexClientMode.ABSTRACT_TESTNET: (
+                VertexBackendURL.ABSTRACT_TESTNET_GATEWAY.value,
+                VertexBackendURL.ABSTRACT_TESTNET_INDEXER.value,
+                VertexBackendURL.ABSTRACT_TESTNET_TRIGGER.value,
+                VertexNetwork.ABSTRACT_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,

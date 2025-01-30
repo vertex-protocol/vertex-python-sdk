@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://api.mainnet.abs.xyz",
+  "explorerUrl": "https://abscan.org",
+  "startBlock": 410000,
+  "deployer": "0x184d0842a2C19fB003D0d12C7dFcCc52dBD608F5",
+  "quote": "0x84A71ccD554Cc1b02749b35d22F684CC8ec987e1",
+  "querier": "0xC155f48b8212a7Dd16B336f1891c8E26D5DFE093",
+  "clearinghouse": "0x1385bF2f06165cA0621aF047cF8666c256e1B1C2",
+  "endpoint": "0x6B104c78D384D1C25CcEe2CA0698541e22eC60b2",
+  "spotEngine": "0xA65B7Ae7A3a17B93dc382fA1487b4bc3BCEB6e3D",
+  "perpEngine": "0x6950DD3d2da0cdc217ad56714c6BA0011171bcC4",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}
