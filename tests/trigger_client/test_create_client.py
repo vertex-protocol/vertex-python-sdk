@@ -1,7 +1,7 @@
 from eth_account import Account
 from vertex_protocol.trigger_client import TriggerClient, TriggerClientOpts
 from eth_account.signers.local import LocalAccount
-from pydantic import ValidationError
+from pydantic.v1 import ValidationError
 import pytest
 
 

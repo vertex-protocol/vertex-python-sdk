@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import validator
+from pydantic.v1 import validator
 
 from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.trigger_client.types.models import TriggerOrderData

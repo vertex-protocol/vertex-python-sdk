@@ -2,7 +2,7 @@ from vertex_protocol.utils.enum import StrEnum
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from typing import Optional, Union
-from pydantic import BaseModel, AnyUrl, validator, root_validator
+from pydantic.v1 import BaseModel, AnyUrl, validator, root_validator
 
 
 class VertexBackendURL(StrEnum):

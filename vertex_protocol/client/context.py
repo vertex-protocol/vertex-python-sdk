@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Optional
 from eth_account import Account
 
-from pydantic import AnyUrl, BaseModel
+from pydantic.v1 import AnyUrl, BaseModel
 from vertex_protocol.contracts import VertexContracts, VertexContractsContext
 from eth_account.signers.local import LocalAccount
 from vertex_protocol.engine_client import EngineClient

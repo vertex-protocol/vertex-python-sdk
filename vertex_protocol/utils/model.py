@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 from typing import Any, Callable, Type, TypeVar, Union
 
 
