@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://rpc.berachain.com",
+  "explorerUrl": "https://berascan.com",
+  "startBlock": 1045097,
+  "deployer": "0xCd55Efc131BEBB66Dd3D68cbda0657eadBDc214D",
+  "quote": "0xFCBD14DC51f0A4d49d5E53C2E0950e0bC26d0Dce",
+  "querier": "0xc4002068DEa1Ae3206Ef9CC7fE3fd672934cf9b4",
+  "clearinghouse": "0x9F90b17E7134aF112C15437Ec4521E4541156036",
+  "endpoint": "0xACda13Df56ab92A244239f4E2ad291657Ac9C5f2",
+  "spotEngine": "0x03aAD14233084c1378b81Ca45783b28aacf186BA",
+  "perpEngine": "0xeba84dbaAeC229dCae114C1a22D9868aB45B87e0",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

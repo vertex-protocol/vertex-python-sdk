@@ -37,6 +37,10 @@ class VertexBackendURL(StrEnum):
     ABSTRACT_MAINNET_INDEXER = "https://archive.abstract-prod.vertexprotocol.com/v1"
     ABSTRACT_MAINNET_TRIGGER = "https://trigger.abstract-prod.vertexprotocol.com/v1"
 
+    BERA_MAINNET_GATEWAY = "https://gateway.bera-prod.vertexprotocol.com/v1"
+    BERA_MAINNET_INDEXER = "https://archive.bera-prod.vertexprotocol.com/v1"
+    BERA_MAINNET_TRIGGER = "https://trigger.bera-prod.vertexprotocol.com/v1"
+
     # testnet
     SEPOLIA_TESTNET_GATEWAY = "https://gateway.sepolia-test.vertexprotocol.com/v1"
     SEPOLIA_TESTNET_INDEXER = "https://archive.sepolia-test.vertexprotocol.com/v1"
@@ -65,6 +69,10 @@ class VertexBackendURL(StrEnum):
     ABSTRACT_TESTNET_GATEWAY = "https://gateway.abstract-test.vertexprotocol.com/v1"
     ABSTRACT_TESTNET_INDEXER = "https://archive.abstract-test.vertexprotocol.com/v1"
     ABSTRACT_TESTNET_TRIGGER = "https://trigger.abstract-test.vertexprotocol.com/v1"
+
+    BERA_TESTNET_GATEWAY = "https://gateway.bera-test.vertexprotocol.com/v1"
+    BERA_TESTNET_INDEXER = "https://archive.bera-test.vertexprotocol.com/v1"
+    BERA_TESTNET_TRIGGER = "https://trigger.bera-test.vertexprotocol.com/v1"
 
     # dev
     DEVNET_GATEWAY = "http://localhost:80"
