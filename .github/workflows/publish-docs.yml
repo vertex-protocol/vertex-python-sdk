@@ -43,9 +43,9 @@ jobs:
         run : |
           poetry run sphinx-build docs/source docs/build
       - name: Setup Pages
-        uses: actions/configure-pages@v1
+        uses: actions/configure-pages@v4
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: './docs/build'
