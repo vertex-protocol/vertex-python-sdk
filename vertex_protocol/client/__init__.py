@@ -25,32 +25,22 @@ class VertexClientMode(StrEnum):
 
     Attributes:
         MAINNET: For operating in Vertex's mainnet environment deployed on Arbitrum One.
-
         BLAST_MAINNET: For operating in Vertex's mainnet environment deployed on Blast Mainnet.
-
         MANTLE_MAINNET: For operating in Vertex's mainnet environment deployed on Mantle Mainnet.
-
         SEI_MAINNET: For operating in Vertex's mainnet environment deployed on Sei Mainnet.
-
         BASE_MAINNET: For operating in Vertex's mainnet environment deployed on Base Mainnet.
-
         SONIC_MAINNET: For operating in Vertex's mainnet environment deployed on Sonic Mainnet.
-
         ABSTRACT_MAINNET: For operating in Vertex's mainnet environment deployed on Abstract Mainnet.
+        BERA_MAINNET: For operating in Vertex's mainnet environment deployed on Berachain Mainnet.
 
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
-
         BLAST_TESTNET: For operating in Vertex's testnet environment deployed on Blast Testnet.
-
         MANTLE_TESTNET: For operating in Vertex's testnet environment deployed on Mantle Testnet.
-
         SEI_TESTNET: For operating in Vertex's testnet environment deployed on Sei Testnet.
-
         BASE_TESTNET: For operating in Vertex's testnet environment deployed on Base Testnet.
-
         SONIC_TESTNET: For operating in Vertex's testnet environment deployed on Sonic Testnet.
-
         ABSTRACT_TESTNET: For operating in Vertex's testnet environment deployed on Abstract Testnet.
+        BERA_TESTNET: For operating in Vertex's testnet environment deployed on Bera Testnet.
 
         DEVNET: For local development.
 
@@ -65,6 +55,7 @@ class VertexClientMode(StrEnum):
     BASE_MAINNET = "base-mainnet"
     SONIC_MAINNET = "sonic-mainnet"
     ABSTRACT_MAINNET = "abstract-mainnet"
+    BERA_MAINNET = "bera-mainnet"
 
     # testnet
     SEPOLIA_TESTNET = "sepolia-testnet"
@@ -74,6 +65,7 @@ class VertexClientMode(StrEnum):
     BASE_TESTNET = "base-testnet"
     SONIC_TESTNET = "sonic-testnet"
     ABSTRACT_TESTNET = "abstract-testnet"
+    BERA_TESTNET = "bera-testnet"
 
     # dev
     DEVNET = "devnet"
@@ -264,6 +256,12 @@ def client_mode_to_setup(
                 VertexBackendURL.ABSTRACT_MAINNET_TRIGGER.value,
                 VertexNetwork.ABSTRACT_MAINNET.value,
             ),
+            VertexClientMode.BERA_MAINNET: (
+                VertexBackendURL.BERA_MAINNET_GATEWAY.value,
+                VertexBackendURL.BERA_MAINNET_INDEXER.value,
+                VertexBackendURL.BERA_MAINNET_TRIGGER.value,
+                VertexNetwork.BERA_MAINNET.value,
+            ),
             VertexClientMode.SEPOLIA_TESTNET: (
                 VertexBackendURL.SEPOLIA_TESTNET_GATEWAY.value,
                 VertexBackendURL.SEPOLIA_TESTNET_INDEXER.value,
@@ -305,6 +303,12 @@ def client_mode_to_setup(
                 VertexBackendURL.ABSTRACT_TESTNET_INDEXER.value,
                 VertexBackendURL.ABSTRACT_TESTNET_TRIGGER.value,
                 VertexNetwork.ABSTRACT_TESTNET.value,
+            ),
+            VertexClientMode.BERA_TESTNET: (
+                VertexBackendURL.BERA_TESTNET_GATEWAY.value,
+                VertexBackendURL.BERA_TESTNET_INDEXER.value,
+                VertexBackendURL.BERA_TESTNET_TRIGGER.value,
+                VertexNetwork.BERA_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,
