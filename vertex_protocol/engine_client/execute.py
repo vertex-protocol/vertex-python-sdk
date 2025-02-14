@@ -178,8 +178,7 @@ class EngineExecuteClient(VertexBaseExecute):
             nonce=params.market_order.nonce,
             priceX18=round_x18(market_price_x18, price_increment_x18),
             expiration=get_expiration_timestamp(
-                OrderType.FOK,
-                int(time.time()) + 1000,
+                OrderType.FOK, int(time.time()) + 1000, bool(params.reduce_only)
             ),
         )
         return self.place_order(
@@ -389,8 +388,7 @@ class EngineExecuteClient(VertexBaseExecute):
                         product.book_info.price_increment_x18,
                     ),
                     expiration=get_expiration_timestamp(
-                        OrderType.FOK,
-                        int(time.time()) + 1000,
+                        OrderType.FOK, int(time.time()) + 1000, reduce_only=True
                     ),
                 ),
             )

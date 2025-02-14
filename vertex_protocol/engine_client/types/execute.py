@@ -56,12 +56,15 @@ class PlaceMarketOrderParams(SignatureParams):
         market_order (MarketOrderParams): The parameters of the market order.
 
         spot_leverage (Optional[bool]): An optional flag indicating whether leverage should be used for the order. By default, leverage is assumed.
+
+        reduce_only (Optional[bool]): When True, the order can only reduce the size of an existing position. Works only with IOC & FOK.
     """
 
     product_id: int
     market_order: MarketOrderParams
     slippage: Optional[float]
     spot_leverage: Optional[bool]
+    reduce_only: Optional[bool]
 
 
 class CancelOrdersParams(BaseParamsSigned):
