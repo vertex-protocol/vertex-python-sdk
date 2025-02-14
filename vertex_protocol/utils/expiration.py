@@ -8,7 +8,9 @@ class OrderType(IntEnum):
     POST_ONLY = 3
 
 
-def get_expiration_timestamp(order_type: OrderType, expiration: int) -> int:
+def get_expiration_timestamp(
+    order_type: OrderType, expiration: int, reduce_only: bool = False
+) -> int:
     """
     Encodes the order type into the expiration timestamp for special order types such as immediate-or-cancel.
 
@@ -17,10 +19,15 @@ def get_expiration_timestamp(order_type: OrderType, expiration: int) -> int:
 
         expiration (int): The expiration timestamp in UNIX seconds.
 
+        reduce_only (bool): When True, the order can only reduce the size of an existing position. Works only with IOC & FOK.
+
     Returns:
         int: The properly formatted timestamp needed for the specified order type.
     """
-    return int(expiration) | (order_type << 62)
+    expiration = int(expiration) | (order_type << 62)
+    if reduce_only:
+        expiration |= 1 << 61
+    return expiration
 
 
 def decode_expiration(expiration: int) -> tuple[OrderType, int]:
