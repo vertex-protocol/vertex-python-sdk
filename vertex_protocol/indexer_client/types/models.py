@@ -25,6 +25,7 @@ class IndexerEventType(StrEnum):
     MANUAL_ASSERT = "manual_assert"
     LINK_SIGNER = "link_signer"
     TRANSFER_QUOTE = "transfer_quote"
+    CREATE_ISOLATED_SUBACCOUNT = "create_isolated_subaccount"
 
 
 class IndexerCandlesticksGranularity(IntEnum):
@@ -66,6 +67,7 @@ class IndexerHistoricalOrder(IndexerOrderFill):
     price_x18: str
     expiration: str
     nonce: str
+    isolated: bool
 
 
 class IndexerSignedOrder(VertexBaseModel):
@@ -78,6 +80,7 @@ class IndexerMatch(IndexerOrderFill):
     cumulative_fee: str
     cumulative_base_filled: str
     cumulative_quote_filled: str
+    isolated: bool
 
 
 class IndexerMatchOrdersTxData(VertexBaseModel):
@@ -194,6 +197,8 @@ class IndexerEvent(IndexerBaseModel, IndexerEventTrackedData):
     product: IndexerProductData
     pre_balance: IndexerProductBalanceData
     post_balance: IndexerProductBalanceData
+    isolated: bool
+    isolated_product_id: Optional[int]
 
 
 class IndexerProduct(IndexerBaseModel):

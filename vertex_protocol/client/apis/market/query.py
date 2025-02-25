@@ -10,6 +10,7 @@ from vertex_protocol.engine_client.types.query import (
     SubaccountOpenOrdersData,
     SubaccountMultiProductsOpenOrdersData,
     QueryMaxOrderSizeParams,
+    IsolatedPositionsData,
 )
 from vertex_protocol.indexer_client.types.query import (
     IndexerCandlesticksData,
@@ -295,3 +296,15 @@ class MarketQueryAPI(VertexBaseAPI):
         if self.context.trigger_client is None:
             raise MissingTriggerClient()
         return self.context.trigger_client.list_trigger_orders(params)
+
+    def get_isolated_positions(self, subaccount: str) -> IsolatedPositionsData:
+        """
+        Retrieve isolated positions for a specific subaccount.
+
+        Args:
+            subaccount (str): Unique identifier for the subaccount.
+
+        Returns:
+            IsolatedPositionsData: A data class object containing information about the isolated positions for the specified subaccount.
+        """
+        return self.context.engine_client.get_isolated_positions(subaccount)

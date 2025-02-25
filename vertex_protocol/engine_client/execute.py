@@ -19,6 +19,7 @@ from vertex_protocol.engine_client.types.execute import (
     LiquidateSubaccountParams,
     MintLpParams,
     OrderParams,
+    PlaceIsolatedOrderParams,
     PlaceMarketOrderParams,
     PlaceOrderParams,
     WithdrawCollateralParams,
@@ -147,6 +148,26 @@ class EngineExecuteClient(VertexBaseExecute):
         params.order = self.prepare_execute_params(params.order, True)
         params.signature = params.signature or self._sign(
             VertexExecuteType.PLACE_ORDER, params.order.dict(), params.product_id
+        )
+        return self.execute(params)
+
+    def place_isolated_order(self, params: PlaceIsolatedOrderParams) -> ExecuteResponse:
+        """
+        Execute a place isolated order operation.
+
+        Args:
+            params (PlaceIsolatedOrderParams): Parameters required for placing an isolated order.
+            The parameters include the isolated order details.
+
+        Returns:
+            ExecuteResponse: Response of the execution, including status and potential error message.
+        """
+        params = PlaceIsolatedOrderParams.parse_obj(params)
+        params.isolated_order = self.prepare_execute_params(params.isolated_order, True)
+        params.signature = params.signature or self._sign(
+            VertexExecuteType.PLACE_ISOLATED_ORDER,
+            params.isolated_order.dict(),
+            params.product_id,
         )
         return self.execute(params)
 

@@ -38,6 +38,7 @@ from vertex_protocol.engine_client.types.query import (
     QuerySubaccountOpenOrdersParams,
     QuerySubaccountMultiProductOpenOrdersParams,
     QueryOrderParams,
+    QueryIsolatedPositionsParams,
     QueryRequest,
     QueryResponse,
     QueryStatusParams,
@@ -50,6 +51,7 @@ from vertex_protocol.engine_client.types.query import (
     AssetsData,
     MarketPairsData,
     SpotsAprData,
+    IsolatedPositionsData,
 )
 from vertex_protocol.utils.exceptions import (
     BadStatusCodeException,
@@ -420,6 +422,21 @@ class EngineQueryClient:
         return ensure_data_type(
             self.query(QueryLinkedSignerParams(subaccount=subaccount)).data,
             LinkedSignerData,
+        )
+
+    def get_isolated_positions(self, subaccount: str) -> IsolatedPositionsData:
+        """
+        Retrieves the isolated positions for a specific subaccount.
+
+        Args:
+            subaccount (str): Identifier of the subaccount (owner's address + subaccount name) sent as a hex string.
+
+        Returns:
+            IsolatedPositionsData: A data object containing the isolated positions for the specified subaccount.
+        """
+        return ensure_data_type(
+            self.query(QueryIsolatedPositionsParams(subaccount=subaccount)).data,
+            IsolatedPositionsData,
         )
 
     def _get_subaccount_product_position(

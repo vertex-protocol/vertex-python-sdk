@@ -7,6 +7,7 @@ from vertex_protocol.engine_client.types.execute import (
     MintLpParams,
     PlaceMarketOrderParams,
     PlaceOrderParams,
+    PlaceIsolatedOrderParams,
 )
 from vertex_protocol.client.apis.base import VertexBaseAPI
 from vertex_protocol.trigger_client.types.execute import (
@@ -75,6 +76,21 @@ class MarketExecuteAPI(VertexBaseAPI):
             Exception: If there is an error during the execution or the response status is not "success".
         """
         return self.context.engine_client.place_order(params)
+
+    def place_isolated_order(self, params: PlaceIsolatedOrderParams) -> ExecuteResponse:
+        """
+        Places an isolated order through the engine.
+
+        Args:
+            params (PlaceIsolatedOrderParams): Parameters required to place an isolated order.
+
+        Returns:
+            ExecuteResponse: The response from the engine execution.
+
+        Raises:
+            Exception: If there is an error during the execution or the response status is not "success".
+        """
+        return self.context.engine_client.place_isolated_order(params)
 
     def place_market_order(self, params: PlaceMarketOrderParams) -> ExecuteResponse:
         """
