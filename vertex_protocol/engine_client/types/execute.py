@@ -58,7 +58,7 @@ class PlaceIsolatedOrderParams(SignatureParams):
 
         digest (Optional[str]): An optional hash of the order data.
 
-        borrow_margin (Optional[bool]): An optional flag indicating whether the order should borrow margin. By default, margin is borrowed.
+        borrow_margin (Optional[bool]): Whether the cross subaccount can borrow quote for the margin transfer into the isolated subaccount. If not provided, it defaults to true.
     """
 
     id: Optional[int]
