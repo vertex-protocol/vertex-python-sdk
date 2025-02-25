@@ -64,7 +64,7 @@ def run():
         ),
         priceX18=to_x18(order_price),
         amount=to_pow_10(1, 17),
-        expiration=get_expiration_timestamp(OrderType.DEFAULT, int(time.time()) + 40),
+        expiration=get_expiration_timestamp(OrderType.IOC, int(time.time()) + 40),
         nonce=gen_order_nonce(),
         margin=to_pow_10(1000, 18),
     )
@@ -72,3 +72,25 @@ def run():
         {"product_id": product_id, "isolated_order": isolated_order}
     )
     print("order result:", res.json(indent=2))
+
+    print("querying isolated positions...")
+    isolated_positions = client.market.get_isolated_positions(subaccount)
+    print("isolated positions:", isolated_positions.json(indent=2))
+
+    print("querying historical isolated orders...")
+    historical_isolated_orders = client.market.get_subaccount_historical_orders(
+        {"subaccount": subaccount, "isolated": True}
+    )
+    print("historical isolated orders:", historical_isolated_orders.json(indent=2))
+
+    print("querying isolated matches...")
+    isolated_matches = client.context.indexer_client.get_matches(
+        {"subaccount": subaccount, "isolated": True}
+    )
+    print("isolated matches:", isolated_matches.json(indent=2))
+
+    print("querying isolated events...")
+    isolated_events = client.context.indexer_client.get_events(
+        {"subaccount": subaccount, "limit": {"raw": 5}, "isolated": True}
+    )
+    print("isolated events:", isolated_events.json(indent=2))

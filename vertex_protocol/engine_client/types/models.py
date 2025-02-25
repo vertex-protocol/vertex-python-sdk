@@ -234,3 +234,14 @@ class Orderbook(VertexBaseModel):
 class MarketType(StrEnum):
     SPOT = "spot"
     PERP = "perp"
+
+
+class IsolatedPosition(VertexBaseModel):
+    subaccount: str
+    quote_balance: SpotProductBalance
+    base_balance: PerpProductBalance
+    quote_product: SpotProduct
+    base_product: PerpProduct
+    healths: list[SubaccountHealth]
+    quote_healths: list
+    base_healths: list

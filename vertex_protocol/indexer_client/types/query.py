@@ -74,6 +74,7 @@ class IndexerSubaccountHistoricalOrdersParams(IndexerBaseParams):
 
     subaccount: str
     product_ids: Optional[list[int]]
+    isolated: Optional[bool]
 
 
 class IndexerHistoricalOrdersByDigestParams(VertexBaseModel):
@@ -91,6 +92,7 @@ class IndexerMatchesParams(IndexerBaseParams):
 
     subaccount: Optional[str]
     product_ids: Optional[list[int]]
+    isolated: Optional[bool]
 
 
 class IndexerEventsRawLimit(VertexBaseModel):
@@ -120,6 +122,7 @@ class IndexerEventsParams(IndexerBaseParams):
     subaccount: Optional[str]
     product_ids: Optional[list[int]]
     event_types: Optional[list[IndexerEventType]]
+    isolated: Optional[bool]
     limit: Optional[IndexerEventsLimit]  # type: ignore
 
 

@@ -7,6 +7,7 @@ from vertex_protocol.engine_client.types.models import (
     Asset,
     BurnLpTx,
     EngineStatus,
+    IsolatedPosition,
     MarketPair,
     MaxOrderSizeDirection,
     MintLpTx,
@@ -45,6 +46,7 @@ class EngineQueryType(StrEnum):
     SUBACCOUNT_INFO = "subaccount_info"
     SUBACCOUNT_ORDERS = "subaccount_orders"
     ORDERS = "orders"
+    ISOLATED_POSITIONS = "isolated_positions"
 
 
 class QueryStatusParams(VertexBaseModel):
@@ -80,6 +82,15 @@ class QueryOrderParams(VertexBaseModel):
     type = EngineQueryType.ORDER.value
     product_id: int
     digest: str
+
+
+class QueryIsolatedPositionsParams(VertexBaseModel):
+    """
+    Parameters for querying the isolated positions of a specific subaccount.
+    """
+
+    type = EngineQueryType.ISOLATED_POSITIONS.value
+    subaccount: str
 
 
 QuerySubaccountInfoTx = Union[MintLpTx, BurnLpTx, ApplyDeltaTx]
@@ -240,6 +251,7 @@ QueryRequest = Union[
     QueryFeeRatesParams,
     QueryHealthGroupsParams,
     QueryLinkedSignerParams,
+    QueryIsolatedPositionsParams,
 ]
 
 StatusData = EngineStatus
@@ -320,6 +332,14 @@ class SubaccountInfoData(VertexBaseModel):
                 return perp_balance
 
         raise ValueError(f"Invalid product id provided: {product_id}")
+
+
+class IsolatedPositionsData(VertexBaseModel):
+    """
+    Data model for isolated positions of a subaccount.
+    """
+
+    isolated_positions: list[IsolatedPosition]
 
 
 class SubaccountOpenOrdersData(VertexBaseModel):
@@ -462,6 +482,7 @@ QueryResponseData = Union[
     HealthGroupsData,
     LinkedSignerData,
     ProductSymbolsData,
+    IsolatedPositionsData,
 ]
 
 
