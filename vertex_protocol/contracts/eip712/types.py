@@ -71,6 +71,16 @@ def get_vertex_eip712_type(tx: VertexTxType) -> dict:
                 {"name": "nonce", "type": "uint64"},
             ]
         },
+        VertexTxType.PLACE_ISOLATED_ORDER: {
+            "IsolatedOrder": [
+                {"name": "sender", "type": "bytes32"},
+                {"name": "priceX18", "type": "int128"},
+                {"name": "amount", "type": "int128"},
+                {"name": "expiration", "type": "uint64"},
+                {"name": "nonce", "type": "uint64"},
+                {"name": "margin", "type": "int128"},
+            ]
+        },
         VertexTxType.CANCEL_ORDERS: {
             "Cancellation": [
                 {"name": "sender", "type": "bytes32"},

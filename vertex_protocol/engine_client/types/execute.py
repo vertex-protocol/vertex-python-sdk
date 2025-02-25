@@ -4,6 +4,7 @@ from vertex_protocol.contracts.types import VertexExecuteType
 from vertex_protocol.engine_client.types.models import ResponseStatus
 from vertex_protocol.utils.execute import (
     BaseParamsSigned,
+    IsolatedOrderParams,
     MarketOrderParams,
     OrderParams,
     SignatureParams,
@@ -42,6 +43,29 @@ class PlaceOrderParams(SignatureParams):
     order: OrderParams
     digest: Optional[str]
     spot_leverage: Optional[bool]
+
+
+class PlaceIsolatedOrderParams(SignatureParams):
+    """
+    Class for defining the parameters needed to place an isolated order.
+
+    Attributes:
+        id (Optional[int]): An optional custom order id that is echoed back in subscription events e.g: fill orders, etc.
+
+        product_id (int): The id of the product for which the order is being placed.
+
+        isolated_order (IsolatedOrderParams): The parameters of the isolated order.
+
+        digest (Optional[str]): An optional hash of the order data.
+
+        borrow_margin (Optional[bool]): An optional flag indicating whether the order should borrow margin. By default, margin is borrowed.
+    """
+
+    id: Optional[int]
+    product_id: int
+    isolated_order: IsolatedOrderParams
+    digest: Optional[str]
+    borrow_margin: Optional[bool]
 
 
 class PlaceMarketOrderParams(SignatureParams):
@@ -225,6 +249,7 @@ class LinkSignerParams(BaseParamsSigned):
 
 ExecuteParams = Union[
     PlaceOrderParams,
+    PlaceIsolatedOrderParams,
     CancelOrdersParams,
     CancelProductOrdersParams,
     WithdrawCollateralParams,
@@ -258,6 +283,33 @@ class PlaceOrderRequest(VertexBaseModel):
         if isinstance(v.order.sender, bytes):
             v.order.serialize_dict(["sender"], bytes32_to_hex)
         v.order.serialize_dict(["nonce", "priceX18", "amount", "expiration"], str)
+        return v
+
+
+class PlaceIsolatedOrderRequest(VertexBaseModel):
+    """
+    Parameters for a request to place an isolated order.
+
+    Attributes:
+        place_isolated_order (PlaceIsolatedOrderParams): The parameters for the isolated order to be placed.
+
+    Methods:
+        serialize: Validates and serializes the order parameters.
+    """
+
+    place_isolated_order: PlaceIsolatedOrderParams
+
+    @validator("place_isolated_order")
+    def serialize(cls, v: PlaceIsolatedOrderParams) -> PlaceIsolatedOrderParams:
+        if v.isolated_order.nonce is None:
+            raise ValueError("Missing order `nonce`")
+        if v.signature is None:
+            raise ValueError("Missing `signature")
+        if isinstance(v.isolated_order.sender, bytes):
+            v.isolated_order.serialize_dict(["sender"], bytes32_to_hex)
+        v.isolated_order.serialize_dict(
+            ["nonce", "priceX18", "amount", "expiration", "margin"], str
+        )
         return v
 
 
@@ -520,6 +572,7 @@ class LinkSignerRequest(VertexBaseModel):
 
 ExecuteRequest = Union[
     PlaceOrderRequest,
+    PlaceIsolatedOrderRequest,
     CancelOrdersRequest,
     CancelProductOrdersRequest,
     CancelAndPlaceRequest,
@@ -594,6 +647,10 @@ def to_execute_request(params: ExecuteParams) -> ExecuteRequest:
     """
     execute_request_mapping = {
         PlaceOrderParams: (PlaceOrderRequest, VertexExecuteType.PLACE_ORDER.value),
+        PlaceIsolatedOrderParams: (
+            PlaceIsolatedOrderRequest,
+            VertexExecuteType.PLACE_ISOLATED_ORDER.value,
+        ),
         CancelOrdersParams: (
             CancelOrdersRequest,
             VertexExecuteType.CANCEL_ORDERS.value,
