@@ -28,7 +28,6 @@ class VertexNetwork(StrEnum):
     BASE_TESTNET = "baseTestnet"
     SONIC_TESTNET = "sonicTestnet"
     ABSTRACT_TESTNET = "abstractTestnet"
-    BERA_TESTNET = "beraTestnet"
 
     # dev
     HARDHAT = "localhost"

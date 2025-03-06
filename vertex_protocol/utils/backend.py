@@ -70,10 +70,6 @@ class VertexBackendURL(StrEnum):
     ABSTRACT_TESTNET_INDEXER = "https://archive.abstract-test.vertexprotocol.com/v1"
     ABSTRACT_TESTNET_TRIGGER = "https://trigger.abstract-test.vertexprotocol.com/v1"
 
-    BERA_TESTNET_GATEWAY = "https://gateway.bera-test.vertexprotocol.com/v1"
-    BERA_TESTNET_INDEXER = "https://archive.bera-test.vertexprotocol.com/v1"
-    BERA_TESTNET_TRIGGER = "https://trigger.bera-test.vertexprotocol.com/v1"
-
     # dev
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"
