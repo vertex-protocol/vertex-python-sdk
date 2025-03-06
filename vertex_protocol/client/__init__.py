@@ -40,7 +40,6 @@ class VertexClientMode(StrEnum):
         BASE_TESTNET: For operating in Vertex's testnet environment deployed on Base Testnet.
         SONIC_TESTNET: For operating in Vertex's testnet environment deployed on Sonic Testnet.
         ABSTRACT_TESTNET: For operating in Vertex's testnet environment deployed on Abstract Testnet.
-        BERA_TESTNET: For operating in Vertex's testnet environment deployed on Bera Testnet.
 
         DEVNET: For local development.
 
@@ -65,7 +64,6 @@ class VertexClientMode(StrEnum):
     BASE_TESTNET = "base-testnet"
     SONIC_TESTNET = "sonic-testnet"
     ABSTRACT_TESTNET = "abstract-testnet"
-    BERA_TESTNET = "bera-testnet"
 
     # dev
     DEVNET = "devnet"
@@ -303,12 +301,6 @@ def client_mode_to_setup(
                 VertexBackendURL.ABSTRACT_TESTNET_INDEXER.value,
                 VertexBackendURL.ABSTRACT_TESTNET_TRIGGER.value,
                 VertexNetwork.ABSTRACT_TESTNET.value,
-            ),
-            VertexClientMode.BERA_TESTNET: (
-                VertexBackendURL.BERA_TESTNET_GATEWAY.value,
-                VertexBackendURL.BERA_TESTNET_INDEXER.value,
-                VertexBackendURL.BERA_TESTNET_TRIGGER.value,
-                VertexNetwork.BERA_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,
