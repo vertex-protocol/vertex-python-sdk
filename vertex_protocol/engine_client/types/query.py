@@ -1,6 +1,6 @@
 from vertex_protocol.utils.enum import StrEnum
 from typing import Optional, Union
-from pydantic import validator
+from pydantic.v1 import validator
 from vertex_protocol.utils.model import VertexBaseModel
 from vertex_protocol.engine_client.types.models import (
     ApplyDeltaTx,

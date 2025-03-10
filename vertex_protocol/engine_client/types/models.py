@@ -2,7 +2,7 @@ from typing import Optional, Union
 from typing import Annotated
 from vertex_protocol.utils.enum import StrEnum
 from vertex_protocol.utils.model import VertexBaseModel
-from pydantic import conlist
+from pydantic.v1 import conlist
 
 
 class ResponseStatus(StrEnum):

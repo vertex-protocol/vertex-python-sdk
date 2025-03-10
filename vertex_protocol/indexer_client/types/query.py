@@ -1,7 +1,7 @@
 from vertex_protocol.utils.enum import StrEnum
 from typing import Dict, Optional, Union
 
-from pydantic import Field, validator
+from pydantic.v1 import Field, validator
 from vertex_protocol.indexer_client.types.models import (
     IndexerCandlestick,
     IndexerCandlesticksGranularity,
