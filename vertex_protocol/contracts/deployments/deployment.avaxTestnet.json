@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://api.avax-test.network/ext/bc/C/rpc",
+  "explorerUrl": "https://subnets-test.avax.network/c-chain",
+  "startBlock": 38008561,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0x94B3173E0a23C28b2BA9a52464AC24c2B032791c",
+  "querier": "0x611A1Bf97B94A526a23Bb11cE12341884f8F6Fe0",
+  "clearinghouse": "0x08F44516d84Eb6D0f057b1Dd198B928aa7191AbD",
+  "endpoint": "0x1a77cB939B7C4fA5Cc90b09787260DABf5f05c41",
+  "spotEngine": "0xA1DbC395Cbaa8c7b74456697C42ADa8F2b08CAbb",
+  "perpEngine": "0xEC1149dF1559eaDB0Af4cf6d9BeAc7a08Aa9f694",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

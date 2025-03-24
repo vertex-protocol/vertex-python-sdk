@@ -19,6 +19,7 @@ class VertexNetwork(StrEnum):
     SONIC_MAINNET = "sonicMainnet"
     ABSTRACT_MAINNET = "abstractMainnet"
     BERA_MAINNET = "beraMainnet"
+    AVAX_MAINNET = "avaxMainnet"
 
     # testnet
     ARBITRUM_SEPOLIA = "arbitrumSepolia"
@@ -28,6 +29,7 @@ class VertexNetwork(StrEnum):
     BASE_TESTNET = "baseTestnet"
     SONIC_TESTNET = "sonicTestnet"
     ABSTRACT_TESTNET = "abstractTestnet"
+    AVAX_TESTNET = "avaxTestnet"
 
     # dev
     HARDHAT = "localhost"

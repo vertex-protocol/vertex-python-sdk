@@ -33,9 +33,6 @@ jobs:
         run: |
           poetry run coverage run -m --source=vertex_protocol pytest tests
           poetry run coverage report
-      # - name: Pycycle
-      #   run: |
-      #     poetry run pycycle --here
       - name: MyPy
         run: |
           poetry run mypy vertex_protocol

@@ -32,6 +32,7 @@ class VertexClientMode(StrEnum):
         SONIC_MAINNET: For operating in Vertex's mainnet environment deployed on Sonic Mainnet.
         ABSTRACT_MAINNET: For operating in Vertex's mainnet environment deployed on Abstract Mainnet.
         BERA_MAINNET: For operating in Vertex's mainnet environment deployed on Berachain Mainnet.
+        AVAX_MAINNET: For operating in Vertex's mainnet environment deployed on Avalanche Mainnet.
 
         SEPOLIA_TESTNET: For operating in Vertex's testnet environment deployed on Arbitrum Sepolia.
         BLAST_TESTNET: For operating in Vertex's testnet environment deployed on Blast Testnet.
@@ -40,6 +41,7 @@ class VertexClientMode(StrEnum):
         BASE_TESTNET: For operating in Vertex's testnet environment deployed on Base Testnet.
         SONIC_TESTNET: For operating in Vertex's testnet environment deployed on Sonic Testnet.
         ABSTRACT_TESTNET: For operating in Vertex's testnet environment deployed on Abstract Testnet.
+        AVAX_TESTNET: For operating in Vertex's testnet environment deployed on Avalanche Testnet.
 
         DEVNET: For local development.
 
@@ -55,6 +57,7 @@ class VertexClientMode(StrEnum):
     SONIC_MAINNET = "sonic-mainnet"
     ABSTRACT_MAINNET = "abstract-mainnet"
     BERA_MAINNET = "bera-mainnet"
+    AVAX_MAINNET = "avax-mainnet"
 
     # testnet
     SEPOLIA_TESTNET = "sepolia-testnet"
@@ -64,6 +67,7 @@ class VertexClientMode(StrEnum):
     BASE_TESTNET = "base-testnet"
     SONIC_TESTNET = "sonic-testnet"
     ABSTRACT_TESTNET = "abstract-testnet"
+    AVAX_TESTNET = "avax-testnet"
 
     # dev
     DEVNET = "devnet"
@@ -242,6 +246,12 @@ def client_mode_to_setup(
                 VertexBackendURL.BASE_MAINNET_TRIGGER.value,
                 VertexNetwork.BASE_MAINNET.value,
             ),
+            VertexClientMode.AVAX_MAINNET: (
+                VertexBackendURL.AVAX_MAINNET_GATEWAY.value,
+                VertexBackendURL.AVAX_MAINNET_INDEXER.value,
+                VertexBackendURL.AVAX_MAINNET_TRIGGER.value,
+                VertexNetwork.AVAX_MAINNET.value,
+            ),
             VertexClientMode.SONIC_MAINNET: (
                 VertexBackendURL.SONIC_MAINNET_GATEWAY.value,
                 VertexBackendURL.SONIC_MAINNET_INDEXER.value,
@@ -301,6 +311,12 @@ def client_mode_to_setup(
                 VertexBackendURL.ABSTRACT_TESTNET_INDEXER.value,
                 VertexBackendURL.ABSTRACT_TESTNET_TRIGGER.value,
                 VertexNetwork.ABSTRACT_TESTNET.value,
+            ),
+            VertexClientMode.AVAX_TESTNET: (
+                VertexBackendURL.AVAX_TESTNET_GATEWAY.value,
+                VertexBackendURL.AVAX_TESTNET_INDEXER.value,
+                VertexBackendURL.AVAX_TESTNET_TRIGGER.value,
+                VertexNetwork.AVAX_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,
