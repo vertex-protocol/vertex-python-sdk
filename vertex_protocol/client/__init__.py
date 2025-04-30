@@ -42,6 +42,7 @@ class VertexClientMode(StrEnum):
         SONIC_TESTNET: For operating in Vertex's testnet environment deployed on Sonic Testnet.
         ABSTRACT_TESTNET: For operating in Vertex's testnet environment deployed on Abstract Testnet.
         AVAX_TESTNET: For operating in Vertex's testnet environment deployed on Avalanche Testnet.
+        XRPL_TESTNET: For operating in Vertex's testnet environment deployed on XRPL Sidechain Testnet.
 
         DEVNET: For local development.
 
@@ -68,6 +69,7 @@ class VertexClientMode(StrEnum):
     SONIC_TESTNET = "sonic-testnet"
     ABSTRACT_TESTNET = "abstract-testnet"
     AVAX_TESTNET = "avax-testnet"
+    XRPL_TESTNET = "xrpl-testnet"
 
     # dev
     DEVNET = "devnet"
@@ -317,6 +319,12 @@ def client_mode_to_setup(
                 VertexBackendURL.AVAX_TESTNET_INDEXER.value,
                 VertexBackendURL.AVAX_TESTNET_TRIGGER.value,
                 VertexNetwork.AVAX_TESTNET.value,
+            ),
+            VertexClientMode.XRPL_TESTNET: (
+                VertexBackendURL.XRPL_TESTNET_GATEWAY.value,
+                VertexBackendURL.XRPL_TESTNET_INDEXER.value,
+                VertexBackendURL.XRPL_TESTNET_TRIGGER.value,
+                VertexNetwork.XRPL_TESTNET.value,
             ),
             VertexClientMode.DEVNET: (
                 VertexBackendURL.DEVNET_GATEWAY.value,

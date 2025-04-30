@@ -1,0 +1,15 @@
+{
+  "publicNodeUrl": "https://rpc.testnet.xrplevm.org",
+  "explorerUrl": "https://explorer.testnet.xrplevm.org",
+  "startBlock": 1027303,
+  "deployer": "0x3c06e307BA6Ab81E8Ff6661c1559ce8027744AE5",
+  "quote": "0xE26D509C661c4F16FaFfBB1eAce1Fa1CdA8cc146",
+  "querier": "0xB05648299133D50759091150c9cc83Ba63B7219B",
+  "clearinghouse": "0x493CfDc0092709646Ebe06f8Ce93bf3020393dbE",
+  "endpoint": "0x2D47a68A951cAd5A11199C6162aF73405aB65a26",
+  "spotEngine": "0x994B75F3891855c04b4455c0148f2867E37698Bd",
+  "perpEngine": "0x0B56e7Cb0F7927680850c83454b20437Ee75742d",
+  "vrtxAirdrop": "0x0000000000000000000000000000000000000000",
+  "vrtxStaking": "0x0000000000000000000000000000000000000000",
+  "foundationRewardsAirdrop": "0x0000000000000000000000000000000000000000"
+}

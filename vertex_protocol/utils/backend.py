@@ -78,6 +78,10 @@ class VertexBackendURL(StrEnum):
     AVAX_TESTNET_INDEXER = "https://archive.avax-test.vertexprotocol.com/v1"
     AVAX_TESTNET_TRIGGER = "https://trigger.avax-test.vertexprotocol.com/v1"
 
+    XRPL_TESTNET_GATEWAY = "https://gateway.xrpl-test.vertexprotocol.com/v1"
+    XRPL_TESTNET_INDEXER = "https://archive.xrpl-test.vertexprotocol.com/v1"
+    XRPL_TESTNET_TRIGGER = "https://trigger.xrpl-test.vertexprotocol.com/v1"
+
     # dev
     DEVNET_GATEWAY = "http://localhost:80"
     DEVNET_INDEXER = "http://localhost:8000"

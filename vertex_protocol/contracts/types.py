@@ -30,6 +30,7 @@ class VertexNetwork(StrEnum):
     SONIC_TESTNET = "sonicTestnet"
     ABSTRACT_TESTNET = "abstractTestnet"
     AVAX_TESTNET = "avaxTestnet"
+    XRPL_TESTNET = "xrplTestnet"
 
     # dev
     HARDHAT = "localhost"
